@@ -1,0 +1,363 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>通过几何概型来估算&pi; - 折腾来折腾去</title>
+  <meta name="author" content="pikipity">
+
+  
+  <meta name="description" content="被涛神要求帮着写了一个通过模拟几何概型实验来估算 &pi; 的 Matlab 函数。这个几何概型的实验是这样的：在一个二维直角坐标系中，存在一个以原点为中心，以1为半径的圆，和一个以原点为中心，边长为2的正方形（如图），向圆中随机投放点，计算此点在圆内的概率（忽略边线）我们可以得到如下公式 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://pikipity.github.io/blog/find-pi.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="折腾来折腾去" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38118079-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">折腾来折腾去</a></h1>
+  
+    <h2>pikipity的blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="pikipity.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/projects">Projects</a></li>
+       <li><a href="/aboutme">AboutMe</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">通过几何概型来估算&pi;</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-03-28T07:52:00+08:00'><span class='date'>2013年03月28日</span> <span class='time'>7:52 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><img src="/images/post/find_pi.jpg" alt="几何概型估算&pi;" width="550pt"></p>
+
+<p>被涛神要求帮着写了一个通过模拟几何概型实验来估算 &pi; 的 Matlab 函数。这个几何概型的实验是这样的：在一个二维直角坐标系中，存在一个以原点为中心，以1为半径的圆，和一个以原点为中心，边长为2的正方形（如图），向圆中随机投放点，计算此点在圆内的概率（忽略边线）我们可以得到如下公式，</p>
+
+<p>$$\begin{array}{rcl}
+P&amp;=&amp;\frac{S<em>{circle}}{S</em>{square}}\
+&amp;=&amp;\frac{\pi r<sup>2</sup>}{\left( 2r\right)<sup>2</sup>}\
+&amp;=&amp;\frac{\pi}{4}
+\end{array}$$</p>
+
+<p>所以我们只要将上面得到的概率乘以4，就可以估算出 &pi; 的值。很明显，既然是概率实验，那么存在一次试验中使用点的个数问题，使用的点越多，理论上得到的 &pi; 的值应该越接近真实值。</p>
+
+<p>涛神希望这个函数实现下面几点要求：</p>
+
+<ol>
+<li>可以一次性通过一个矩阵输入多次实验，每次实验中使用的点数不一样。</li>
+<li>将多次实验所得到的 &pi; 的值放在一个矩阵里进行输出。</li>
+<li>使用 <code>rand</code> 函数。</li>
+<li>不使用循环。</li>
+</ol>
+
+
+<p>由于 <code>rand</code> 的函数无法一次性产生多个二维随机数矩阵，又由于不能使用循环，使得这个函数的编写比较麻烦（吐槽一下，即使可以产生多个二维随机数矩阵我也没法进行后续操作啊！！）。于是我的想法如下：</p>
+
+<ol>
+<li>根据最大的点数，用 <code>rand</code> 函数产生一个三维矩阵，前两个维度分别表示每个点的横纵坐标，最后一个维度表示第几次实验。例如，如果进行三次试验，每次试验的实验点数为1，10，100，那么就用 <code>rand</code> 生成一个100*2*3的随机矩阵。</li>
+<li>根据所需要的不同实验中不同的点数对实验结果进行取样。继续上面的举例，我们就在第一个试验的结果（如果结果存在矩阵 <code>a</code> 中，那么实验一的结果也就是 <code>a(:,:,1)</code>）中只使用第一组数据，在第二个实验的结果中只使用前10组数据，在第三个实验的结果中只使用前100组数据。</li>
+<li>通过上面的理论公式，计算得到结果，并输出。</li>
+<li>在整个过程中，使用 <code>reshape</code> 函数进行二维和三维矩阵之间的转化。</li>
+</ol>
+
+
+<p>程序如下：</p>
+
+<pre><code>function y=find_pi(n)
+%y=find_pi(n)
+%input: n, a array for number of experiments, like [10 100 1000]
+%output: y, the approximate value of pi for every experiment
+
+%generate the matrix that will be used to sample results
+sample=triu(ones(max(n),max(n)),0);
+sample=sample(1:end,[n;n]);
+sample=reshape(sample,max(n),2,length(n));
+%generate the data matrix
+total_number_exp=length(n);
+maximum=max(n);
+all_experiment=rand(maximum,2,total_number_exp);
+%sample results
+all_experiment=all_experiment.*sample;
+%calculate value of pi
+final_experiment=(all_experiment.*2-1);
+final_result=sum(final_experiment.^2,2);
+y=sum(final_result&lt;1)./reshape(n,1,1,length(n));
+y=reshape(y,[1,length(y)]).*4;
+</code></pre>
+
+<p>主要用到下面几个常用函数：</p>
+
+<ol>
+<li><code>triu(ones(n,n),0)</code>: 生成一个单位矩阵的上三角矩阵，其中 <code>n</code> 必须是一个正整数。</li>
+<li><code>reshape</code>: 根据需要将矩阵重建为与原矩阵不同维数的矩阵。</li>
+<li><code>rand</code>: 从0到1中抽取随机数生成矩阵。</li>
+<li><code>sum</code>: 求和，可以根据括号中的条件计算符合条件的点的个数。</li>
+</ol>
+
+
+<p>用 <code>y=find_pi([100 1 10 1000])</code> 进行四次测试，结果为 <code>[3.0800 0 3.6000 3.0800]</code>，<code>[3.3200 4.0000 3.2000 3.2240]</code>, <code>[3.3200 4.0000 3.2000 3.1640]</code> 和 <code>[3.3200 4.0000 2.8000 3.0880]</code>，运行正常，结果看起来是真确的啦。</p>
+
+<p>存在一个问题，当运行实验点数较多的情况，比如10000次的时候，函数会卡死，但是把函数语句单独提出来使用一切正常，只是会有小卡顿，看来是我的小 MBP 内存不够了。但是问题还是很明显的，不论最小的点数是多少，都要至少产生两个以最大点数为基础的大矩阵来运算，实在是太浪费了，但是不让使用循环，浪费就浪费吧。函数已放在<a href="https://github.com/pikipity/Find-pi">我的 Github</a>，欢迎来 Fork 我，谢谢。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">pikipity</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2013-03-28T07:52:00+08:00'><span class='date'>2013年03月28日</span> <span class='time'>7:52 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/matlab/'>matlab</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/googleartproject.html" title="Previous Post: Google要成立博物馆了？">&laquo; Google要成立博物馆了？</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/duck-tales-2.html" title="Next Post: 那年我还是个纯真的小男孩 -- 《唐老鸭大冒险》">那年我还是个纯真的小男孩 -- 《唐老鸭大冒险》 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+    
+        <section imagesd="comment">
+	<br>
+	<br>
+        <h1>Comments</h1>
+	<br>
+	<p></p>
+        <!-- Duoshuo Comment BEGIN -->
+	<div class="ds-thread"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"pikipity"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- Duoshuo Comment END -->
+       </section>
+       
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me -- pikipity</h1>
+  <ul id="post">
+  pikipity 的小博客，搜罗有意思的科技话题，展示自己的所知所学所感。<p>
+  
+  <img src="/images/myface.gif" width="100pt"><p>
+  
+  如果发现问题，请在文章后面留言指出或是直接点<a href="mailto:pikipityw@gmail.com">这里</a>发邮件给我指正，谢谢。<p>
+  
+  pikipity Blog: <a href="http://pikipity.github.io/">pikipity.github.io</a><p>
+  
+  pikipity Email: <a href="mailto:pikipityw@gmail.com">pikipityw.gmail.com</a><p>
+  
+  使用IE浏览器可能无法得到完美的浏览体验，建议更换为<a href="https://www.google.com/intl/en/chrome/browser/"> Chrome 浏览器</a><p>
+
+  </ul>
+</section>
+<section>
+  <h1>Category List</h1>
+    <span id="tag-cloud"><a href='/blog/categories/algorithm' style='font-size: 107.89473684210526%'>algorithm(5)</a> <a href='/blog/categories/arduino' style='font-size: 109.47368421052632%'>arduino(6)</a> <a href='/blog/categories/assembly' style='font-size: 111.05263157894737%'>assembly(7)</a> <a href='/blog/categories/c-plus-plus' style='font-size: 103.15789473684211%'>c++(2)</a> <a href='/blog/categories/cartoon' style='font-size: 111.05263157894737%'>cartoon(7)</a> <a href='/blog/categories/circuit' style='font-size: 104.73684210526315%'>circuit(3)</a> <a href='/blog/categories/game' style='font-size: 115.78947368421052%'>game(10)</a> <a href='/blog/categories/github' style='font-size: 104.73684210526315%'>github(3)</a> <a href='/blog/categories/google' style='font-size: 126.84210526315789%'>google(17)</a> <a href='/blog/categories/ios' style='font-size: 111.05263157894737%'>ios(7)</a> <a href='/blog/categories/life' style='font-size: 160.0%'>life(38)</a> <a href='/blog/categories/linux' style='font-size: 112.63157894736842%'>linux(8)</a> <a href='/blog/categories/mac' style='font-size: 125.26315789473685%'>mac(16)</a> <a href='/blog/categories/matlab' style='font-size: 125.26315789473685%'>matlab(16)</a> <a href='/blog/categories/movie' style='font-size: 106.3157894736842%'>movie(4)</a> <a href='/blog/categories/octopress' style='font-size: 104.73684210526315%'>octopress(3)</a> <a href='/blog/categories/others' style='font-size: 115.78947368421052%'>others(10)</a> <a href='/blog/categories/processing' style='font-size: 111.05263157894737%'>processing(7)</a> <a href='/blog/categories/python' style='font-size: 109.47368421052632%'>python(6)</a> <a href='/blog/categories/scm' style='font-size: 128.42105263157896%'>scm(18)</a> <a href='/blog/categories/technology' style='font-size: 126.84210526315789%'>technology(17)</a> </span>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week4.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week4)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week3.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week3)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week12summary.html">Algorithms: Design and Analysis Part 1 – Programming Questions (Week1 and Week 2 Summary)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week2.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week2)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week1.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week1)</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+<h1>Copyright Agreement</h1>
+<ul id="copyright">
+<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh"><img
+  alt="知识共享许可协议" style="border-width:0"
+  src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png"
+  /></a><br />本作品采用<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh">知识
+  共享署名-非商业性使用-相同方式共享 3.0 未本地化版本许可协议</a>进行
+  许可。<p>
+
+  如果您想转载本网站下的博文，请注明作者和出处。如果文章内没有特别说明，文章皆为原创，请将出处注明为那篇文章的网址；如果文章内特别指明为转载，请将出处注明为原始文章的网址。非常感谢。<p>
+</ul>
+</section><section>
+  <h1>Who are visiting</h1>
+  <ul id="for_fun">
+  <script type="text/javascript" src="http://jb.revolvermaps.com/2/1.js?i=1p1ij0eyux4&amp;s=190&amp;m=7&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+  </ul>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - pikipity -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

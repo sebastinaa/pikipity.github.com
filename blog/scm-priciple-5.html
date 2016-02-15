@@ -1,0 +1,425 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>单片机原理及程序设计 第五章 中断 - 折腾来折腾去</title>
+  <meta name="author" content="pikipity">
+
+  
+  <meta name="description" content="中断是单片机中一个非常重要的服务。中断是指由于接收到外围硬件的异步信号或是软件的同步信号，而进行的相应的软件或是硬件上的处理。发出这样的信号被称为中断请求，发出中断请求的硬件或是软件被称为中断源。当中断源产生了中断请求，相应的中断旗标（就是对应的寄存器的一个 bit）便会置“1”，8051的 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://pikipity.github.io/blog/scm-priciple-5.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="折腾来折腾去" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38118079-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">折腾来折腾去</a></h1>
+  
+    <h2>pikipity的blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="pikipity.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/projects">Projects</a></li>
+       <li><a href="/aboutme">AboutMe</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">单片机原理及程序设计 第五章 中断</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-03-12T18:18:00+08:00'><span class='date'>2013年03月12日</span> <span class='time'>6:18 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>中断是单片机中一个非常重要的服务。中断是指由于接收到外围硬件的异步信号或是软件的同步信号，而进行的相应的软件或是硬件上的处理。发出这样的信号被称为中断请求，发出中断请求的硬件或是软件被称为中断源。当中断源产生了中断请求，相应的中断旗标（就是对应的寄存器的一个 bit）便会置“1”，8051的 CPU 每个机械周期里都会去检查这些中断旗标，若发现中断旗标置“1”，CPU便会在执行完当前指令后，将当前的执行状态（以程序计数器和程序状态字等寄存器信息为主）塞入堆叠中保存，然后跳到相应的程序内存地址（这个程序内存地址叫做中断向量）执行那里的中断副程序，直到执行到 “RETI” 指令后结束附程序，将塞入堆叠的执行状态取出，回到之前的主程序继续执行。</p>
+
+<h3>中断分类</h3>
+
+<p>8051中的中断可分为2两种：</p>
+
+<ol>
+<li>不可屏蔽中断：无法通过在中断屏蔽寄存器中设定位掩码来关闭，典型例子是时钟中断（时钟中断不是指的计时/计数器 Timer0 或是 Timer1，而是一个硬件时钟，其会以恒定频率，如12MHz，发出中断）。</li>
+<li>可屏蔽中断：可通过在中断屏蔽寄存器中设定位掩码来关闭。</li>
+</ol>
+
+
+<p>不可屏蔽中断无法控制，是单片机工作的基础，所以不作介绍。只介绍可以控制的可屏蔽中断。</p>
+
+<h3>中断源</h3>
+
+<p>8051提供了五个中断源。中断源、中断向量、中断旗标及中断旗标所属寄存器都列在下表中：</p>
+
+<p>|&mdash;&mdash;&mdash;&ndash;+&mdash;&mdash;-+&mdash;&mdash;+&mdash;&mdash;&mdash;&mdash;&mdash;|
+|中断源      |中断向量|中断旗标|中断旗标所属寄存器|
+|:&mdash;&mdash;&mdash;:|:&mdash;&ndash;:|:&mdash;-:|:&mdash;&mdash;&mdash;&mdash;-:|
+|INT0       |0003H  |IE0   |TCON.1         |
+|Timer0     |000BH  |TF0   |TCON.5         |
+|INT1       |0013H  |IE1   |TCON.3         |
+|Timer1     |001BH  |TF1   |TCON.7         |
+|UART (TXD) |0023H  |TI    |SCON.1         |
+|UART (RXD) |0023H  |RI    |SCON.0         |
+|&mdash;&mdash;&mdash;&ndash;+&mdash;&mdash;-+&mdash;&mdash;+&mdash;&mdash;&mdash;&mdash;&mdash;|</p>
+
+<p>具体满足什么条件会产生中断请求会在介绍各个中断源的时候详细介绍。需要注意的就是串列口 UART 的输入输出中断的中断向量都是 0023H，在使用的时候要判断到底是输入还是输出。</p>
+
+<h3>中断置能</h3>
+
+<p>8051在重置之后会关闭所有可屏蔽中断，所以在使用中断之前需要打开需要的中断功能，也就是中断置能。中断功能打开关闭通过中断置能寄存器（IE，地址为 A8H，允许按位寻址）管理。下面是中断置能寄存器各个 bit 的意思（“1”为使能，“0”为关闭）：</p>
+
+<pre><code>EA  --  --  ES  ET1  EX1  ET0  EX0
+</code></pre>
+
+<ol>
+<li>EA: 相当于中断的总开关。置“0”就关闭所有中断。置“1”再根据下面的 bit 来看这个中断是否置能。</li>
+<li>ES：串列口（UART）中断使能位。</li>
+<li>ET1：计时/计数器 Timer1 使能</li>
+<li>EX1：外部中断 INT1 使能</li>
+<li>ET0: 计时/计数器 Timer0 使能</li>
+<li>EX0：外部中断 INT0 使能</li>
+</ol>
+
+
+<h3>中断优先级</h3>
+
+<p>当多个中断旗标同时存在时，就会有一个先执行哪个中断向量的问题，8051内置了一个中断优先级，优先级高的先执行，优先级如下（顺序其实是按照中断向量排列的）：</p>
+
+<ol>
+<li>外部中断 INT0</li>
+<li>计时/计数器 Timer0</li>
+<li>外部中断 INT1</li>
+<li>计时/计数器 Timer1</li>
+<li>串列口（UART）</li>
+</ol>
+
+
+<p>8051允许用户设置两层优先级，8051会先执行高层优先级中的中断，同一层中的中断优先顺序则按照上面的排序来进行。两层优先级的归属问题通过中断优先级寄存器（IP，地址为 B8H，允许位元定址）来设定。IP 每一个 bit 代表的意义如下（“1”代表高优先级，“0”代表低优先级）：</p>
+
+<pre><code>--  --  --  PS  PT1  PX1  PT0  PX0
+</code></pre>
+
+<ol>
+<li>PS：串列口（UART）优先级</li>
+<li>PT1：计时/计数器 Timer1 优先级</li>
+<li>PX1：外部中断 INT1 优先级</li>
+<li>PT0: 计时/计数器 Timer0 优先级</li>
+<li>PX0：外部中断 INT0 优先级</li>
+</ol>
+
+
+<h3>Assembly 程序设计</h3>
+
+<p>一个需要使用中断的 Assembly 程序设计的时候需要注意以下几点：</p>
+
+<ol>
+<li><p>由于中断向量都在程序记忆体的开始部分，所以主程序要注意回避中断向量的位置，所以一开始一般通过一个跳跃跳到主程序，例如</p>
+
+<pre><code>     ORG 00H
+     JMP MAIN
+        .
+        .
+        .
+
+     ORG 30H
+ MAIN:
+        .
+        .
+        .
+     END
+</code></pre></li>
+<li><p>两个中断向量之间的空间很短，一般无法放下整个附程序，所以一般在中断向量处通过一个跳跃到其他位置来执行副程序，例如</p>
+
+<pre><code>     ORG 00H
+     JMP MAIN
+
+     ORG 03H
+     JMP INT0
+
+     ORG 0BH
+     JMP TIMER0
+
+     ORG 30H
+ INT0:
+        .
+        .
+        .
+     RETI
+
+ TIMER0:
+         .
+         .
+         .
+      RETI
+
+MAIN:
+       .
+       .
+       .
+     END    
+</code></pre></li>
+<li><p>ORG 声明程序内存地址的时候要按照程序内存的顺序摆放，比如不可以出现 <code>ORG 05H</code> 在 <code>ORG 03H</code> 前面的情况</p></li>
+<li>在执行中断副程序之前记得保存之间需要保护的变量（填入堆叠就可以了）。结束之后记得把保护的变量提取出来。</li>
+<li>有的时候再执行一个中断的时候不希望其他中断来打扰，记得在执行中断副程序之前关闭中断（ <code>CLR EA</code> ），在执行结束后记得打开中断（ <code>SETB EA</code>）。</li>
+<li>在执行一个中断副程序的时候，如果其中断旗标再次置起，不会重新跳回中断向量。</li>
+</ol>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">pikipity</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2013-03-12T18:18:00+08:00'><span class='date'>2013年03月12日</span> <span class='time'>6:18 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/scm/'>scm</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/super-mario.html" title="Previous Post: 别说你知道超级玛丽">&laquo; 别说你知道超级玛丽</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/ssh-public-key.html" title="Next Post: 向 Github 添加 SSH 公匙">向 Github 添加 SSH 公匙 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+    
+        <section imagesd="comment">
+	<br>
+	<br>
+        <h1>Comments</h1>
+	<br>
+	<p></p>
+        <!-- Duoshuo Comment BEGIN -->
+	<div class="ds-thread"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"pikipity"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- Duoshuo Comment END -->
+       </section>
+       
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me -- pikipity</h1>
+  <ul id="post">
+  pikipity 的小博客，搜罗有意思的科技话题，展示自己的所知所学所感。<p>
+  
+  <img src="/images/myface.gif" width="100pt"><p>
+  
+  如果发现问题，请在文章后面留言指出或是直接点<a href="mailto:pikipityw@gmail.com">这里</a>发邮件给我指正，谢谢。<p>
+  
+  pikipity Blog: <a href="http://pikipity.github.io/">pikipity.github.io</a><p>
+  
+  pikipity Email: <a href="mailto:pikipityw@gmail.com">pikipityw.gmail.com</a><p>
+  
+  使用IE浏览器可能无法得到完美的浏览体验，建议更换为<a href="https://www.google.com/intl/en/chrome/browser/"> Chrome 浏览器</a><p>
+
+  </ul>
+</section>
+<section>
+  <h1>Category List</h1>
+    <span id="tag-cloud"><a href='/blog/categories/algorithm' style='font-size: 107.89473684210526%'>algorithm(5)</a> <a href='/blog/categories/arduino' style='font-size: 109.47368421052632%'>arduino(6)</a> <a href='/blog/categories/assembly' style='font-size: 111.05263157894737%'>assembly(7)</a> <a href='/blog/categories/c-plus-plus' style='font-size: 103.15789473684211%'>c++(2)</a> <a href='/blog/categories/cartoon' style='font-size: 111.05263157894737%'>cartoon(7)</a> <a href='/blog/categories/circuit' style='font-size: 104.73684210526315%'>circuit(3)</a> <a href='/blog/categories/game' style='font-size: 115.78947368421052%'>game(10)</a> <a href='/blog/categories/github' style='font-size: 104.73684210526315%'>github(3)</a> <a href='/blog/categories/google' style='font-size: 126.84210526315789%'>google(17)</a> <a href='/blog/categories/ios' style='font-size: 111.05263157894737%'>ios(7)</a> <a href='/blog/categories/life' style='font-size: 160.0%'>life(38)</a> <a href='/blog/categories/linux' style='font-size: 112.63157894736842%'>linux(8)</a> <a href='/blog/categories/mac' style='font-size: 125.26315789473685%'>mac(16)</a> <a href='/blog/categories/matlab' style='font-size: 125.26315789473685%'>matlab(16)</a> <a href='/blog/categories/movie' style='font-size: 106.3157894736842%'>movie(4)</a> <a href='/blog/categories/octopress' style='font-size: 104.73684210526315%'>octopress(3)</a> <a href='/blog/categories/others' style='font-size: 115.78947368421052%'>others(10)</a> <a href='/blog/categories/processing' style='font-size: 111.05263157894737%'>processing(7)</a> <a href='/blog/categories/python' style='font-size: 109.47368421052632%'>python(6)</a> <a href='/blog/categories/scm' style='font-size: 128.42105263157896%'>scm(18)</a> <a href='/blog/categories/technology' style='font-size: 126.84210526315789%'>technology(17)</a> </span>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week4.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week4)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week3.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week3)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week12summary.html">Algorithms: Design and Analysis Part 1 – Programming Questions (Week1 and Week 2 Summary)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week2.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week2)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week1.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week1)</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+<h1>Copyright Agreement</h1>
+<ul id="copyright">
+<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh"><img
+  alt="知识共享许可协议" style="border-width:0"
+  src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png"
+  /></a><br />本作品采用<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh">知识
+  共享署名-非商业性使用-相同方式共享 3.0 未本地化版本许可协议</a>进行
+  许可。<p>
+
+  如果您想转载本网站下的博文，请注明作者和出处。如果文章内没有特别说明，文章皆为原创，请将出处注明为那篇文章的网址；如果文章内特别指明为转载，请将出处注明为原始文章的网址。非常感谢。<p>
+</ul>
+</section><section>
+  <h1>Who are visiting</h1>
+  <ul id="for_fun">
+  <script type="text/javascript" src="http://jb.revolvermaps.com/2/1.js?i=1p1ij0eyux4&amp;s=190&amp;m=7&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+  </ul>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - pikipity -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

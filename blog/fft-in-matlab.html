@@ -1,0 +1,343 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>在 Matlab 中如何做傅里叶变换 - 折腾来折腾去</title>
+  <meta name="author" content="pikipity">
+
+  
+  <meta name="description" content="翻译自Matlab Geeks的 &ldquo;How to Do a Fourier Transform in Matlab&rdquo;。 傅里叶变换是一个在很多科学和工程领域都非常有用的数学工具。傅里叶变换在信号处理、物理、通信、地质学、天文学、光学等很多领域都有应用。 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://pikipity.github.io/blog/fft-in-matlab.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="折腾来折腾去" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38118079-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">折腾来折腾去</a></h1>
+  
+    <h2>pikipity的blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="pikipity.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/projects">Projects</a></li>
+       <li><a href="/aboutme">AboutMe</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">在 Matlab 中如何做傅里叶变换</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-03-03T11:09:00+08:00'><span class='date'>2013年03月03日</span> <span class='time'>11:09 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>翻译自<a href="http://matlabgeeks.com/">Matlab Geeks</a>的 <a href="http://matlabgeeks.com/tips-tutorials/how-to-do-a-fourier-transform-in-matlab/">&ldquo;How to Do a Fourier Transform in Matlab&rdquo;</a>。</p>
+
+<p>傅里叶变换是一个在很多科学和工程领域都非常有用的数学工具。傅里叶变换在信号处理、物理、通信、地质学、天文学、光学等很多领域都有应用。这个技术将一个函数或是一组数据从时域或是取样域变换到频域。这意味着，傅里叶变换可以展示一组时间序列数据的频率分量。离散傅里叶变换是将取样域的离散数据转化到频域。快速傅里叶变换是一种高效进行离散傅里叶变换的方法，并且存在很多种方法来完成快速傅里叶变换。Matlab 使用快速傅里叶变换来得到离散数据的频域分量</p>
+
+<p>下面是一个在 Matlab 中如何用快速傅里叶变换来分析音频文件的例子。这个例子中的文件是记录在 note A4 （怎么翻译？不会啊）上的音叉录音。这个展示了傅里叶变换如何进行和如何在 Matlab 中使用这项技术。</p>
+
+<pre><code>%Fourier Transform of Sound File
+
+%Load File
+file = 'C:\MATLAB7\work\tuning_fork_A4';
+[y,Fs,bits] = wavread(file);
+
+Nsamps = length(y);
+t = (1/Fs)*(1:Nsamps)          %Prepare time data for plot
+
+%Do Fourier Transform
+y_fft = abs(fft(y));            %Retain Magnitude
+y_fft = y_fft(1:Nsamps/2);      %Discard Half of Points
+f = Fs*(0:Nsamps/2-1)/Nsamps;   %Prepare freq data for plot
+
+%Plot Sound File in Time Domain
+figure
+plot(t, y)
+xlabel('Time (s)')
+ylabel('Amplitude')
+title('Tuning Fork A4 in Time Domain')
+
+%Plot Sound File in Frequency Domain
+figure
+plot(f, y_fft)
+xlim([0 1000])
+xlabel('Frequency (Hz)')
+ylabel('Amplitude')
+title('Frequency Response of Tuning Fork A4')
+</code></pre>
+
+<p>音频文件 <a href="http://matlabgeeks.com/wp-content/uploads/2010/12/tuning_fork_A4.wav">&ldquo;tuning_fork_A4&rdquo;</a> 用 wavread 函数打开，这个函数返回文件的采样数据 &ldquo;y"、采样频率 "Fs&rdquo; 和 A/D 转换器使用的比特数 &ldquo;bits"。注意，文件的扩展名 &rdquo;.wav" 不需要在使用函数的时候特别指定。就像下面将会展示的，采样频率在重建数据的时候非常重要。</p>
+
+<p>快速傅里叶变换用 &ldquo;fft&rdquo; 函数执行。Matlab 没有 &ldquo;dft&rdquo; 函数因为快速傅里叶变换实际上就是计算的离散傅里叶变换。尽管快速傅里叶变换的角度在很多应用中非常中央，但是只有快速傅里叶变换的大小被保存了。“fft” 函数允许指定一个快速傅里叶变换的输出点数，但是在这个例子中，我们使用与输入点数一样数目的输出点数。在下一行，快速傅里叶变换的一半数据被舍弃了。为了这个例子的目的所以这样做了，但是在很多应用中，整个波谱都会用到（译者注：我认为这里舍弃一半的点是因为FFT是关于采样频率的一半对称的，所以只要看一半就可以了）。接下来的一行，将会用于横坐标的数据通过使用采样频率和时遇采样数量准备好了。这一步对于确定包含在音频文件的实际频率是很重要的。</p>
+
+<p>接下来，原始数据在时域上被画了下来，快速傅里叶变换的数据也被画了出来。为了展示在峰值的频率上的更多详情，在这个画中，x轴被限定在了 [0,1000] 的范围中。注意，在大约440Hz处，频率响应有一个峰值，这个就是 &ldquo;note A4&rdquo; 的频率。在其他频率也有一些很小东西，这些估计是音叉了。对于其他乐器比如吉他，在频率响应的峰值的整数倍上都可以看见谐波。</p>
+
+<p><img src="http://matlabgeeks.com/wp-content/uploads/2010/12/tunforktime.jpg" width="550pt"></p>
+
+<p><img src="http://matlabgeeks.com/wp-content/uploads/2010/12/tunforkfreq.jpg" width="550pt"></p>
+
+<p>傅里叶变换在很多不同的领域都是很有用的工具。二维的傅里叶变换也常常用在图像上。尝试一下上面的代码，看看你能不能得到一样的结果。</p>
+
+<p>PS：有人问 FFT 结果的幅值问题。本质来说，FFT结果的幅值单位是什么并不重要，只要你在分析过程中，需要分析的两个幅值的单位是统一的就可以了。Matlab 的 FFT 最终结果的绝对值的确看上去并不好看（太大了），根据 Matlab 帮助文件，FFT 的最终结果还需要进行一下小调整再来使用比较好（上面的图未作调整），<a href="https://gist.github.com/pikipity/7669493">这里</a>有我根据 Matlab 帮助文档编写的一个计算 FFT 并绘制 FFT 结果幅值图的函数，具体如何使用，请看函数内的注释说明。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">pikipity</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2013-03-03T11:09:00+08:00'><span class='date'>2013年03月03日</span> <span class='time'>11:09 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/matlab/'>matlab</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/sending-message-with-sendmail.html" title="Previous Post: Matlab 小技巧：通过 sendmail 来发送信息">&laquo; Matlab 小技巧：通过 sendmail 来发送信息</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/wine.html" title="Next Post: 关于“红酒”的那点事">关于“红酒”的那点事 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+    
+        <section imagesd="comment">
+	<br>
+	<br>
+        <h1>Comments</h1>
+	<br>
+	<p></p>
+        <!-- Duoshuo Comment BEGIN -->
+	<div class="ds-thread"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"pikipity"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- Duoshuo Comment END -->
+       </section>
+       
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me -- pikipity</h1>
+  <ul id="post">
+  pikipity 的小博客，搜罗有意思的科技话题，展示自己的所知所学所感。<p>
+  
+  <img src="/images/myface.gif" width="100pt"><p>
+  
+  如果发现问题，请在文章后面留言指出或是直接点<a href="mailto:pikipityw@gmail.com">这里</a>发邮件给我指正，谢谢。<p>
+  
+  pikipity Blog: <a href="http://pikipity.github.io/">pikipity.github.io</a><p>
+  
+  pikipity Email: <a href="mailto:pikipityw@gmail.com">pikipityw.gmail.com</a><p>
+  
+  使用IE浏览器可能无法得到完美的浏览体验，建议更换为<a href="https://www.google.com/intl/en/chrome/browser/"> Chrome 浏览器</a><p>
+
+  </ul>
+</section>
+<section>
+  <h1>Category List</h1>
+    <span id="tag-cloud"><a href='/blog/categories/algorithm' style='font-size: 107.89473684210526%'>algorithm(5)</a> <a href='/blog/categories/arduino' style='font-size: 109.47368421052632%'>arduino(6)</a> <a href='/blog/categories/assembly' style='font-size: 111.05263157894737%'>assembly(7)</a> <a href='/blog/categories/c-plus-plus' style='font-size: 103.15789473684211%'>c++(2)</a> <a href='/blog/categories/cartoon' style='font-size: 111.05263157894737%'>cartoon(7)</a> <a href='/blog/categories/circuit' style='font-size: 104.73684210526315%'>circuit(3)</a> <a href='/blog/categories/game' style='font-size: 115.78947368421052%'>game(10)</a> <a href='/blog/categories/github' style='font-size: 104.73684210526315%'>github(3)</a> <a href='/blog/categories/google' style='font-size: 126.84210526315789%'>google(17)</a> <a href='/blog/categories/ios' style='font-size: 111.05263157894737%'>ios(7)</a> <a href='/blog/categories/life' style='font-size: 160.0%'>life(38)</a> <a href='/blog/categories/linux' style='font-size: 112.63157894736842%'>linux(8)</a> <a href='/blog/categories/mac' style='font-size: 125.26315789473685%'>mac(16)</a> <a href='/blog/categories/matlab' style='font-size: 125.26315789473685%'>matlab(16)</a> <a href='/blog/categories/movie' style='font-size: 106.3157894736842%'>movie(4)</a> <a href='/blog/categories/octopress' style='font-size: 104.73684210526315%'>octopress(3)</a> <a href='/blog/categories/others' style='font-size: 115.78947368421052%'>others(10)</a> <a href='/blog/categories/processing' style='font-size: 111.05263157894737%'>processing(7)</a> <a href='/blog/categories/python' style='font-size: 109.47368421052632%'>python(6)</a> <a href='/blog/categories/scm' style='font-size: 128.42105263157896%'>scm(18)</a> <a href='/blog/categories/technology' style='font-size: 126.84210526315789%'>technology(17)</a> </span>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week4.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week4)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week3.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week3)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week12summary.html">Algorithms: Design and Analysis Part 1 – Programming Questions (Week1 and Week 2 Summary)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week2.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week2)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week1.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week1)</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+<h1>Copyright Agreement</h1>
+<ul id="copyright">
+<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh"><img
+  alt="知识共享许可协议" style="border-width:0"
+  src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png"
+  /></a><br />本作品采用<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh">知识
+  共享署名-非商业性使用-相同方式共享 3.0 未本地化版本许可协议</a>进行
+  许可。<p>
+
+  如果您想转载本网站下的博文，请注明作者和出处。如果文章内没有特别说明，文章皆为原创，请将出处注明为那篇文章的网址；如果文章内特别指明为转载，请将出处注明为原始文章的网址。非常感谢。<p>
+</ul>
+</section><section>
+  <h1>Who are visiting</h1>
+  <ul id="for_fun">
+  <script type="text/javascript" src="http://jb.revolvermaps.com/2/1.js?i=1p1ij0eyux4&amp;s=190&amp;m=7&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+  </ul>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - pikipity -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

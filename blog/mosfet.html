@@ -1,0 +1,386 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>MOSFET分析总结 - 折腾来折腾去</title>
+  <meta name="author" content="pikipity">
+
+  
+  <meta name="description" content="在看了很多关于MOSFET介绍后发现这些资料都有一个共同的毛病，就是对于PMOS的介绍少的可怜，往往就是一句“和NMOS类似”就一带而过，但是NMOS和PMOS还是有很多不一样的，所以在这里对NMOS和PMOS的Large Signal Analysis和Small Signal &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://pikipity.github.io/blog/mosfet.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="折腾来折腾去" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38118079-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">折腾来折腾去</a></h1>
+  
+    <h2>pikipity的blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="pikipity.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/projects">Projects</a></li>
+       <li><a href="/aboutme">AboutMe</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">MOSFET分析总结</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-02-17T15:05:00+08:00'><span class='date'>2013年02月17日</span> <span class='time'>3:05 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>在看了很多关于<a href="http://en.wikipedia.org/wiki/MOSFET">MOSFET</a>介绍后发现这些资料都有一个共同的毛病，就是对于PMOS的介绍少的可怜，往往就是一句“和NMOS类似”就一带而过，但是NMOS和PMOS还是有很多不一样的，所以在这里对NMOS和PMOS的Large Signal Analysis和Small Signal Analysis做一下总结归纳。</p>
+
+<!--more-->
+
+
+<h2>Large Signal Analysis</h2>
+
+<p>对于MOSFET的分析，第一步就是通过Large Signal Analysis来确定MOSFET的工作范围，并通过不同工作范围下的电压电流特性来确定Small Signal Analysis下的current gain。MOSFET有三个工作范围：cut-off region, triode region and saturation region。当MOSFET作为开关使用的时候，要控制在triode region；当MOSFET作为放大器使用的时候，要控制在saturation region。</p>
+
+<h3>NOMS</h3>
+
+<p>n-channel MOSFET有下面5种符号表示法，分别表示不同种类的NMOS</p>
+
+<p><img src="/images/post/MOStype.jpg" alt="NMOS不同种类的符号" width="550pt"></p>
+
+<ol>
+<li><p>Cut-off region</p>
+
+<ul>
+<li>条件：$V_{GS}&lt;V_{TH}$</li>
+<li>电压电流特性：$I_D=0$</li>
+</ul>
+</li>
+<li><p>Triode region</p>
+
+<ul>
+<li>条件：$V_{TH}&lt;V_{GD}$</li>
+<li>电压电流特性：
+$$I_D=\mu_n C<em>{ox}\frac{W}{L}\left[\left(V</em>{GS}-V<em>{TH}\right)V</em>{DS}-\frac{1}{2}V_{DS}^2\right]$$</li>
+</ul>
+</li>
+<li><p>Saturation region</p>
+
+<ul>
+<li>条件：$$V<em>{TH}>V</em>{GD}$$</li>
+<li>电压电流特性：$$I_D=\frac{1}{2}\mu_n C<em>{ox}\frac{W}{L}\left(V</em>{GS}-V<em>{TH}\right)<sup>2</sup>\left(1+\lambda V</em>{DS}\right)$$</li>
+</ul>
+</li>
+<li><p>Transconductor: 就是Small Signal Analysis中的current gain，$$g_m=\frac{I_D}{V_{GS}}$$</p>
+
+<p>$$\begin{array}{rcl}
+g_m&amp;=&amp;\mu_n C<em>{ox}\frac{W}{L}\left(V</em>{GS}-V<em>{TH}\right)\
+g_m&amp;=&amp;\sqrt{2\mu_nC</em>{ox}\frac{W}{L}I_D}\
+g_m&amp;=&amp;\frac{2I_D}{V<em>{GS}-V</em>{TH}}
+\end{array}$$</p></li>
+<li><p>Output resistor：就是Small Signal Analysis中的$$r_0$$</p>
+
+<p>$$r_0\approx \frac{1}{\lambda I_D}$$</p></li>
+</ol>
+
+
+<h3>PMOS</h3>
+
+<p>p-channel MOSFET一样有5种符号表示法，分别代表不同种类的PMOS</p>
+
+<p><img src="/images/post/PMOStype.jpg" alt="PMOS不同种类的符号" width="550pt"></p>
+
+<ol>
+<li><p>Cut-off region</p>
+
+<ul>
+<li>条件：$$V<em>{GS}>V</em>{TH}$$</li>
+<li>电压电流特性：$$I_D=0$$</li>
+</ul>
+</li>
+<li><p>Triode region</p>
+
+<ul>
+<li>条件：$$V<em>{DG}>\left|V</em>{TH}\right|$$</li>
+<li>电压电流特性：$$I_D=\mu_p C<em>{ox}\frac{W}{L}\left[\left(V</em>{GS}-V<em>{TH}\right)V</em>{DS}-\frac{1}{2}V_{DS}^2\right]$$</li>
+</ul>
+</li>
+<li><p>Saturation region</p>
+
+<ul>
+<li>条件：$$V<em>{DG}&lt;\left| V</em>{TH}\right|$$</li>
+<li>电压电流特性：$$I_D=\frac{1}{2}\mu_pC<em>{ox}\frac{W}{L}\left(V</em>{GS}-V<em>{TH}\right)<sup>2</sup>\left(1-\lambda V</em>{DS}\right)$$</li>
+</ul>
+</li>
+<li>Transconductor $g_m$ and output resistance $r_0$: 和NMOS完全一样。</li>
+</ol>
+
+
+<h2>Small Signal Analysis</h2>
+
+<p>Small Signal Analysis是将MOSFET用等效电路代替，来分析AC信号的分析过程。在进行Small Signal Analysis的时候，要将DC电压源看做等效AC短路，将DC电流源看做等效AC断路。</p>
+
+<p>Small Signal Analysis最重要的就是明确MOSFET的等效电路，然后就是电路分析了。NMOS和PMOS的等效电路如图</p>
+
+<p><img src="/images/post/NMOSequivalentcircuit.jpg" alt="NMOS等效电路" width="450pt"></p>
+
+<p><img src="/images/post/PMOSequivalentcircuit.jpg" alt="PMOS等效电路" width="450pt"></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">pikipity</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2013-02-17T15:05:00+08:00'><span class='date'>2013年02月17日</span> <span class='time'>3:05 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/circuit/'>circuit</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/keil-and-proteus.html" title="Previous Post: Proteus和Keil的简单教程">&laquo; Proteus和Keil的简单教程</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/obfuscated-python.html" title="Next Post: 我不相信，这是Python么？！">我不相信，这是Python么？！ &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+    
+        <section imagesd="comment">
+	<br>
+	<br>
+        <h1>Comments</h1>
+	<br>
+	<p></p>
+        <!-- Duoshuo Comment BEGIN -->
+	<div class="ds-thread"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"pikipity"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- Duoshuo Comment END -->
+       </section>
+       
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me -- pikipity</h1>
+  <ul id="post">
+  pikipity 的小博客，搜罗有意思的科技话题，展示自己的所知所学所感。<p>
+  
+  <img src="/images/myface.gif" width="100pt"><p>
+  
+  如果发现问题，请在文章后面留言指出或是直接点<a href="mailto:pikipityw@gmail.com">这里</a>发邮件给我指正，谢谢。<p>
+  
+  pikipity Blog: <a href="http://pikipity.github.io/">pikipity.github.io</a><p>
+  
+  pikipity Email: <a href="mailto:pikipityw@gmail.com">pikipityw.gmail.com</a><p>
+  
+  使用IE浏览器可能无法得到完美的浏览体验，建议更换为<a href="https://www.google.com/intl/en/chrome/browser/"> Chrome 浏览器</a><p>
+
+  </ul>
+</section>
+<section>
+  <h1>Category List</h1>
+    <span id="tag-cloud"><a href='/blog/categories/algorithm' style='font-size: 107.89473684210526%'>algorithm(5)</a> <a href='/blog/categories/arduino' style='font-size: 109.47368421052632%'>arduino(6)</a> <a href='/blog/categories/assembly' style='font-size: 111.05263157894737%'>assembly(7)</a> <a href='/blog/categories/c-plus-plus' style='font-size: 103.15789473684211%'>c++(2)</a> <a href='/blog/categories/cartoon' style='font-size: 111.05263157894737%'>cartoon(7)</a> <a href='/blog/categories/circuit' style='font-size: 104.73684210526315%'>circuit(3)</a> <a href='/blog/categories/game' style='font-size: 115.78947368421052%'>game(10)</a> <a href='/blog/categories/github' style='font-size: 104.73684210526315%'>github(3)</a> <a href='/blog/categories/google' style='font-size: 126.84210526315789%'>google(17)</a> <a href='/blog/categories/ios' style='font-size: 111.05263157894737%'>ios(7)</a> <a href='/blog/categories/life' style='font-size: 160.0%'>life(38)</a> <a href='/blog/categories/linux' style='font-size: 112.63157894736842%'>linux(8)</a> <a href='/blog/categories/mac' style='font-size: 125.26315789473685%'>mac(16)</a> <a href='/blog/categories/matlab' style='font-size: 125.26315789473685%'>matlab(16)</a> <a href='/blog/categories/movie' style='font-size: 106.3157894736842%'>movie(4)</a> <a href='/blog/categories/octopress' style='font-size: 104.73684210526315%'>octopress(3)</a> <a href='/blog/categories/others' style='font-size: 115.78947368421052%'>others(10)</a> <a href='/blog/categories/processing' style='font-size: 111.05263157894737%'>processing(7)</a> <a href='/blog/categories/python' style='font-size: 109.47368421052632%'>python(6)</a> <a href='/blog/categories/scm' style='font-size: 128.42105263157896%'>scm(18)</a> <a href='/blog/categories/technology' style='font-size: 126.84210526315789%'>technology(17)</a> </span>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week4.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week4)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week3.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week3)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week12summary.html">Algorithms: Design and Analysis Part 1 – Programming Questions (Week1 and Week 2 Summary)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week2.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week2)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week1.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week1)</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+<h1>Copyright Agreement</h1>
+<ul id="copyright">
+<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh"><img
+  alt="知识共享许可协议" style="border-width:0"
+  src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png"
+  /></a><br />本作品采用<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh">知识
+  共享署名-非商业性使用-相同方式共享 3.0 未本地化版本许可协议</a>进行
+  许可。<p>
+
+  如果您想转载本网站下的博文，请注明作者和出处。如果文章内没有特别说明，文章皆为原创，请将出处注明为那篇文章的网址；如果文章内特别指明为转载，请将出处注明为原始文章的网址。非常感谢。<p>
+</ul>
+</section><section>
+  <h1>Who are visiting</h1>
+  <ul id="for_fun">
+  <script type="text/javascript" src="http://jb.revolvermaps.com/2/1.js?i=1p1ij0eyux4&amp;s=190&amp;m=7&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+  </ul>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - pikipity -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

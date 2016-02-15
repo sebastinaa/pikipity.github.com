@@ -1,0 +1,400 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Kramdown 语法文档翻译（一） - 折腾来折腾去</title>
+  <meta name="author" content="pikipity">
+
+  
+  <meta name="description" content="这是 《kramdown Syntax》的中文翻译系列，英文、中文都不好，翻译过来为大家方便查询与学习，原文在这里。 kramdown 语法是基于 Markdown 语法建立并加入了一些其他 Markdown 扩展版本（例如，Maruku、PHP Markdown Extra 和 Pandoc） &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://pikipity.github.io/blog/kramdown-syntax-chinese-1.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="折腾来折腾去" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38118079-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">折腾来折腾去</a></h1>
+  
+    <h2>pikipity的blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="pikipity.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/projects">Projects</a></li>
+       <li><a href="/aboutme">AboutMe</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Kramdown 语法文档翻译（一）</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-02-23T17:14:00+08:00'><span class='date'>2013年02月23日</span> <span class='time'>5:14 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>这是 《kramdown Syntax》的中文翻译系列，英文、中文都不好，翻译过来为大家方便查询与学习，原文在<a href="http://kramdown.rubyforge.org/syntax.html#attribute-list-definitions">这里</a>。</p>
+
+<p><img src="/images/post/overview_kramdown.png" width="550pt"></p>
+
+<p>kramdown 语法是基于 Markdown 语法建立并加入了一些其他 Markdown 扩展版本（例如，<a href="http://maruku.rubyforge.org/">Maruku</a>、<a href="http://michelf.com/projects/php-markdown/extra/">PHP Markdown Extra</a> 和 <a href="http://johnmacfarlane.net/pandoc/">Pandoc</a>）所具有的特性。不仅如此，它努力去提供一个包括明确规则的严格的语法，所以它不可能完全符合 Markdown 语法。尽管如此，大多数用 Markdown 编写的文档依然可以用 kramdown 很好地解析。下面所有和 Markdown 语法存在不一样的地方的 kranmdown 语法都用高亮指出了。</p>
+
+<p>下面是所有 kramdown 所支持元素的语法定义，同时还有告诉你 kramdown 通过一个可用的编译器转换之后你将得到什么样的文档。</p>
+
+<!--more-->
+
+
+<h2>源文件文本格式</h2>
+
+<p>一个 kramdown 文本可以支持多种编码格式，比如 ASCII、UTF-8 和 ISO-8859-1，并且会将他们转化为和你源文件同样的编码格式。</p>
+
+<p>文件包括两种元素：块级元素 (block-level elements) 和跨度级元素 (span-level elements)</p>
+
+<ul>
+<li>块级元素定义了内容的主体部分，比如，哪块文字是一个段落，哪块是一个列表，哪块是一个引用文字等等</li>
+<li>跨度级元素标记了一些小的文字块，比如，强调文字或是链接</li>
+</ul>
+
+
+<p>因此，跨度级元素只能出现在块级元素或是另一个跨度级元素之内。</p>
+
+<p>在对于块级元素的描述中，你会经常发现以“第一行”或是一个块级元素的某一行的“第一个字”作为参照的叫法。这种参照仅仅是相对于当前的缩进级别。因为有的块级元素中会出现一个新的缩进级别（例如，引用文字）。一个 kramdown 文件总是开始于以文本第一行为开始的默认缩进。</p>
+
+<h3>自动换行</h3>
+
+<p>一些轻量级的语法不能很好地在强制断行的换行环境中使用，例如，很多的 email 程序中。但是，kramdown 允许内容比如段落或是引用中使用强制断行的换行形式，比如行之间的中断。这个有时被称为“懒语法”，因为对于连续行来说，文本第一行的缩进或是行首标记并不需要。</p>
+
+<p>当下面条件满足时，块级元素的一行结束：</p>
+
+<ul>
+<li>一个空行，一条具有 EOB 标记的行，一条空的内联属性列表或是文本结束</li>
+<li>或是 HTML 块</li>
+</ul>
+
+
+<p>在 krandom 的文件中支持自动换行，但是还是有一些块级元素不支持强制断行：</p>
+
+<ul>
+<li>标题: 因为标题一般只有一行，所以在大多数情况下没有问题。如果标题一行太长，你需要用 HTML 语法代替</li>
+<li>独立的程序代码块：一个独立代码块的分界线不支持强制断行，因为在分界线之间的东西都被当做独立代码块的内容。</li>
+<li>定义：每一个定义项必须出现在一个单独的行里面。强制断行将会引入一个新的定义项。</li>
+<li>表格：因为 kramdown 表格的每一行代表表格的一行或是两个表格之间的分割，所以表格不可能支持强制断行</li>
+</ul>
+
+
+<p><strong>注意</strong>：并不是建议使用懒语法来书写 kramdown 文档。因为自动换行所提供的 kramdown 语法的灵活性会影响易读性，所以不应该使用。</p>
+
+<h3>Tab 的使用</h3>
+
+<p>krandown 定义 tab 是四个空格，当在在列表的行首空格使用 tab 的时候，这点非常重要。并且，tab 只可以在行首使用，不可以用来代替空格，否则结果不可预测。</p>
+
+<h3>自动和手动逃逸</h3>
+
+<p>根据输出的形式，有一些常用字符需要特别对待，比如，当将一个 kramdowmn 文档转化为 HTML 的时候，需要特别注意“&lt;”、“>”和“&amp;”字符。为了放别对这些特殊字符的处理，它们会正确地自动根据输出方式逃逸。</p>
+
+<p>比如，你可以直接在 kramdown 文档中使用“&lt;”、“>”和“&amp;”字符，而不必去考虑它们在 HTML 中的使用。并且，如果你以 HTML 语言的形式或是 HTML 标签的形式使用使用这些字符的话，结果一样是正确的。</p>
+
+<p>因为 kramdown 也是用了一些字符去标记文本，所以这里有一种方法去实现这种字符的逃逸，这样它们就是自己本来的意思了。这是使用反斜杠逃逸。比如，你可以类似这样来使用单引号：</p>
+
+<pre><code>This \`is not a code\` span!
+</code></pre>
+
+<p>下面是一个包含全部可以逃逸的字符的列表</p>
+
+<pre><code>\         反斜线
+.         点号
+*         星号
+_         下划线
++         加号
+-         减号
+=         等号
+`         撇号
+()[]{}&lt;&gt;  小、中、大括号、单书名号
+#         井号
+!         感叹号
+&lt;&lt;        双小于
+&gt;&gt;        双大于
+:         冒号
+|         单竖杠
+"         双引号
+'         单引号
+$         钱的符号
+</code></pre>
+
+<h3>块边界</h3>
+
+<p>一些块级元素必须以块边界来开始或是结束。这里有两种情况来使块边界发挥作用：</p>
+
+<ul>
+<li>如果块级元素必须以块边界来开始，那么它必须是一个空行，一个 EOB 标记，或是一个断掉的 IAL 或者它就是第一个元素</li>
+<li>如果块级元素必须以块边界结束，那么它必须跟一个空行，一个 EOB 标记，或是一个断掉的 IAL 或者它就是最后元素</li>
+</ul>
+
+
+<h2>结构元素所有的结构元素都是块级元素，并且它们用来构成整个内容。它们可以标记很多文本，比如一个简单的段落，一段引用或是一个列表等</h2>
+
+<h3>空行</h3>
+
+<p>在 kramdown 中，任何一行只包含空字符例如空格或是 tab 就被认为是一个空行。一个或是多个连续的空行被认为是一个空行。空行被用来分割块级元素和其他部分，所以没有语义上的意思。但是，这里还是有一些空行有寓意的情况：+ 在标题使用时+ 在代码块中使用时
++ 在列表中使用时
++ 在数学快中使用时
++ 在用来做一些元素的块边界的时候</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">pikipity</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2013-02-23T17:14:00+08:00'><span class='date'>2013年02月23日</span> <span class='time'>5:14 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/octopress/'>octopress</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/octopress-and-github.html" title="Previous Post: 用Octopress 和 Github 建立自己的 Blog">&laquo; 用Octopress 和 Github 建立自己的 Blog</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/fullmetal-alchemist-bgm.html" title="Next Post: 骨头社出品，必属精品 -- 燃到爆的《钢炼》BGM">骨头社出品，必属精品 -- 燃到爆的《钢炼》BGM &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+    
+        <section imagesd="comment">
+	<br>
+	<br>
+        <h1>Comments</h1>
+	<br>
+	<p></p>
+        <!-- Duoshuo Comment BEGIN -->
+	<div class="ds-thread"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"pikipity"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- Duoshuo Comment END -->
+       </section>
+       
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me -- pikipity</h1>
+  <ul id="post">
+  pikipity 的小博客，搜罗有意思的科技话题，展示自己的所知所学所感。<p>
+  
+  <img src="/images/myface.gif" width="100pt"><p>
+  
+  如果发现问题，请在文章后面留言指出或是直接点<a href="mailto:pikipityw@gmail.com">这里</a>发邮件给我指正，谢谢。<p>
+  
+  pikipity Blog: <a href="http://pikipity.github.io/">pikipity.github.io</a><p>
+  
+  pikipity Email: <a href="mailto:pikipityw@gmail.com">pikipityw.gmail.com</a><p>
+  
+  使用IE浏览器可能无法得到完美的浏览体验，建议更换为<a href="https://www.google.com/intl/en/chrome/browser/"> Chrome 浏览器</a><p>
+
+  </ul>
+</section>
+<section>
+  <h1>Category List</h1>
+    <span id="tag-cloud"><a href='/blog/categories/algorithm' style='font-size: 107.89473684210526%'>algorithm(5)</a> <a href='/blog/categories/arduino' style='font-size: 109.47368421052632%'>arduino(6)</a> <a href='/blog/categories/assembly' style='font-size: 111.05263157894737%'>assembly(7)</a> <a href='/blog/categories/c-plus-plus' style='font-size: 103.15789473684211%'>c++(2)</a> <a href='/blog/categories/cartoon' style='font-size: 111.05263157894737%'>cartoon(7)</a> <a href='/blog/categories/circuit' style='font-size: 104.73684210526315%'>circuit(3)</a> <a href='/blog/categories/game' style='font-size: 115.78947368421052%'>game(10)</a> <a href='/blog/categories/github' style='font-size: 104.73684210526315%'>github(3)</a> <a href='/blog/categories/google' style='font-size: 126.84210526315789%'>google(17)</a> <a href='/blog/categories/ios' style='font-size: 111.05263157894737%'>ios(7)</a> <a href='/blog/categories/life' style='font-size: 160.0%'>life(38)</a> <a href='/blog/categories/linux' style='font-size: 112.63157894736842%'>linux(8)</a> <a href='/blog/categories/mac' style='font-size: 125.26315789473685%'>mac(16)</a> <a href='/blog/categories/matlab' style='font-size: 125.26315789473685%'>matlab(16)</a> <a href='/blog/categories/movie' style='font-size: 106.3157894736842%'>movie(4)</a> <a href='/blog/categories/octopress' style='font-size: 104.73684210526315%'>octopress(3)</a> <a href='/blog/categories/others' style='font-size: 115.78947368421052%'>others(10)</a> <a href='/blog/categories/processing' style='font-size: 111.05263157894737%'>processing(7)</a> <a href='/blog/categories/python' style='font-size: 109.47368421052632%'>python(6)</a> <a href='/blog/categories/scm' style='font-size: 128.42105263157896%'>scm(18)</a> <a href='/blog/categories/technology' style='font-size: 126.84210526315789%'>technology(17)</a> </span>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week4.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week4)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week3.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week3)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week12summary.html">Algorithms: Design and Analysis Part 1 – Programming Questions (Week1 and Week 2 Summary)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week2.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week2)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week1.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week1)</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+<h1>Copyright Agreement</h1>
+<ul id="copyright">
+<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh"><img
+  alt="知识共享许可协议" style="border-width:0"
+  src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png"
+  /></a><br />本作品采用<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh">知识
+  共享署名-非商业性使用-相同方式共享 3.0 未本地化版本许可协议</a>进行
+  许可。<p>
+
+  如果您想转载本网站下的博文，请注明作者和出处。如果文章内没有特别说明，文章皆为原创，请将出处注明为那篇文章的网址；如果文章内特别指明为转载，请将出处注明为原始文章的网址。非常感谢。<p>
+</ul>
+</section><section>
+  <h1>Who are visiting</h1>
+  <ul id="for_fun">
+  <script type="text/javascript" src="http://jb.revolvermaps.com/2/1.js?i=1p1ij0eyux4&amp;s=190&amp;m=7&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+  </ul>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - pikipity -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

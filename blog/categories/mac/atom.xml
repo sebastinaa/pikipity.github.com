@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Categories: Mac | 折腾来折腾去]]></title>
+  <link href="http://pikipity.github.io/blog/categories/mac/atom.xml" rel="self"/>
+  <link href="http://pikipity.github.io/"/>
+  <updated>2016-02-15T21:04:31+08:00</updated>
+  <id>http://pikipity.github.io/</id>
+  <author>
+    <name><![CDATA[pikipity]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[40行代码大赛 -- Cocoa China]]></title>
+    <link href="http://pikipity.github.io/blog/40-line-code-award.html"/>
+    <updated>2014-01-03T09:15:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/40-line-code-award</id>
+    <content type="html"><![CDATA[<p>在2013年的最后四天里，<a href="http://www.cocoachina.com/bbs/thread.php?fid=6&amp;page=1">Cocoa China 论坛</a>举行了一个<a href="http://www.cocoachina.com/bbs/read.php?tid=175903&amp;page=1">“40行代码大赛”</a>，看谁可以使用不超过40行的代码就写出提现 Geek 精神的原创程序，语言不限，objective-C 最好。</p>
+
+<p>虽然已经结束了，但是参赛作品的质量都不容小觑，很值得学习。下面是我看到的很有创意的几个作品：</p>
+
+<ol>
+<li><a href="http://www.cocoachina.com/bbs/read.php?tid=177830">用shader实现的生命游戏</a></li>
+<li><a href="http://www.cocoachina.com/bbs/read.php?tid=175964">用二分法查找算法+递归对数组快速匹配单词（外加模糊查找，不连续关键词查找）</a></li>
+<li><a href="http://www.cocoachina.com/bbs/read.php?tid=177832">代码片段：不加载图片，实现世界地图的显示和旋转</a></li>
+<li><a href="http://www.cocoachina.com/bbs/read.php?tid=177219">一键打包</a></li>
+<li><a href="http://www.cocoachina.com/bbs/read.php?tid=176148">用十种语言说“我爱你” (IOS7)</a></li>
+<li><a href="http://www.cocoachina.com/bbs/read.php?tid=177222&amp;fpage=2">不使用一张图片，实现漂亮的霓虹灯特效</a></li>
+<li><a href="http://www.cocoachina.com/bbs/read.php?tid=177183&amp;fpage=2">输入的时候自动对银行账号进行格式化</a></li>
+<li><a href="http://www.cocoachina.com/bbs/read.php?tid=176160&amp;fpage=2">根据分辨率缩放并旋转图片。最重要的是，消除图片白边</a></li>
+<li><a href="http://www.cocoachina.com/bbs/read.php?tid=176055&amp;fpage=2">一弧形展示代碼片段</a></li>
+<li><a href="http://www.cocoachina.com/bbs/read.php?tid=176052&amp;fpage=3">圣诞动画</a></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[你好，zsh]]></title>
+    <link href="http://pikipity.github.io/blog/introduction-to-zsh.html"/>
+    <updated>2013-12-25T17:43:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/introduction-to-zsh</id>
+    <content type="html"><![CDATA[<p><img src="https://lh5.googleusercontent.com/-0o9D53zyzsc/Urqxkk8sX8I/AAAAAAAABaM/NUvbaYHXQWA/s337/oh-my-zsh-logo.png" alt="on-my-zsh" /></p>
+
+<p>随着直接使用 shell 的次数增多，越来越感觉 bash shell 各种意义上的不方便：没有自动补全，输入错误指令不能自动校正等等。于是开始寻找一个用起来比较方便快捷的新 shell。在寻找的过程中发现了 zsh。</p>
+
+<p>我没有尝试原版的 zsh（官方网站在<a href="http://www.zsh.org/">这里</a>）。而是直接根据大多数人的推荐，安装了 oh-my-zsh（Github 项目主页在<a href="https://github.com/robbyrussell/oh-my-zsh.git">这里</a>）。用过之后，我就再也不想碰 bash 了。如果你仅仅想知道它和 bash 相比，有什么好处，请移步到<a href="http://www.quora.com/What-are-the-advantages-and-disadvantages-of-using-zsh-instead-of-bash-or-other-shells">这里</a>看看吧，大家说好的东西才是真的好 :-D 。这里我只说说在我眼中 zsh 的好处：</p>
+
+<ol>
+<li>bash 能做的它都能做，而且在 bash 里怎么做，在 zsh 里就怎么做，可以说学习代价降到了最低。</li>
+<li><p>超级好用的自动补全，命令及命令参数不再需要打完整了，打一半，然后 Tab 键，所有可选信息就展示出来，用 Tab 键选择，然后回车输入就可以了，简直方便快捷。尤其是输入路径的时候，再也不用 ls 去看路径的内容了，cd + Tab 搞定一切，省心省力。</p>
+
+<p><img src="https://lh4.googleusercontent.com/-9L_9-Fr5U4o/UrqxkmsrcXI/AAAAAAAABaI/BEJ-MS1QJUk/s599/%25E5%25B1%258F%25E5%25B9%2595%25E5%25BF%25AB%25E7%2585%25A7%25202013-12-25%2520%25E4%25B8%258B%25E5%258D%25886.05.50.png" alt="自动补全" /></p></li>
+<li><p>自动纠错功能非常好用，再也不用每条命令都明明白白的记住了，记个大概，剩下的交给 zsh 自动纠错了。</p>
+
+<p><img src="https://lh5.googleusercontent.com/-wqtEVfxhZNg/UrqxlPka2cI/AAAAAAAABaY/3hKt9aOAR5Y/s353/%25E5%25B1%258F%25E5%25B9%2595%25E5%25BF%25AB%25E7%2585%25A7%25202013-12-25%2520%25E4%25B8%258B%25E5%258D%25886.09.05.png" alt="自动纠错" /></p></li>
+<li><p>oh-my-zsh 提供多种多样的主题，无论怎么样，总有一款适合你。如果全都不合适，也可以自己定制。主题（主题库在<a href="https://github.com/robbyrussell/oh-my-zsh/wiki/themes">这里</a>）也不是简简单单改改颜色那么简单欧！！主题配合 oh-my-zsh 自带的 git 插件一起使用，让 git 的使用更加方便快捷！！</p>
+
+<p><img src="https://lh3.googleusercontent.com/-jyeEtbcDv8k/Urqxkj5eWUI/AAAAAAAABaQ/-CxipTrdNuo/s538/theme-oh-my-zsh.png" alt="一种 oh-my-zsh 的主题" /></p></li>
+</ol>
+
+
+<p>在 Mac 下，推荐将 zsh 与 iTerm（在<a href="http://iterm.sourceforge.net/index.shtml">这里</a>下载）配合使用，增加更多的可定制功能，尤其是输入快捷键，将常用指令与快捷键结合之后，现在完全不用记命令了 ~\(≧▽≦)/~</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[自制 Keynote IR Remote Control]]></title>
+    <link href="http://pikipity.github.io/blog/diy-apple-remote-controller.html"/>
+    <updated>2013-11-28T18:47:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/diy-apple-remote-controller</id>
+    <content type="html"><![CDATA[<p><img src="https://lh6.googleusercontent.com/-02eVPhz8fdE/UpcgK1x33qI/AAAAAAAABY0/SDuT9V15AK0/s400/MC377.jpeg" alt="Apple IR Remote Control" /></p>
+
+<p>上图就是 Apple IR Remote Control，利用红外线对 iPod, Apple TV 等苹果设备进行视频播放和音乐播放等控制。对于 Macbook，可以控制 iTunes 的音乐视频播放和 Keynote 的幻灯片演示。官网价钱是港币 148 一个，如果它是蓝牙控制，这个价钱也就没什么了，但是为了一个红外线控制器，这个价钱就不是太值了。但是在使用我的 Macbook Pro 上的 Keynote 做演讲的时候，每次切换幻灯片都要跑到键盘前操作还是太麻烦了，学校网络的问题，iPhone 上的 Keynote Remote 应用不能保证百分之百的和电脑连接上，于是准备自己做一个。</p>
+
+<p>因为手头有一个 Arduino，除了平时根据自己喜好做点小东西以外，放着也没什么大用处，所以准备用它来制作这个红外线遥控器。但是制作过程中遇到问题，由于自己买的红色 LED 灯质量不行，发射的信号始终无法被 Macbook 的红外线探测器检查到，于是放弃。</p>
+
+<p>既然遥控器不容易做，那就使用现成的遥控器，用 Arduino 做一个红外线接收器好了。于是就有了这个项目。使用 下图的红外线遥控器（在<a href="http://item.taobao.com/item.htm?spm=a1z10.3.w17-8299872990.33.35xCfn&amp;id=17278512079&amp;">“淘宝”</a>上买的，5 块钱一个）进行控制。Arduino 作为接收器，接收红外线信号，并解码，将解码结果通过 USB 传送给电脑，电脑上的客户端再根据解码结果，模拟电脑按键来实现对 Keynote 的控制。</p>
+
+<p><img src="https://lh3.googleusercontent.com/-FpgQqEiGrEg/UpcIy8HMWSI/AAAAAAAABYU/Zvznasr8fTM/s640/%25E7%2585%25A7%25E7%2589%2587%252013-11-28%2520%25E4%25B8%258B%25E5%258D%25884%252042%252056.jpg" alt="5 块钱一个的红外线遥控器" /></p>
+
+<p>电路图在下面，超级简单，我使用的是 VS1838B 作为红外线传感器（一样是在<a href="http://item.taobao.com/item.htm?spm=a1z10.3.w17-8299872990.9.VOESMp&amp;id=14835734724&amp;">“淘宝”</a>买的，2 块钱一个）。</p>
+
+<p><img src="https://lh6.googleusercontent.com/-yB0nK0QzIyk/UpcpKN_er6I/AAAAAAAABZE/xTzkLpMezio/s640/apple_controller_bb.png" alt="电路图" /></p>
+
+<p>客户端我使用 Processing 编写，Arduino 和 Processing 的程序可以到<a href="https://github.com/pikipity/apple_controller.git">我的 Github </a>下载。下面是遥控器与键盘实际按键的对应关系：</p>
+
+<table>
+<thead>
+<tr>
+<th style="text-align:center;">遥控器按键</th>
+<th style="text-align:center;">键盘按键</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">后推|&lt;&lt;</td>
+<td style="text-align:center;">方向键上</td>
+</tr>
+<tr>
+<td style="text-align:center;">前进>>|</td>
+<td style="text-align:center;">方向键下</td>
+</tr>
+<tr>
+<td style="text-align:center;">音量 +</td>
+<td style="text-align:center;">方向键右</td>
+</tr>
+<tr>
+<td style="text-align:center;">音量 -</td>
+<td style="text-align:center;">方向键左</td>
+</tr>
+<tr>
+<td style="text-align:center;">关闭键</td>
+<td style="text-align:center;">开启和关闭选择幻灯片</td>
+</tr>
+<tr>
+<td style="text-align:center;">数字键 0~9</td>
+<td style="text-align:center;">数字键 0~9</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>实际焊接电路的时候，使用了两个 VS1838B，保证信号接收的覆盖范围。现在唯一的问题就是，控制距离很近，这毕竟受到那个遥控器的限制，没有办法。</p>
+
+<p><img src="https://lh5.googleusercontent.com/-03mn3hE1oG0/UpcIywneYJI/AAAAAAAABYY/sz1hunZUDr8/s640/%25E7%2585%25A7%25E7%2589%2587%252013-11-28%2520%25E4%25B8%258B%25E5%258D%25884%252042%252015.jpg" alt="实际电路正面" /></p>
+
+<p><img src="https://lh3.googleusercontent.com/-RWONifCIKj0/UpcIz7nYDOI/AAAAAAAABYg/KgFqGnWKyYc/s640/%25E7%2585%25A7%25E7%2589%2587%252013-11-28%2520%25E4%25B8%258B%25E5%258D%25884%252044%252019.jpg" alt="实际电路背面" /></p>
+
+<p><img src="https://lh6.googleusercontent.com/-KPxIQL4uRjg/UpcIy3xTkvI/AAAAAAAABYc/ihL8Wa_p1uo/s640/%25E7%2585%25A7%25E7%2589%2587%252013-11-28%2520%25E4%25B8%258B%25E5%258D%25884%252043%252040.jpg" alt="电路和 Arduino 连接以后" /></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[让我们一起来征服世界]]></title>
+    <link href="http://pikipity.github.io/blog/introduction-to-terraria.html"/>
+    <updated>2013-09-16T20:14:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/introduction-to-terraria</id>
+    <content type="html"><![CDATA[<p><img src="https://lh3.googleusercontent.com/-xBEV9XTEUq8/UjcIJFQTLzI/AAAAAAAABL0/MzrQc4KU-oU/s364/Logo.png" alt="Terraria" /></p>
+
+<p>今天推荐一款沙盒游戏 &ndash; <a href="http://www.terraria.org/">《Terraria》</a>。“沙盒游戏”是模拟游戏的一个分支，玩家在一个大世界下自由行动，通常没有明确的目标，玩家发挥想象自由创造，例如<a href="http://www.ali213.net/zt/spore/">《孢子》</a>、<a href="http://zh.wikipedia.org/wiki/%E4%BF%A0%E7%9B%9C%E7%8D%B5%E8%BB%8A%E6%89%8B%E7%B3%BB%E5%88%97">《侠盗猎车手》</a>、<a href="https://minecraft.net/">《minecraft》</a>都属于沙盒游戏，其中<a href="https://minecraft.net/">《minecraft》</a>的超高的自由度现在应该是无人不知无人不晓了。</p>
+
+<p>如果你知道 <a href="https://minecraft.net/">《minecraft》</a> 的话，<a href="http://www.terraria.org/">《Terraria》</a> 可以理解为 2D 的<a href="https://minecraft.net/">《minecraft》</a>，但是绝对不是等同，从资源到怪物都完全不同，故事背景就更是一点关系都没有了，唯一相同的就是极高的自由度和挖矿的重要性。如果你连 <a href="https://minecraft.net/">《minecraft》</a> 都不知道的话，看一看下面这个视频，如果你觉得发挥想象挖掘世界、创造物品挺有趣的话，那么我就及其推荐你玩一玩这款游戏，你可以充分享受自己发现世界、创造文明的乐趣。当然和 <a href="https://minecraft.net/">《minecraft》</a> 一样，可以联机和小伙伴们一起进行世界探索。</p>
+
+<p><embed height="452" width="544" quality="high" allowfullscreen="true" type="application/x-shockwave-flash" src="http://static.hdslb.com/miniloader.swf" flashvars="aid=127992&page=1" pluginspage="http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash"></p>
+
+<p>缺点也和 <a href="https://minecraft.net/">《minecraft》</a> 一样，新人入手比较困难，由于完全没有新手指南（NPC 新手向导除了会告诉你配方外还会告诉你一些小贴士，但是等你听完他的小贴士早就黑天了，然后僵尸来了，然后。。。就没然后了），新手可以到<a href="http://www.mcbbs.net/thread-4917-1-1.html">这里</a>看一看，至少可以帮助平安度过第一夜，然后就是你自由的探索了，等你遇到瓶颈的时候，可以到<a href="http://tieba.baidu.com/f?kw=terraria">贴吧</a>看一看，会很有启发的。当你将原版玩到腻了，就可以尝试打各种各样的 MOD，换种玩法继续玩。总之，这是一款一旦入手就不想放手的游戏。</p>
+
+<ul>
+<li>Windows 用户<a href="http://tieba.baidu.com/p/2591750651">这里</a>下载（注意看安装说明，需要安装一些其他的东西）。</li>
+<li>Windows 上的有钱人可以到 <a href="http://store.steampowered.com/app/105600/">Steam</a> 上购买，联机什么的就不是问题了。</li>
+<li>Mac OS X 用户<a href="http://pan.baidu.com/share/link?shareid=1013474534&amp;uk=4080321956">这里</a>下载（原始的 dmg 找不到了就把自己的 app 压缩了一下传上来了，可能连自己的人物和世界一起打包了，将就着用吧，无法联机，需要联机的请用 <a href="http://pikipity.github.io/blog/wine.html">Wine</a>）。</li>
+<li>IOS 用户可以到<a href="https://itunes.apple.com/us/app/id640364616?mt=8">这里</a>下载</li>
+<li>Andriod 用户可以到<a href="https://play.google.com/store/apps/details?id=com.and.games505.Terraria">这里</a>下载</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Youtube-dl GUI]]></title>
+    <link href="http://pikipity.github.io/blog/youtube-dl-gui.html"/>
+    <updated>2013-08-25T15:47:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/youtube-dl-gui</id>
+    <content type="html"><![CDATA[<p>经常在网上看到一些很好的视频想要保存下来，如果保存成书签的形式，每次打开都要重新加载一遍实在是太麻烦了，最好的当然是下载到电脑上，虽然自己找了许多在 Mac OS X 上下载视频的软件，但是其中的广告或是收费升级通知让我烦不胜烦。最后找到了这个软件 &ndash; <a href="http://rg3.github.io/youtube-dl/">youtube-dl</a>。用 Python 编写，本来是专门用于下载 YouTube 上的视频的，但是现在支持大部分的视频网站，经测试优酷和土豆都可以正常下载，唯一的缺点就是没有一个 GUI，每次都要打开终端输入一行代码，而且像我这种记忆渣每次都要查一遍它的参数列表，实在麻烦，但是又不忍放弃，于是决定自己为其写一个 GUI。</p>
+
+<p><a href="http://pikipity.github.io/youtube-dl-GUI/">这里是此 youtube-dl GUI 的项目主页</a>，安装及使用方法都可以找到。下面是软件截图，因为仅仅是为了使用方便，所以看上去和简陋，但是功能还是齐全的，下一步希望可以抽时间把 &ldquo;Options&rdquo; 做的更人性化一点。</p>
+
+<p><img src="https://lh3.googleusercontent.com/-rkDZUJACtqo/UhmniKahR7I/AAAAAAAABHM/iwtIZ9ZXXuo/s640/%25E5%25B1%258F%25E5%25B9%2595%25E5%25BF%25AB%25E7%2585%25A7%25202013-08-25%2520%25E4%25B8%258B%25E5%258D%25882.34.08.png" alt="下载中" /></p>
+
+<p><img src="https://lh3.googleusercontent.com/-ZNcrGbCx18M/UhmniTT8BYI/AAAAAAAABHQ/ig4RsA_k8OM/s640/%25E5%25B1%258F%25E5%25B9%2595%25E5%25BF%25AB%25E7%2585%25A7%25202013-08-25%2520%25E4%25B8%258B%25E5%258D%25882.34.31.png" alt="选择 Options" /></p>
+]]></content>
+  </entry>
+  
+</feed>

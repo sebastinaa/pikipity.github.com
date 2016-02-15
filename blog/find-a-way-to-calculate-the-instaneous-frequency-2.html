@@ -1,0 +1,374 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>寻找一种有效估算瞬时频率的方法（EMD 求法讨论 续） - 折腾来折腾去</title>
+  <meta name="author" content="pikipity">
+
+  
+  <meta name="description" content="上接寻找一种有效估算瞬时频率的方法。 如何判断 $$h_k(t)$$ 是 IMF 黄锷院士提供了两种判断方法： 根据 IMF 的定义： 在整个信号上，局部极值（包括局部极大值和局部极小值）的个数和零点的个数必须等于或最多只能相差一个。
+在任意一点， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://pikipity.github.io/blog/find-a-way-to-calculate-the-instaneous-frequency-2.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="折腾来折腾去" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38118079-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">折腾来折腾去</a></h1>
+  
+    <h2>pikipity的blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="pikipity.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/projects">Projects</a></li>
+       <li><a href="/aboutme">AboutMe</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">寻找一种有效估算瞬时频率的方法（EMD 求法讨论 续）</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-08-14T03:19:00+08:00'><span class='date'>2013年08月14日</span> <span class='time'>3:19 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>上接<a href="http://pikipity.github.io/blog/find-a-way-to-calculate-the-instaneous-frequency.html">寻找一种有效估算瞬时频率的方法</a>。</p>
+
+<h3>如何判断 $$h_k(t)$$ 是 IMF</h3>
+
+<p>黄锷院士提供了两种判断方法：</p>
+
+<ol>
+<li><p>根据 IMF 的定义：</p>
+
+<ol>
+<li>在整个信号上，局部极值（包括局部极大值和局部极小值）的个数和零点的个数必须等于或最多只能相差一个。</li>
+<li>在任意一点，局部极大值所形成的上包络线和局部极小值所形成的下包络线的平均值等于0</li>
+</ol>
+
+
+<p>在这个定义中涉及局部极值问题，也就是我们将讨论的第三个问题，所以我们这里暂且假定我们可以通过一种方法找到局部极值，那么条件的第一点就可以解决了，但是这里要注意，条件的第一点并不能等价于“所有局部极大值都大于0并且所有极小值都小于0”，尽管通过论文中的论述会很容易认为黄锷院士的本意是这样，但是仅仅根据这条论述，会出现很多特殊情况，下面举几个特殊情况的例子，如图</p>
+
+<p><img src="https://lh6.googleusercontent.com/-7HQOCNGo3cE/UgqLD89QF7I/AAAAAAAABCs/8flUGmA5sT4/s559/1.png" alt="一个局部极小值在零以上或是一个局部极大值在零以下" /></p>
+
+<p><img src="https://lh5.googleusercontent.com/-mCwygyF6gUY/UgqLD0CDH5I/AAAAAAAABC0/g5aOdQH99T4/s559/2.png" alt="刚好一个局部极值是零点" /></p>
+
+<p><img src="https://lh5.googleusercontent.com/-6cLysf5vzQA/UgqLDzAvxpI/AAAAAAAABCo/wDF11u8mCGM/s559/3.png" alt="刚好两个局部极值是零点" /></p>
+
+<p>在 G. Rilling 编写的 MATLAB 程序中，其使用的是这种方法判断的 IMF，有的时候的确会出现上面列出的三种特殊情况，但是既然是按照定义来的，那么应该也没有什么问题，况且对结果也没有大的影响。</p>
+
+<p>对于条件的第二点则比较困难，即使我们通过三次样条差值找到了包络线，但是我们能够求的也只是插值之后线上的取样点，所以我们只能通过取样点估算上下包络线的平均值，所以这里写为“约等于”0更为合适。</p></li>
+<li><p>黄锷原始在论文中提到另外一种更为简单的判断方式 &ndash; 计算 SD 值：</p>
+
+<p>$$SD_k=\frac{\sum<em>{t=0}^T \left| h</em>{k-1}(t)-h_k(t) \right|^2}{\sum<em>{t=0}^T h</em>{k-1}^2 (t)}$$</p>
+
+<p>然后预设一个范围，如果 SD 在此范围内，那么就是 IMF，否则不是。同时，黄锷院士指出 SD 值一般在0.2~0.3之间，但是我看到的大多数程序都是以0.3为界进行判断，小于0.3就是 IMF，大于0.3就不是。Github 上的那个程序就是如此判断的，这样判断的好处是简化了计算过程，使判断变得极为简单，坏处也是显而易见的，SD 的阀值设置的不同导致最终结果就不一样，这和 Wavelet Transform 中选取小波种类类似，阀值的选择反而增大了分析的难度。简化计算难度，增大阀值选择难度，我认为不可取，所以如果能找到一种很好的办法选择出恰当的局部极值点，我认为还是第一种判断方法比较好。</p></li>
+</ol>
+
+
+<h3>局部极值点与零点的判断</h3>
+
+<p>由于将来计算瞬时频率需要用到零点，所以这里我又加入了零点的判断。局部极值点与零点判断困难是因为我们需要通过有限的原始信号采样点来估计出原始信号，由于采样带来的信息缺失导致困难很大，但是因为我们不需要估计出整个信号，我们只需要估计出原始信号的局部极值与零点就可以了，如果假定采样信号的极值点“约等于”原始信号的极值点，那么我们就面临多个很容易遇到的问题，总结起来列在这里：</p>
+
+<ol>
+<li>采样点中出现连续的极值点与零点如何处理？</li>
+<li>采样点刚好错过极值点与零点如何处理？</li>
+<li>边界点如何处理？</li>
+</ol>
+
+
+<p>在 G. Rilling 的程序中，他取了连续极值点或零点的中间的那个采样点来作为极值点与零点。如果原始信号是一个类正弦信号，这的确是一种好的近似方法，但是对于方波，这种近似方法显然就不合适了。而 Github 上的那个程序，完全没有考虑这个问题。</p>
+
+<p>对于采样点刚好错过极值点与零点的情况，也就是零点或极值点在两个点之间的情况，G. Rilling 的程序只考虑了零点的情况，他将前一个点作为零点的近似，如果采样频率足够大，这的确可以，但是如果采样频率不够大，很显然这样会带来很大的误差。</p>
+
+<p>对于边界点，G. Rilling 根据已有的采样点将边界沿拓，这样边界点就不再是边界点了。在 Github 上的程序则是很简单的将两个边界点直接加入到局部极大值与局部极小值的序列中去。边界沿拓虽然很好，但是复杂并且存在沿拓方法选择的问题。将边界点直接加入虽然简单，但是可能会导致求出的 IMF 边缘震荡，导致分解出无限个 IMF。所以两种方法各有优劣。</p>
+
+<h2>我的想法</h2>
+
+<p>其实总结起来就是两个大问题：</p>
+
+<ol>
+<li>用局部极值求出的上下包络线会出现与原信号相交的问题，这怎么办？</li>
+<li>如何通过离散信号求出原信号的局部极值与零点？</li>
+</ol>
+
+
+<p>而第二个大问题主要就是上面提到的三个特殊情况：</p>
+
+<ol>
+<li>采样点中出现连续的极值点与零点如何处理？</li>
+<li>采样点刚好错过极值点与零点如何处理？</li>
+<li>边界点如何处理？</li>
+</ol>
+
+
+<p>对于的第二个大问题，我认为可以使用原始信号与以求出的上下包络线的切点来修正上下包络线以此来得到不会与原始信号相交的包络线。</p>
+
+<p>对于采样点中出现连续的极值点与零点，我认为可以全部用来计算包络线，无依据，仅仅是感觉，而且由于脑电几乎不会出现方波的状况，所以我认为 G. Rilling 的解决方法已经可以了。</p>
+
+<p>对于采样点刚好错过极值点与零点的情况，如果是零点，我们可以通过两点确定的直线，估算出零点的位置。对于极值点，可以通过再多取几个点做插值，来估算极值点的位置。</p>
+
+<p>对于边界点，我认为还是沿拓比较好，但是沿拓的方法还有待考虑。</p>
+
+<p>但是如果根据我上面提到的方法修改 G. Rilling 的程序，必然带来一个很严重的情况，就是处理时间的延长。收集数据时间变短，但是处理时间变长，致使总时间几乎不改变甚至变长，这完全没有达到我们开始希望的结果嘛，所以 EMD 求法有待讨论与寻找。我认为，如果可以找到一种快速有效解决上述问题的方法，寻找瞬时频率并不是问题。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">pikipity</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2013-08-14T03:19:00+08:00'><span class='date'>2013年08月14日</span> <span class='time'>3:19 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/matlab/'>matlab</a>, <a class='category' href='/blog/categories/technology/'>technology</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/cube-slam.html" title="Previous Post: 推荐一款游戏 Cube Slam">&laquo; 推荐一款游戏 Cube Slam</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/try-two-way-to-find-instaneous-frequency-by-using-emd.html" title="Next Post: 尝试两种利用 EMD 来计算瞬时频率的方法">尝试两种利用 EMD 来计算瞬时频率的方法 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+    
+        <section imagesd="comment">
+	<br>
+	<br>
+        <h1>Comments</h1>
+	<br>
+	<p></p>
+        <!-- Duoshuo Comment BEGIN -->
+	<div class="ds-thread"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"pikipity"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- Duoshuo Comment END -->
+       </section>
+       
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me -- pikipity</h1>
+  <ul id="post">
+  pikipity 的小博客，搜罗有意思的科技话题，展示自己的所知所学所感。<p>
+  
+  <img src="/images/myface.gif" width="100pt"><p>
+  
+  如果发现问题，请在文章后面留言指出或是直接点<a href="mailto:pikipityw@gmail.com">这里</a>发邮件给我指正，谢谢。<p>
+  
+  pikipity Blog: <a href="http://pikipity.github.io/">pikipity.github.io</a><p>
+  
+  pikipity Email: <a href="mailto:pikipityw@gmail.com">pikipityw.gmail.com</a><p>
+  
+  使用IE浏览器可能无法得到完美的浏览体验，建议更换为<a href="https://www.google.com/intl/en/chrome/browser/"> Chrome 浏览器</a><p>
+
+  </ul>
+</section>
+<section>
+  <h1>Category List</h1>
+    <span id="tag-cloud"><a href='/blog/categories/algorithm' style='font-size: 107.89473684210526%'>algorithm(5)</a> <a href='/blog/categories/arduino' style='font-size: 109.47368421052632%'>arduino(6)</a> <a href='/blog/categories/assembly' style='font-size: 111.05263157894737%'>assembly(7)</a> <a href='/blog/categories/c-plus-plus' style='font-size: 103.15789473684211%'>c++(2)</a> <a href='/blog/categories/cartoon' style='font-size: 111.05263157894737%'>cartoon(7)</a> <a href='/blog/categories/circuit' style='font-size: 104.73684210526315%'>circuit(3)</a> <a href='/blog/categories/game' style='font-size: 115.78947368421052%'>game(10)</a> <a href='/blog/categories/github' style='font-size: 104.73684210526315%'>github(3)</a> <a href='/blog/categories/google' style='font-size: 126.84210526315789%'>google(17)</a> <a href='/blog/categories/ios' style='font-size: 111.05263157894737%'>ios(7)</a> <a href='/blog/categories/life' style='font-size: 160.0%'>life(38)</a> <a href='/blog/categories/linux' style='font-size: 112.63157894736842%'>linux(8)</a> <a href='/blog/categories/mac' style='font-size: 125.26315789473685%'>mac(16)</a> <a href='/blog/categories/matlab' style='font-size: 125.26315789473685%'>matlab(16)</a> <a href='/blog/categories/movie' style='font-size: 106.3157894736842%'>movie(4)</a> <a href='/blog/categories/octopress' style='font-size: 104.73684210526315%'>octopress(3)</a> <a href='/blog/categories/others' style='font-size: 115.78947368421052%'>others(10)</a> <a href='/blog/categories/processing' style='font-size: 111.05263157894737%'>processing(7)</a> <a href='/blog/categories/python' style='font-size: 109.47368421052632%'>python(6)</a> <a href='/blog/categories/scm' style='font-size: 128.42105263157896%'>scm(18)</a> <a href='/blog/categories/technology' style='font-size: 126.84210526315789%'>technology(17)</a> </span>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week4.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week4)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week3.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week3)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week12summary.html">Algorithms: Design and Analysis Part 1 – Programming Questions (Week1 and Week 2 Summary)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week2.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week2)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week1.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week1)</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+<h1>Copyright Agreement</h1>
+<ul id="copyright">
+<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh"><img
+  alt="知识共享许可协议" style="border-width:0"
+  src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png"
+  /></a><br />本作品采用<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh">知识
+  共享署名-非商业性使用-相同方式共享 3.0 未本地化版本许可协议</a>进行
+  许可。<p>
+
+  如果您想转载本网站下的博文，请注明作者和出处。如果文章内没有特别说明，文章皆为原创，请将出处注明为那篇文章的网址；如果文章内特别指明为转载，请将出处注明为原始文章的网址。非常感谢。<p>
+</ul>
+</section><section>
+  <h1>Who are visiting</h1>
+  <ul id="for_fun">
+  <script type="text/javascript" src="http://jb.revolvermaps.com/2/1.js?i=1p1ij0eyux4&amp;s=190&amp;m=7&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+  </ul>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - pikipity -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

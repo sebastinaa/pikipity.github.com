@@ -1,0 +1,394 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>单片机原理及程序设计 第二章 记忆体和寄存器 - 折腾来折腾去</title>
+  <meta name="author" content="pikipity">
+
+  
+  <meta name="description" content="上一章主要是简单介绍了一下 8051 的样子和结构，这一章主要介绍内存，为将来介绍各个特殊功能和 assembly 做准备。 记忆体种类 记忆体主要分为两种： 只读记忆体（ROM）：资料一旦存储就不能删除或是修改（既不能重新写入），且内容不会因为断电而消失。一般来说， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://pikipity.github.io/blog/scm-principle-2.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="折腾来折腾去" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38118079-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">折腾来折腾去</a></h1>
+  
+    <h2>pikipity的blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="pikipity.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/projects">Projects</a></li>
+       <li><a href="/aboutme">AboutMe</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">单片机原理及程序设计 第二章 记忆体和寄存器</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-02-27T22:37:00+08:00'><span class='date'>2013年02月27日</span> <span class='time'>10:37 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><a href="http://pikipity.github.com/blog/scm-principle-1.html">上一章</a>主要是简单介绍了一下 8051 的样子和结构，这一章主要介绍内存，为将来介绍各个特殊功能和 assembly 做准备。</p>
+
+<h3>记忆体种类</h3>
+
+<p>记忆体主要分为两种：</p>
+
+<ol>
+<li>只读记忆体（ROM）：资料一旦存储就不能删除或是修改（既不能重新写入），且内容不会因为断电而消失。一般来说，我们可以认为你所编写的程式就存储在 8051 的 ROM 中，当然现在的新科技已经允许通过一定的手段来从新修改 ROM 上的内容了，所以你可以向你的 8051 芯片中重新写入程式，但是重新写入的次数是有限，但是这个次数非常大，所以不用担心。8051 内部 ROM 容量为 4K Byte，最大可扩充到 64K Byte。8052 内部 ROM 容量为 8K Byte，最大可扩充到 64K Byte</li>
+<li>随即存储存储器（RAM）：可以随时将数据存入记忆体的任意位置，但是断电后数据会消失。一般来说，我们可以认为程式临时数据就是存储在 8051 的 RAM 中的。8051 内部 RAM 容量为 128 Byte，最大可扩充到 64K Byte。8052 内部 RAM 容量为 256 Byte，最大可扩充到 64K Byte。</li>
+</ol>
+
+
+<!--more-->
+
+
+<h3>地址分配</h3>
+
+<p>我们不可能随意的将数据存储在记忆体中，如果那样的话，我们就难以知道自己所需的数据到底存储在哪里，所以我们用“地址”来对记忆体中的数据定位。我们一般用一个十六进制数<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup> 来表示一个地址。程式记忆体（可以理解为 ROM）和资料记忆体（可以理解为 RAM）的地址是分开的。</p>
+
+<ol>
+<li>程式记忆体地址分配：由于 8051 允许外部扩充程式记忆体，所以程式记忆体的地址分配有两种（以下程式记忆体的地址都是一个地址代表一个字节（8位二进制））：
+
+<ul>
+<li><p>EA 引脚接高时：</p>
+
+<p><img src="/images/post/scm-principle-2-1.jpg" alt="当 EA 接高时，程式记忆体的地址分配" width="350pt"></p></li>
+<li><p>EA 引脚接地时：</p>
+
+<p><img src="/images/post/scm-principle-2-2.jpg" alt="当 EA 接地时，程式记忆体的地址分配" width="350pt"></p></li>
+</ul>
+</li>
+<li>资料记忆体地址分配：资料记忆体的地址（依然是一个地址代表一个字节（8位二进制））从 00H 到 FFH，共分为四个部分：
+
+<ul>
+<li><p>00H ~ 1FH：四个寄存器组。由于在写 assembly 程序的时候，每次都记住地址很麻烦，所以 assembly 为一部分地址直接预设了名字，这样我们就可以直接通过调用名字来使用这一部分内存而不是记住地址。这四个寄存器组 RB0~RB3 中，每个寄存器组又包含8个8位寄存器 R0~R7（每个字节地址就是一个寄存器），主要用来存放数据。但每次只能使用一个寄存器组，通过 RS0 和 RS1 两个位元来控制到底使用哪个寄存器组：</p>
+
+<table>
+<thead>
+<tr>
+<th style="text-align:center;">RS1</th>
+<th style="text-align:center;">RS0</th>
+<th style="text-align:center;">寄存器组</th>
+<th style="text-align:center;">位置    </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">0  </td>
+<td style="text-align:center;">0  </td>
+<td style="text-align:center;">RB0    </td>
+<td style="text-align:center;">00H~07H </td>
+</tr>
+<tr>
+<td style="text-align:center;">0  </td>
+<td style="text-align:center;">1  </td>
+<td style="text-align:center;">RB1    </td>
+<td style="text-align:center;">08H~0FH </td>
+</tr>
+<tr>
+<td style="text-align:center;">1  </td>
+<td style="text-align:center;">0  </td>
+<td style="text-align:center;">RB2    </td>
+<td style="text-align:center;">10H~17H </td>
+</tr>
+<tr>
+<td style="text-align:center;">1  </td>
+<td style="text-align:center;">1  </td>
+<td style="text-align:center;">RB3    </td>
+<td style="text-align:center;">18H~1FH </td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>20H ~ 2FH：可位元寻址区，这一部分的地址都允许直接对 bit 进行操作。例如，21H.0 就代表在字节地址 21H 的8位二进制的第 0 位。</li>
+<li>30H ~ 7FH：一般数据与堆栈区。不可以位元寻址，就是一般的存储数据的地方</li>
+<li><p>80H ~ FFH：特殊功能寄存器（SFR）。8051 本事已经内置了很多的功能，在<a href="http://pikipity.github.com/blog/scm-principle-1.html">第一章</a>的8051单片机结构中就可以看到，有计时/计数器、中断、UART串口等等，这些特殊功能需要通过设置这一部分的 SFR 的参数来控制。在讲解各个特殊功能的时候会讲解如何设置参数，和这些参数代表什么意思。下面是一幅AT89系列的 SFR 地址分配表，将来可以对照、理解。</p>
+
+<p><img src="/images/post/scm-principle-2-3.jpg" alt="AT89系列的 SFR 地址分配表" width="550pt"></p>
+
+<p>注意：</p>
+
+<ul>
+<li>注意最左边一列都可以位元寻址</li>
+<li>括号中的寄存器代表 AT89C52 才有，AT89C51 没有</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+
+
+<hr />
+<div class="footnotes">
+<hr/>
+<ol>
+<li id="fn:1">
+<p>十六进制数就是以逢16进1作为进位制的数，一般用数字0到9和字母A到F表示，并在数后面加一个“H”来表示此数为16进制。<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
+</ol>
+</div>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">pikipity</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2013-02-27T22:37:00+08:00'><span class='date'>2013年02月27日</span> <span class='time'>10:37 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/scm/'>scm</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/cloud-atlas.html" title="Previous Post: 《云图》影评">&laquo; 《云图》影评</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/do-a-barrel-roll.html" title="Next Post: 谷姐别这样，转的头疼">谷姐别这样，转的头疼 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+    
+        <section imagesd="comment">
+	<br>
+	<br>
+        <h1>Comments</h1>
+	<br>
+	<p></p>
+        <!-- Duoshuo Comment BEGIN -->
+	<div class="ds-thread"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"pikipity"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- Duoshuo Comment END -->
+       </section>
+       
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me -- pikipity</h1>
+  <ul id="post">
+  pikipity 的小博客，搜罗有意思的科技话题，展示自己的所知所学所感。<p>
+  
+  <img src="/images/myface.gif" width="100pt"><p>
+  
+  如果发现问题，请在文章后面留言指出或是直接点<a href="mailto:pikipityw@gmail.com">这里</a>发邮件给我指正，谢谢。<p>
+  
+  pikipity Blog: <a href="http://pikipity.github.io/">pikipity.github.io</a><p>
+  
+  pikipity Email: <a href="mailto:pikipityw@gmail.com">pikipityw.gmail.com</a><p>
+  
+  使用IE浏览器可能无法得到完美的浏览体验，建议更换为<a href="https://www.google.com/intl/en/chrome/browser/"> Chrome 浏览器</a><p>
+
+  </ul>
+</section>
+<section>
+  <h1>Category List</h1>
+    <span id="tag-cloud"><a href='/blog/categories/algorithm' style='font-size: 107.89473684210526%'>algorithm(5)</a> <a href='/blog/categories/arduino' style='font-size: 109.47368421052632%'>arduino(6)</a> <a href='/blog/categories/assembly' style='font-size: 111.05263157894737%'>assembly(7)</a> <a href='/blog/categories/c-plus-plus' style='font-size: 103.15789473684211%'>c++(2)</a> <a href='/blog/categories/cartoon' style='font-size: 111.05263157894737%'>cartoon(7)</a> <a href='/blog/categories/circuit' style='font-size: 104.73684210526315%'>circuit(3)</a> <a href='/blog/categories/game' style='font-size: 115.78947368421052%'>game(10)</a> <a href='/blog/categories/github' style='font-size: 104.73684210526315%'>github(3)</a> <a href='/blog/categories/google' style='font-size: 126.84210526315789%'>google(17)</a> <a href='/blog/categories/ios' style='font-size: 111.05263157894737%'>ios(7)</a> <a href='/blog/categories/life' style='font-size: 160.0%'>life(38)</a> <a href='/blog/categories/linux' style='font-size: 112.63157894736842%'>linux(8)</a> <a href='/blog/categories/mac' style='font-size: 125.26315789473685%'>mac(16)</a> <a href='/blog/categories/matlab' style='font-size: 125.26315789473685%'>matlab(16)</a> <a href='/blog/categories/movie' style='font-size: 106.3157894736842%'>movie(4)</a> <a href='/blog/categories/octopress' style='font-size: 104.73684210526315%'>octopress(3)</a> <a href='/blog/categories/others' style='font-size: 115.78947368421052%'>others(10)</a> <a href='/blog/categories/processing' style='font-size: 111.05263157894737%'>processing(7)</a> <a href='/blog/categories/python' style='font-size: 109.47368421052632%'>python(6)</a> <a href='/blog/categories/scm' style='font-size: 128.42105263157896%'>scm(18)</a> <a href='/blog/categories/technology' style='font-size: 126.84210526315789%'>technology(17)</a> </span>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week4.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week4)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week3.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week3)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week12summary.html">Algorithms: Design and Analysis Part 1 – Programming Questions (Week1 and Week 2 Summary)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week2.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week2)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week1.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week1)</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+<h1>Copyright Agreement</h1>
+<ul id="copyright">
+<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh"><img
+  alt="知识共享许可协议" style="border-width:0"
+  src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png"
+  /></a><br />本作品采用<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh">知识
+  共享署名-非商业性使用-相同方式共享 3.0 未本地化版本许可协议</a>进行
+  许可。<p>
+
+  如果您想转载本网站下的博文，请注明作者和出处。如果文章内没有特别说明，文章皆为原创，请将出处注明为那篇文章的网址；如果文章内特别指明为转载，请将出处注明为原始文章的网址。非常感谢。<p>
+</ul>
+</section><section>
+  <h1>Who are visiting</h1>
+  <ul id="for_fun">
+  <script type="text/javascript" src="http://jb.revolvermaps.com/2/1.js?i=1p1ij0eyux4&amp;s=190&amp;m=7&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+  </ul>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - pikipity -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

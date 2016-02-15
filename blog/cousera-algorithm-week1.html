@@ -1,0 +1,406 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Algorithms: Design and Analysis Part 1 -- Programming Questions (Week1) - 折腾来折腾去</title>
+  <meta name="author" content="pikipity">
+
+  
+  <meta name="description" content="这里主要记录下来在 &ldquo;Algorithms: Design and Analysis Part 1&rdquo; 的Programming Questions 中的算法、实现和作业中的困难。我是用的是 Python。Week 1 Programming Question &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://pikipity.github.io/blog/cousera-algorithm-week1.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="折腾来折腾去" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38118079-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">折腾来折腾去</a></h1>
+  
+    <h2>pikipity的blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="pikipity.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/projects">Projects</a></li>
+       <li><a href="/aboutme">AboutMe</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week1)</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-08-15T09:05:00+08:00'><span class='date'>2015年08月15日</span> <span class='time'>9:05 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>这里主要记录下来在 &ldquo;Algorithms: Design and Analysis Part 1&rdquo; 的Programming Questions 中的算法、实现和作业中的困难。我是用的是 Python。Week 1 Programming Question 的题目可以到<a href="http://pan.baidu.com/s/1bnnY6IF">这里</a>查看，作业用到的数据可以到<a href="http://pan.baidu.com/s/1bnnY6GB">这里</a>下载。</p>
+
+<!--more-->
+
+
+<p>第一周，作业是要求使用 &ldquo;Merge Sort&rdquo; 方法对给定的数列排序，并记录下颠倒元素组（inversions）的个数。对于颠倒元素组，如果在一个数组中<code>a[i]&gt;a[j]</code>但是<code>i&lt;j</code>，就可以将其定义为一个颠倒元素组。例如，在<code>2, 4, 1, 3, 5</code>中，有三组<code>(2,1)</code>，<code>(4,1)</code>和<code>(4,3)</code>。</p>
+
+<p>&ldquo;Merge Sort&rdquo; 方法比较简单（毕竟才第一周）。方法主要思想就是把一个大问题变为小问题，通过解决所有的小问题来实现大问题的解决。那么这个方法也就分为两步：</p>
+
+<ol>
+<li>大问题分解为小问题（Devide）：这一步中，要将这个数组从中间进行拆分，一直拆分到数组足够小为止，对于排序问题，最小的数组应该是仅包含两个元素的数组。</li>
+<li>解决所有的小问题实现大问题的解决（Merge）：这一步中，要将刚才拆分出来的所有小问题以回溯的方式逐层解决。</li>
+</ol>
+
+
+<p>拿一个例子来讲解一下，加入我们要排序的数组是<code>2, 4, 1, 3, 5</code>，按照上面的步骤：</p>
+
+<ol>
+<li><p>首先将大问题进行拆分，如图。</p>
+
+<p><img src="https://lh3.googleusercontent.com/U2vRnRKgdwpZyAq0JgDYyfDXuW8nKXRogksTGijd1AI=w499-h310-no" alt="Divide" /></p></li>
+<li>然后从下向上依次解决小问题：
+
+<ul>
+<li><p>最下层有两个数组<code>(2, 4)</code>和<code>(1)</code>，很显然不存在颠倒元素组</p>
+
+<p><img src="https://lh3.googleusercontent.com/3vNenhYhV08wqUabVfFLvS3cXa0ntz23uDN2JT3c0kg=w498-h311-no" alt="Merge 1" /></p></li>
+<li><p>然后将最下层的两个数组<code>(2, 4)</code>和<code>(1)</code>进行合并，合并的同时进行排序。注意：在每次合并的时候，两个数组一定是已经各自排好序的，所以如果第一个数组的第 i 个元素大于第二个数组的第 k 个元素，那么第一个数组的第 i+1, i+2, i+3 … 个元素都大于第二个数组的第 k 个元素，也就是说，如果第一个数组的长度为 L，那么就有 (L-i+1) 个颠倒元素组。如图：</p>
+
+<p><img src="https://lh3.googleusercontent.com/0sfNLXizKUa_ObsxffGuTgqpKnBS1BKHNNRDM4lBEoQ=w502-h309-no" alt="Merge 2" /></p></li>
+<li><p>类似的步骤对倒数第二层使用，就可以得到最终的结果了。</p>
+
+<p><img src="https://lh3.googleusercontent.com/iVssNpbM-JAXv6l4vZ1APNi7z7sjH2pHLavXS4UevSs=w498-h312-no" alt="Merge 3" /></p></li>
+</ul>
+</li>
+</ol>
+
+
+<p>在这个方法中需要特别注意的三点：</p>
+
+<ol>
+<li><p>在每次合并的时候，两个数组一定是已经各自排好序的，所以如果第一个数组的第 i 个元素大于第二个数组的第 k 个元素，那么第一个数组的第 i+1, i+2, i+3 … 个元素都大于第二个数组的第 k 个元素，也就是说，如果第一个数组的长度为 L，那么就有 (L-i+1) 个颠倒元素组，如图。需要注意的是，这里的 i 和 k 都是指的第 X 个元素，对于不同的编程语言，由于元素起始编号不同，那么对于第 X 个元素的引用方式也会不同，常规情况下（例如 C，C++，java 等），起始元素编号为0，所以第 i 个元素应该为 a[i-1] 而不是 a[i]，而对于 MATLAB，起始元素是1，所以第 i 个元素就是 a[i]。所以在计算颠倒元素个数的时候，要注意应该是 (L-i) 还是 (L-i+1)</p>
+
+<p><img src="https://lh3.googleusercontent.com/1T-ktT5mwmmAL-tZNfDj42q7x-6pN51fHCwsAJtkyqQ=w670-h183-no" alt="如何统计颠倒元素个数" /></p></li>
+<li><p>在合并的时候，可以每次都比较两个数组中的第一个元素，然后将小的那个从原数组中排出，放到存放结果的数组的最后，如图</p>
+
+<p><img src="https://lh3.googleusercontent.com/GeGbgUlVSU5Dju__OYYJIEKY6hzq2Eh7oCHW5reNI7E=w564-h300-no" alt="如何合并两个数组" /></p></li>
+<li>最后在统计颠倒元素组个数的时候，记得要将所有的颠倒元素组加起来，包括拆分和合并两个部分。</li>
+</ol>
+
+
+<p>最后是代码部分，我用的是 Python：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>def SortCount(input_array):
+</span><span class='line'>    if len(input_array) &gt; 1:
+</span><span class='line'>        lower_part, count1 = SortCount(input_array[:len(input_array)//2])
+</span><span class='line'>        upper_part, count2 = SortCount(input_array[len(input_array)//2:])
+</span><span class='line'>        merge_part, count3 = MergeCount(lower_part,upper_part)
+</span><span class='line'>        return merge_part, count1+count2+count3
+</span><span class='line'>    else:
+</span><span class='line'>        return input_array, 0
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>def MergeCount(lower_part,upper_part):
+</span><span class='line'>    count = 0
+</span><span class='line'>    merge_result = []
+</span><span class='line'>    while lower_part and upper_part:
+</span><span class='line'>        if lower_part[0] &lt;= upper_part[0]:
+</span><span class='line'>            merge_result.append(lower_part.pop(0))
+</span><span class='line'>        else:
+</span><span class='line'>            count += len(lower_part)
+</span><span class='line'>            merge_result.append(upper_part.pop(0))
+</span><span class='line'>    merge_result  += lower_part + upper_part
+</span><span class='line'>    return merge_result, count
+</span><span class='line'>
+</span><span class='line'>file="IntegerArray.txt"
+</span><span class='line'>f=open(file,'r')
+</span><span class='line'>Array=map(int,f.readlines())
+</span><span class='line'>f.close()
+</span><span class='line'>SortArray,Count=SortCount(Array)
+</span><span class='line'>print Count</span></code></pre></td></tr></table></div></figure>
+
+
+<p>代码可以到<a href="http://pan.baidu.com/s/1bnz3TXd">这里</a>下载。作业用到的数据可以到<a href="http://pan.baidu.com/s/1bnnY6GB">这里</a>下载。答案：2407905288</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">pikipity</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-08-15T09:05:00+08:00'><span class='date'>2015年08月15日</span> <span class='time'>9:05 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/algorithm/'>algorithm</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/sorry-for-my-love.html" title="Previous Post: 迟到的情人节礼物">&laquo; 迟到的情人节礼物</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/cousera-algorithm-week2.html" title="Next Post: Algorithms: Design and Analysis Part 1 -- Programming Questions (Week2)">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week2) &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+    
+        <section imagesd="comment">
+	<br>
+	<br>
+        <h1>Comments</h1>
+	<br>
+	<p></p>
+        <!-- Duoshuo Comment BEGIN -->
+	<div class="ds-thread"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"pikipity"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- Duoshuo Comment END -->
+       </section>
+       
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me -- pikipity</h1>
+  <ul id="post">
+  pikipity 的小博客，搜罗有意思的科技话题，展示自己的所知所学所感。<p>
+  
+  <img src="/images/myface.gif" width="100pt"><p>
+  
+  如果发现问题，请在文章后面留言指出或是直接点<a href="mailto:pikipityw@gmail.com">这里</a>发邮件给我指正，谢谢。<p>
+  
+  pikipity Blog: <a href="http://pikipity.github.io/">pikipity.github.io</a><p>
+  
+  pikipity Email: <a href="mailto:pikipityw@gmail.com">pikipityw.gmail.com</a><p>
+  
+  使用IE浏览器可能无法得到完美的浏览体验，建议更换为<a href="https://www.google.com/intl/en/chrome/browser/"> Chrome 浏览器</a><p>
+
+  </ul>
+</section>
+<section>
+  <h1>Category List</h1>
+    <span id="tag-cloud"><a href='/blog/categories/algorithm' style='font-size: 107.89473684210526%'>algorithm(5)</a> <a href='/blog/categories/arduino' style='font-size: 109.47368421052632%'>arduino(6)</a> <a href='/blog/categories/assembly' style='font-size: 111.05263157894737%'>assembly(7)</a> <a href='/blog/categories/c-plus-plus' style='font-size: 103.15789473684211%'>c++(2)</a> <a href='/blog/categories/cartoon' style='font-size: 111.05263157894737%'>cartoon(7)</a> <a href='/blog/categories/circuit' style='font-size: 104.73684210526315%'>circuit(3)</a> <a href='/blog/categories/game' style='font-size: 115.78947368421052%'>game(10)</a> <a href='/blog/categories/github' style='font-size: 104.73684210526315%'>github(3)</a> <a href='/blog/categories/google' style='font-size: 126.84210526315789%'>google(17)</a> <a href='/blog/categories/ios' style='font-size: 111.05263157894737%'>ios(7)</a> <a href='/blog/categories/life' style='font-size: 160.0%'>life(38)</a> <a href='/blog/categories/linux' style='font-size: 112.63157894736842%'>linux(8)</a> <a href='/blog/categories/mac' style='font-size: 125.26315789473685%'>mac(16)</a> <a href='/blog/categories/matlab' style='font-size: 125.26315789473685%'>matlab(16)</a> <a href='/blog/categories/movie' style='font-size: 106.3157894736842%'>movie(4)</a> <a href='/blog/categories/octopress' style='font-size: 104.73684210526315%'>octopress(3)</a> <a href='/blog/categories/others' style='font-size: 115.78947368421052%'>others(10)</a> <a href='/blog/categories/processing' style='font-size: 111.05263157894737%'>processing(7)</a> <a href='/blog/categories/python' style='font-size: 109.47368421052632%'>python(6)</a> <a href='/blog/categories/scm' style='font-size: 128.42105263157896%'>scm(18)</a> <a href='/blog/categories/technology' style='font-size: 126.84210526315789%'>technology(17)</a> </span>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week4.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week4)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week3.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week3)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week12summary.html">Algorithms: Design and Analysis Part 1 – Programming Questions (Week1 and Week 2 Summary)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week2.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week2)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week1.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week1)</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+<h1>Copyright Agreement</h1>
+<ul id="copyright">
+<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh"><img
+  alt="知识共享许可协议" style="border-width:0"
+  src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png"
+  /></a><br />本作品采用<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh">知识
+  共享署名-非商业性使用-相同方式共享 3.0 未本地化版本许可协议</a>进行
+  许可。<p>
+
+  如果您想转载本网站下的博文，请注明作者和出处。如果文章内没有特别说明，文章皆为原创，请将出处注明为那篇文章的网址；如果文章内特别指明为转载，请将出处注明为原始文章的网址。非常感谢。<p>
+</ul>
+</section><section>
+  <h1>Who are visiting</h1>
+  <ul id="for_fun">
+  <script type="text/javascript" src="http://jb.revolvermaps.com/2/1.js?i=1p1ij0eyux4&amp;s=190&amp;m=7&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+  </ul>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - pikipity -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

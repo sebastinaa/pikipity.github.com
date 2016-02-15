@@ -1,0 +1,1797 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[折腾来折腾去]]></title>
+  <link href="http://pikipity.github.io/atom.xml" rel="self"/>
+  <link href="http://pikipity.github.io/"/>
+  <updated>2016-02-15T21:04:31+08:00</updated>
+  <id>http://pikipity.github.io/</id>
+  <author>
+    <name><![CDATA[pikipity]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Algorithms: Design and Analysis Part 1 -- Programming Questions (Week4)]]></title>
+    <link href="http://pikipity.github.io/blog/cousera-algorithm-week4.html"/>
+    <updated>2015-08-24T14:26:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/cousera-algorithm-week4</id>
+    <content type="html"><![CDATA[<p>这里主要记录下来在 “Algorithms: Design and Analysis Part 1” 的Programming Questions 中的算法、实现和作业中的困难。我是用的是 Python。<a href="http://pikipity.github.io/blog/cousera-algorithm-week3.html">Week 3 Programming Question 在这里</a>。 <a href="http://pan.baidu.com/s/1mgrKHw0">Week 4 Programming Question 的题目可以到这里查看</a>，<a href="http://pan.baidu.com/s/1hq93IOO">作业用到的数据可以到这里下载</a>。</p>
+
+<!--more-->
+
+
+<p>第四周，作业要求找出 &ldquo;Strongly Connected Components&rdquo; (SCC) 并计算其内部所含点的数量。如果一幅图上的任意一点都可以经由边与其他所有点相连，这个图就被称为 SCC，可以直观的理解为内部的点形成了回路的图。对于定向图，寻找 SCC 的方法基本可以分为以下几个步骤：</p>
+
+<ol>
+<li>生成定向图的反向图；</li>
+<li>对生成的反向图中的点进行深度优先搜索，纪录搜索结束的时间，最先搜索完成的点（也就是最底层的点）记为1，其次搜索完成的点（次底层点）记为2，依次类推；</li>
+<li>对原定向图进行深度优先搜索，点的搜索顺序按照刚刚得到的完成顺序由大到小进行，纪录每一个点的上层点 (leader)；</li>
+<li>根据每个点的上层点 (leader)，倒推得到 SCC。</li>
+</ol>
+
+
+<p>作业的难点在于深度优先算法在 python 中的实现。由于作业给的图非常大，如果在 python 中使用迭代的方式循环调用同一个函数来实现深度优先搜索，很有可能会导致达到迭代次数上限，所以只能用普通的循环语句来实现。推荐熟悉并使用 <a href="https://docs.python.org/2.7/library/itertools.html">“itertools”</a> 这个模组，循环执行某个固定功能的时候非常好用。</p>
+
+<p>Python 代码如下。由于给的图非常大，即使是图的读入过程都可能会很漫长，所以我将整个进度打印在屏幕上，方便监视。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+<span class='line-number'>94</span>
+<span class='line-number'>95</span>
+<span class='line-number'>96</span>
+<span class='line-number'>97</span>
+<span class='line-number'>98</span>
+<span class='line-number'>99</span>
+<span class='line-number'>100</span>
+<span class='line-number'>101</span>
+<span class='line-number'>102</span>
+<span class='line-number'>103</span>
+<span class='line-number'>104</span>
+<span class='line-number'>105</span>
+<span class='line-number'>106</span>
+<span class='line-number'>107</span>
+<span class='line-number'>108</span>
+<span class='line-number'>109</span>
+<span class='line-number'>110</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># -*- coding: utf-8 -*-
+</span><span class='line'>import time
+</span><span class='line'>from itertools import groupby
+</span><span class='line'>from collections import defaultdict
+</span><span class='line'>
+</span><span class='line'>def dfs(input_graph,order,step):
+</span><span class='line'>    # Depth-First Search
+</span><span class='line'>    leader=dict()
+</span><span class='line'>    time=0
+</span><span class='line'>    finish_time=dict()
+</span><span class='line'>    visited=set()
+</span><span class='line'>    track=[]
+</span><span class='line'>    N=0
+</span><span class='line'>    for node in order:
+</span><span class='line'>        N+=1
+</span><span class='line'>        if step==1:
+</span><span class='line'>            print "%.5f%% -- DFS for reverse graph"%(N/float(len(order))*100)
+</span><span class='line'>        else:
+</span><span class='line'>            print "%.5f%% -- DFS for graph"%(N/float(len(order))*100)
+</span><span class='line'>        if node not in visited:
+</span><span class='line'>            current_source=node
+</span><span class='line'>            visited.add(node)
+</span><span class='line'>            leader[node]=current_source
+</span><span class='line'>            track.extend(list(set(input_graph[node])-visited))
+</span><span class='line'>            while track:
+</span><span class='line'>                p=track[-1]
+</span><span class='line'>                visited.add(p)
+</span><span class='line'>                leader[p]=current_source
+</span><span class='line'>                if not set(input_graph[p])-visited:
+</span><span class='line'>                    track.pop()
+</span><span class='line'>                    time+=1
+</span><span class='line'>                    finish_time[p]=time
+</span><span class='line'>                else:
+</span><span class='line'>                    track.extend(list(set(input_graph[p])-visited))
+</span><span class='line'>            time+=1
+</span><span class='line'>            finish_time[node]=time
+</span><span class='line'>    return finish_time,leader
+</span><span class='line'> 
+</span><span class='line'>
+</span><span class='line'>    
+</span><span class='line'>def readgraph(lines):
+</span><span class='line'>    # Generate graph
+</span><span class='line'>    graph=defaultdict(list)
+</span><span class='line'>    N=0
+</span><span class='line'>    for line in lines:
+</span><span class='line'>        N+=1
+</span><span class='line'>        print "%.5f%% -- Read graph"%(N/float(len(lines))*100)
+</span><span class='line'>        line=map(int,line.split())
+</span><span class='line'>        if line[0]!=line[1]:
+</span><span class='line'>            graph[line[0]].append(line[1])
+</span><span class='line'>            graph[line[1]]
+</span><span class='line'>    return graph
+</span><span class='line'>    
+</span><span class='line'>def reversegraph(lines):
+</span><span class='line'>    # Generate reverse graph
+</span><span class='line'>    regraph=defaultdict(list)
+</span><span class='line'>    N=0
+</span><span class='line'>    for line in lines:
+</span><span class='line'>        N+=1
+</span><span class='line'>        print "%.5f%% -- Generate reverse graph"%(N/float(len(lines))*100)
+</span><span class='line'>        line=map(int,line.split())
+</span><span class='line'>        if line[0]!=line[1]:
+</span><span class='line'>            regraph[line[1]].append(line[0])
+</span><span class='line'>            regraph[line[0]]
+</span><span class='line'>    return regraph
+</span><span class='line'>    
+</span><span class='line'>def leader2SCC(leader_dict):
+</span><span class='line'>    # Obtain length of SCC (reverse order) and SCC
+</span><span class='line'>    SCC=defaultdict(list)
+</span><span class='line'>    for i,k in groupby(leader_dict.keys(),leader_dict.get):
+</span><span class='line'>        SCC[i].extend(list(k))
+</span><span class='line'>    SCC_len=sorted([len(SCC[x]) for x in SCC.keys()],reverse=True)
+</span><span class='line'>    while len(SCC_len)&lt;5:
+</span><span class='line'>        SCC_len.append(0)
+</span><span class='line'>    return SCC,SCC_len
+</span><span class='line'>    
+</span><span class='line'>
+</span><span class='line'>file=["SCC.txt"]
+</span><span class='line'>for file_name in file:
+</span><span class='line'>    print ""
+</span><span class='line'>    # Record time
+</span><span class='line'>    t1=time.clock()
+</span><span class='line'>    # Read file
+</span><span class='line'>    f=open(file_name)
+</span><span class='line'>    lines=f.readlines()
+</span><span class='line'>    f.close()
+</span><span class='line'>    # Generate graph and reverse graph
+</span><span class='line'>    graph=readgraph(lines)
+</span><span class='line'>    regraph=reversegraph(lines)
+</span><span class='line'>    # DFS for reverse graph and count finish time
+</span><span class='line'>    finish_time_regraph,leader_regraph=dfs(regraph,sorted(regraph.keys(),reverse=True),1)
+</span><span class='line'>    # reorder finish time
+</span><span class='line'>    finishtime=[0]*len(finish_time_regraph)
+</span><span class='line'>    finishtime=sorted(finish_time_regraph,key=finish_time_regraph.get,reverse=True)
+</span><span class='line'>    # DFS for graph based on finish time to get SCC
+</span><span class='line'>    finish_time_graph,leader_graph=dfs(graph,finishtime,2)
+</span><span class='line'>    SCC,SCC_len=leader2SCC(leader_graph)
+</span><span class='line'>    t2=time.clock()
+</span><span class='line'>    # print and store result
+</span><span class='line'>    print file_name+" result:"
+</span><span class='line'>    if len(SCC_len)&gt;5:
+</span><span class='line'>        SCC_len=SCC_len[0:5]
+</span><span class='line'>    print SCC_len
+</span><span class='line'>    print "time: %.3f CPU seconds"%(t2-t1)
+</span><span class='line'>    f=open('result.txt','w')
+</span><span class='line'>    f.write('''
+</span><span class='line'>    "%s" results: %s
+</span><span class='line'>    time: %.3f CPU seconds
+</span><span class='line'>    '''%(file_name,SCC_len,t2-t1))
+</span><span class='line'>    f.close()</span></code></pre></td></tr></table></div></figure>
+
+
+<p>答案：434821,968,459,313,211。总用时：730.875 CPU seconds。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Algorithms: Design and Analysis Part 1 -- Programming Questions (Week3)]]></title>
+    <link href="http://pikipity.github.io/blog/cousera-algorithm-week3.html"/>
+    <updated>2015-08-21T11:42:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/cousera-algorithm-week3</id>
+    <content type="html"><![CDATA[<p>这里主要记录下来在 “Algorithms: Design and Analysis Part 1” 的Programming Questions 中的算法、实现和作业中的困难。我是用的是 Python。<a href="http://pikipity.github.io/blog/cousera-algorithm-week2.html">Week 2 Programming Question 在这里</a>。 <a href="http://pan.baidu.com/s/1hqAPt56">Week 3 Programming Question 的题目可以到这里查看</a>，<a href="http://pan.baidu.com/s/1o69XkKi">作业用到的数据可以到这里下载</a>。</p>
+
+<!--more-->
+
+
+<p>第三周，作业要求使用 &ldquo;randomized contraction algorithm&rdquo; 来解决 &ldquo;min cut&rdquo; 问题。当我们将图上所有的点划分为两大类的时候，如果一个边的两个端点分别属于两个大类，这一个边被我们称为 &ldquo;cut"。"min cut&rdquo; 问题就是找到一种分类方法，使得 &ldquo;cut&rdquo; 的数量最少。<a href="http://pan.baidu.com/s/1o69XkKi">这里</a>这份文档，将如何使用 &ldquo;Karger’s Min Cut Algorithm&rdquo; （也就是题目要求使用的方法）解释的非常清楚，但是是英文的，我就挑其中的重点翻译一下。</p>
+
+<p>这个 &ldquo;Karger’s Min Cut Algorithm&rdquo; 非常简单，基本分为以下步骤：</p>
+
+<ol>
+<li>随机选择一个边；</li>
+<li>将选定的边的两个端点合并；</li>
+<li>重复步骤1、2，直到只剩两个点，此两点之间的边就是 cut；</li>
+<li>重复步骤1、2、3，直到找到 min cut。</li>
+</ol>
+
+
+<p>以下图为例，如果要找到其 min cut，需要进行以下步骤：</p>
+
+<p><img src="https://lh3.googleusercontent.com/oJW2ZvaypTpyEPuJVjF1DRfVm_zcXB_au3ASUl24ess=w237-h131-no" alt="Example of min cut" /></p>
+
+<ol>
+<li><p>随机选择一个边，例如 b-f，将 b 和 f 合并，得到下图。注意：当两个点合并之后，只有这两个点之间的边消失，其他边依然存在，比如 a-bf 和 e-bf 都是两个边。</p>
+
+<p><img src="https://lh3.googleusercontent.com/L149F_jt9nzZlU8IPJYFnEb-O1c_0hlp6KuSLj3YJJ8=w223-h114-no" alt="Step 1" /></p></li>
+<li><p>再随机选择一个边，例如 g-h ，将 g 和 h 合并，得到下图。</p>
+
+<p><img src="https://lh3.googleusercontent.com/YimUdKCc9onhcZl_RLXmJe29SMTyd-Fkb7ETc0PzT5Y=w227-h116-no" alt="Step 2" /></p></li>
+<li><p>再随机选择一个边，例如 d-g，合并 d 和 g，由于 g 已经与 h 合并，所以得到下图。</p>
+
+<p><img src="https://lh3.googleusercontent.com/9-0y23rvNo8aKv1nvhwakKzJcDim2keI4Qk3OUTQHSk=w186-h128-no" alt="Step 3" /></p></li>
+<li><p>再随机选择一个边，例如 a-e，合并 a 和 e，得到下图。</p>
+
+<p><img src="https://lh3.googleusercontent.com/x7rRguJeXo9SezNVKF149VMSBKLCMejeZ--HWuVwTCs=w196-h123-no" alt="Step 4" /></p></li>
+<li><p>随机选择一个边，例如 a-b，合并 a 和 b，得到下图。</p>
+
+<p><img src="https://lh3.googleusercontent.com/TXB-fHQEyp15Oi5DJ_qzJhw331WIAX17Dm26ZyG3ris=w152-h127-no" alt="Step 5" /></p></li>
+<li><p>随机选择一个边，例如 c-d，合并 c-d，得到下图。</p>
+
+<p><img src="https://lh3.googleusercontent.com/g19utDONvfiTUaZNpQ2dED-92_cW9nm3E-JGzwfjoNc=w174-h28-no" alt="Step 6" /></p></li>
+</ol>
+
+
+<p>以上是一个循环，cut 数量为2。由于每次都是随机选择边，所以无法保证一次就得到最少的 cut 数量，所以要将以上的步骤循环多次，随着次数的增多，就可以找到 min cut 了。</p>
+
+<p>这个算法很简单，难点是如何实现。我的程序中，每一次合并点都需要更新整幅图，比较耗费资源，如果有更好的实现方法，欢迎讨论。每一次循环的基本思路如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Repeat until there are only two points:
+</span><span class='line'>  choose first point "a"
+</span><span class='line'>  choose second point "b" from connections of "a"
+</span><span class='line'>  change all "b" to "a" in current graph
+</span><span class='line'>  move connections of "b" to "a"
+</span><span class='line'>  remove self-connection
+</span><span class='line'>  remove "b" point</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Python 代码如下，我代码中，总共循环了50次，：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># -*- coding: utf-8 -*-
+</span><span class='line'>import random
+</span><span class='line'>import copy
+</span><span class='line'>
+</span><span class='line'>def Choose_first_point(Points):
+</span><span class='line'>    # Choose one point from Points
+</span><span class='line'>    L=len(Points)
+</span><span class='line'>    index=random.choice(range(0,L))
+</span><span class='line'>    point=Points[index]
+</span><span class='line'>    return index, point
+</span><span class='line'>    
+</span><span class='line'>def Choose_second_point(first_index,first_point,Graph,Points):
+</span><span class='line'>    # Choose second point from Graph based on first_point
+</span><span class='line'>    second_index,second_point=Choose_first_point(Graph[first_index])
+</span><span class='line'>    second_index=Points.index(second_point)
+</span><span class='line'>    return second_index,second_point
+</span><span class='line'>    
+</span><span class='line'>def Cal_Min_Cut(Points,Graph):
+</span><span class='line'>    if len(Graph)==2:
+</span><span class='line'>        return len(Graph[0])
+</span><span class='line'>    # Choose silde
+</span><span class='line'>    Index=[0,0]
+</span><span class='line'>    Silde=[0,0]
+</span><span class='line'>    Index[0],Silde[0]=Choose_first_point(Points)
+</span><span class='line'>    Index[1],Silde[1]=Choose_second_point(Index[0],Silde[0],Graph,Points)
+</span><span class='line'>    # Change all second index to first index
+</span><span class='line'>    for i in Graph[Index[1]]:
+</span><span class='line'>        index_i=Points.index(i)
+</span><span class='line'>        while 1:
+</span><span class='line'>            try: 
+</span><span class='line'>                index=Graph[index_i].index(Silde[1])
+</span><span class='line'>            except ValueError:
+</span><span class='line'>                break
+</span><span class='line'>            else:
+</span><span class='line'>                Graph[index_i][index]=Silde[0]
+</span><span class='line'>    # Combine second point to first point
+</span><span class='line'>    Points.pop(Points.index(Silde[1]))
+</span><span class='line'>    Graph[Index[0]]=Graph[Index[0]]+Graph[Index[1]]
+</span><span class='line'>    # Remove self-silde
+</span><span class='line'>    i=0
+</span><span class='line'>    while 1:
+</span><span class='line'>        try: 
+</span><span class='line'>            k=Graph[Index[0]][i]
+</span><span class='line'>        except IndexError:
+</span><span class='line'>            break
+</span><span class='line'>        else:
+</span><span class='line'>            if k==Silde[0]:
+</span><span class='line'>                Graph[Index[0]].pop(i)
+</span><span class='line'>            else:
+</span><span class='line'>                i+=1
+</span><span class='line'>    Graph.pop(Index[1])
+</span><span class='line'>    # Continue
+</span><span class='line'>    return Cal_Min_Cut(Points,Graph)                                 
+</span><span class='line'>    
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'># Read File
+</span><span class='line'>file="KargerMinCut.txt"
+</span><span class='line'>f=open(file)
+</span><span class='line'>InGraph=[]
+</span><span class='line'>InPoints=[]
+</span><span class='line'>while 1:
+</span><span class='line'>    line=f.readline()
+</span><span class='line'>    if not line:
+</span><span class='line'>        break
+</span><span class='line'>    else:
+</span><span class='line'>        line=map(int,line.split())
+</span><span class='line'>        InPoints.append(line.pop(0))
+</span><span class='line'>        InGraph.append(line)
+</span><span class='line'>
+</span><span class='line'># Find min cut number
+</span><span class='line'>N=50
+</span><span class='line'>Num=''
+</span><span class='line'>while N&gt;=0:
+</span><span class='line'>    Points=copy.deepcopy(InPoints)
+</span><span class='line'>    Graph=copy.deepcopy(InGraph)
+</span><span class='line'>    print ""
+</span><span class='line'>    temp=Cal_Min_Cut(Points,Graph)
+</span><span class='line'>    if temp&lt;Num:
+</span><span class='line'>        Num=temp
+</span><span class='line'>    print "iteration "+str(N)
+</span><span class='line'>    print "current cut: "+str(temp)
+</span><span class='line'>    print "min cut: "+str(Num)
+</span><span class='line'>    N-=1</span></code></pre></td></tr></table></div></figure>
+
+
+<p>答案是17</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Algorithms: Design and Analysis Part 1 – Programming Questions (Week1 and Week 2 Summary)]]></title>
+    <link href="http://pikipity.github.io/blog/cousera-algorithm-week12summary.html"/>
+    <updated>2015-08-17T15:24:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/cousera-algorithm-week12summary</id>
+    <content type="html"><![CDATA[<p>这里主要记录下来在 &ldquo;Algorithms: Design and Analysis Part 1&rdquo; 的Programming Questions 中的算法、实现和作业中的困难。我是用的是 Python。Week 1 Programming Question 在<a href="http://pikipity.github.io/blog/cousera-algorithm-week1.html">这里</a>。Week 2 Programming Question 在<a href="http://pikipity.github.io/blog/cousera-algorithm-week2.html">这里</a>。由于 Week 1 和 Week 2 都是讨论排序问题，所以在这里做下小结－比较一下之前实现过的方法的运行时间。</p>
+
+<!--more-->
+
+
+<p>具体代码可以到<a href="https://github.com/pikipity/Sorting-Algorithm-Comparison.git">这里</a>查看和下载。非常简单的比较了之前在 Week 1 和 Week 2 实现过的4排序方法和 Python 自带函数 <code>sorted</code> 对同一个数列运行1000次的时间。结果如下：</p>
+
+<ol>
+<li>Week 1 的 Merge Sort 方法：113.557s</li>
+<li>Week 2 的 QuickSort（第一个元素做 Pivot）：93.443s</li>
+<li>Week 2 的 QuickSort（最后一个元素做 Pivot）：95.201s</li>
+<li>Week 3 的 QuickSort（中间元素做Pivot）：94.088s</li>
+<li><code>sorted</code> 函数：19.413s</li>
+</ol>
+
+
+<p><code>sorted</code>函数使用 <a href="http://blog.csdn.net/yangzhongblog/article/details/8184707">“Timsort”</a> 方法，而且是使用 C 编写的，所以速度远远快于用 Python 编写的其他算法。所以想要速度快，还是用 C 比较好。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Algorithms: Design and Analysis Part 1 -- Programming Questions (Week2)]]></title>
+    <link href="http://pikipity.github.io/blog/cousera-algorithm-week2.html"/>
+    <updated>2015-08-16T12:03:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/cousera-algorithm-week2</id>
+    <content type="html"><![CDATA[<p>这里主要记录下来在 &ldquo;Algorithms: Design and Analysis Part 1&rdquo; 的Programming Questions 中的算法、实现和作业中的困难。我是用的是 Python。Week 1 Programming Question 在<a href="http://pikipity.github.io/blog/cousera-algorithm-week1.html">这里</a>。
+Week 2 Programming Question 的题目可以到<a href="http://pan.baidu.com/s/1sj41gap">这里</a>查看，作业用到的数据可以到<a href="http://pan.baidu.com/s/1hqpk1da">这里</a>下载。</p>
+
+<!--more-->
+
+
+<p>第二周，作业要求使用 &ldquo;QuickSort&rdquo; 方法对给定的数列排序，并记录“比较”的次数。这次作业的难点并不是对于 &ldquo;QuickSort&rdquo; 的实现，而是作业要求给出“比较”的次数。由于 &ldquo;QuickSort&rdquo; 虽然主思路一样但是实现方法千差万别，不同的实现方法会导致统计出来的“比较”的次数不同。所以必须严格按照老师上课讲的方法实现 &ldquo;QuickSort&rdquo; 才能得到正确答案。所以是否认真看老师的 lecture video 并能明白老师讲的细节成为这次作业的难点。由于 &ldquo;QuickSort&rdquo; 根据选定的 “Pivot” 不同可以分为三种，所以这一次的作业分为三个小问，每一个小问实现一种 &ldquo;QuickSort"，通过“比较”次数的不同就会发现选择哪种 "Pivot&rdquo; 比较好了。</p>
+
+<p>&ldquo;QuickSort&rdquo; 的基本思想和 week 1 中使用的 &ldquo;Merge Sort&rdquo; 基本一样，也是将大问题分解为小问题，但是不再是从数组的中间进行数组的拆分，而是通过确定 &ldquo;Pivot&rdquo; 元素在排序之后的数组中的位置，并以此位置为基础进行拆分。所以在进行拆分的同时进行了排序，所以也就不需要合并（Merge）的步骤了。基本步骤如下：</p>
+
+<ol>
+<li>选择一个元素作为 &ldquo;Pivot"。</li>
+<li>将数组中的其他元素与 &ldquo;Pivot&rdquo; 比较大小从而将原数组拆分为两个数组：比 &ldquo;Pivot&rdquo; 小的数组与比 &ldquo;Pivot&rdquo; 大的数组。确定 &ldquo;Pivot&rdquo; 元素的位置从而完成对 &ldquo;Pivot&rdquo; 元素的排序。</li>
+<li>分别对拆分出来的两个数组重复步骤1和步骤2，直到全部元素排序完成。</li>
+</ol>
+
+
+<p>上述步骤中需要注意两点：</p>
+
+<ol>
+<li>根据选定 &ldquo;Pivot&rdquo; 不同，排序步骤会发生不同，这也就是为什么这一次作业会出现三个小问。</li>
+<li>对于拆分的过程不同，拆分出来的两个数组也会不同，这会导致后续步骤中 &ldquo;Pivot&rdquo; 的不同，从而导致排序步骤的不同，这也就是为什么要严格按照老师 lecture video 中讲的方法来进行拆分，否则答案会不对。</li>
+</ol>
+
+
+<p>接下来，对于三个小问（也就是三种 &ldquo;Pivot&rdquo; 选择方式衍生出来三种 &ldquo;QuickSort"）分别如何实现来进行讲解。</p>
+
+<h2>第一个元素作为 &ldquo;Pivot&rdquo;</h2>
+
+<p>第一种 &ldquo;QuickSort&rdquo; 是将等待排序的数组的第一个元素作为 &ldquo;Pivot&rdquo; 来进行排序。在排序中，我们需要两个位置标记 <code>i</code> 和 <code>j</code>，整个等待排序的数列如下图所示，<code>i</code> 标记的是在比 &ldquo;Pivot&rdquo; 小的元素的数组中最后一个元素的位置，<code>j</code> 标记的是还没有和 &ldquo;Pivot&rdquo; 比较的元素的数组中第一个元素的位置。</p>
+
+<p><img src="https://lh3.googleusercontent.com/0rm5Elld6U_mwutu8VCk3ncL_70OfqbrX2p6BA3IpWo=w487-h361-no" alt="第一个元素作为 &quot;Pivot&quot; 的 &quot;QuickSort&quot;" /></p>
+
+<p>整个排序过程如下：</p>
+
+<ol>
+<li>选择等待排序的数组的第一个元素作为 &ldquo;Pivot"，初始化 <code>i</code> 和 <code>j</code>，<code>i</code>指向第一个元素的位置，<code>j</code> 指向第二个元素的位置。</li>
+<li>对 <code>j</code> 指向的元素和 &ldquo;Pivot&rdquo; 进行大小比较。如果 <code>j</code> 指向的元素小于  &ldquo;Pivot"，那么就将 <code>j</code> 指向的元素与 <code>i+1</code> 指向的元素进行交换，然后 <code>i</code> 变为 <code>i+1</code>，否则不做任何操作。最后，<code>j</code> 变为 <code>j+1</code>。</li>
+<li><p>重复步骤2，直到 <code>j</code> 指向的位置超出数组范围。得到的数组如下图所示。</p>
+
+<p><img src="https://lh3.googleusercontent.com/RHMt79CWJTzPifbTUKklvjLqw4F5DkF7CNkEsBTPUJw=w515-h361-no" alt="拆分完成" /></p></li>
+<li><p>将 <code>i</code> 指向的元素与 &ldquo;Pivot&rdquo; 交换，结束 &ldquo;Pivot&rdquo; 元素的排序。得到的数组如下图所示。</p>
+
+<p><img src="https://lh3.googleusercontent.com/Q_F0qpwtjBcQsq0D7DKsP0AOtnItuna_6nP9olsseX0=w519-h361-no" alt="&quot;Pivot&quot; 排序结束" /></p></li>
+<li>将比 “Pivot”小的元素组成的数组和比 &ldquo;Pivot&rdquo; 大的元素组成的数组分别作为等待排序的数组，重复步骤1～5，直到所有元素排序结束。</li>
+</ol>
+
+
+<p>需要注意两点：</p>
+
+<ol>
+<li>尽管存在多种 <code>i</code> 和 <code>j</code> 的选择和移动方式，虽然不影响排序结果，但是会影响后面循环中 &ldquo;Pivot&rdquo; 的选择，所以无法得到正确的“比较”次数。</li>
+<li>在第4步中，尽管不采用交换的方式而是直接将 &ldquo;Pivot&rdquo; 插入到正确位置并不影响最终的排序结果，但是同样会影响后面循环中 &ldquo;Pivot&rdquo; 的选择，所以也无法得到正确的“比较”次数。</li>
+</ol>
+
+
+<p>Python 代码如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>def QuickSort(InputArray,Count):
+</span><span class='line'>    if len(InputArray)==1 or len(InputArray)==0:
+</span><span class='line'>        return InputArray,Count
+</span><span class='line'>    i=0
+</span><span class='line'>    j=1
+</span><span class='line'>    while j&lt;len(InputArray):
+</span><span class='line'>        Count+=1
+</span><span class='line'>        if InputArray[j]&lt;InputArray[0]:
+</span><span class='line'>            InputArray[j],InputArray[i+1]=InputArray[i+1],InputArray[j]
+</span><span class='line'>            i+=1
+</span><span class='line'>            j+=1
+</span><span class='line'>        else:
+</span><span class='line'>            j+=1
+</span><span class='line'>    InputArray[0],InputArray[i]=InputArray[i],InputArray[0]
+</span><span class='line'>    InputArray[:i],Count=QuickSort(InputArray[:i],Count)
+</span><span class='line'>    InputArray[i+1:],Count=QuickSort(InputArray[i+1:],Count)
+</span><span class='line'>    return InputArray,Count
+</span><span class='line'>    
+</span><span class='line'>
+</span><span class='line'># Read file
+</span><span class='line'>file="QuickSort.txt"
+</span><span class='line'>f=open(file,'r')
+</span><span class='line'>InputArray=map(int,f.readlines())
+</span><span class='line'>f.close()
+</span><span class='line'>Copy=InputArray
+</span><span class='line'>
+</span><span class='line'># QuickSort
+</span><span class='line'>Count=0
+</span><span class='line'>InputArray,Count=QuickSort(InputArray,Count)
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>if InputArray==sorted(Copy):
+</span><span class='line'>    print "Correct"
+</span><span class='line'>    print Count
+</span><span class='line'>else:
+</span><span class='line'>    print "Wrong"
+</span><span class='line'>    print InputArray</span></code></pre></td></tr></table></div></figure>
+
+
+<p>代码的可以到<a href="http://pan.baidu.com/s/1o6qZXDw">这里</a>下载。答案是162085。</p>
+
+<h2>最后一个元素作为 &ldquo;Pivot&rdquo;</h2>
+
+<p>这种 &ldquo;QuickSort"，只需要在排序前，将最后一个元素和第一个元素交换，就完全可以当作第一种一样进行操作。同样要注意，必须是“交换”，否则无法得到正确的“比较”次数。Python 代码如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>def QuickSort(InputArray,Count):
+</span><span class='line'>    if len(InputArray)==1 or len(InputArray)==0:
+</span><span class='line'>        return InputArray,Count
+</span><span class='line'>    InputArray[0],InputArray[len(InputArray)-1]=InputArray[len(InputArray)-1],InputArray[0]
+</span><span class='line'>    i=0
+</span><span class='line'>    j=1
+</span><span class='line'>    while j&lt;len(InputArray):
+</span><span class='line'>        Count+=1
+</span><span class='line'>        if InputArray[j]&lt;InputArray[0]:
+</span><span class='line'>            InputArray[j],InputArray[i+1]=InputArray[i+1],InputArray[j]
+</span><span class='line'>            i+=1
+</span><span class='line'>            j+=1
+</span><span class='line'>        else:
+</span><span class='line'>            j+=1
+</span><span class='line'>    InputArray[0],InputArray[i]=InputArray[i],InputArray[0]
+</span><span class='line'>    InputArray[:i],Count=QuickSort(InputArray[:i],Count)
+</span><span class='line'>    InputArray[i+1:],Count=QuickSort(InputArray[i+1:],Count)
+</span><span class='line'>    return InputArray,Count
+</span><span class='line'>    
+</span><span class='line'>
+</span><span class='line'># Read file
+</span><span class='line'>file="QuickSort.txt"
+</span><span class='line'>f=open(file,'r')
+</span><span class='line'>InputArray=map(int,f.readlines())
+</span><span class='line'>f.close()
+</span><span class='line'>Copy=InputArray
+</span><span class='line'>
+</span><span class='line'># QuickSort
+</span><span class='line'>Count=0
+</span><span class='line'>InputArray,Count=QuickSort(InputArray,Count)
+</span><span class='line'>
+</span><span class='line'>if InputArray==sorted(Copy):
+</span><span class='line'>    print "Correct"
+</span><span class='line'>    print Count
+</span><span class='line'>else:
+</span><span class='line'>    print "Wrong"
+</span><span class='line'>    print InputArray</span></code></pre></td></tr></table></div></figure>
+
+
+<p>代码可以到<a href="http://pan.baidu.com/s/1o6y17nG">这里</a>下载。答案是164123。</p>
+
+<h2>中间元素作为 &ldquo;Pivot&rdquo;</h2>
+
+<p>这里的“中间”元素并不是指地是数列中间的元素，而是将数列第一个元素、数列最后一个元素和数列中间的元素进行大小比较，排在中间的元素作为 &ldquo;Pivot"。这一种同样可以等效为第一种，只是在排序前先要进行比较，然后把选定的元素和数列第一个元素进行交换就可以了。同样要注意，必须是“交换”。Python 代码如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>def QuickSort(InputArray,Count):
+</span><span class='line'>    if len(InputArray)==1 or len(InputArray)==0:
+</span><span class='line'>        return InputArray,Count
+</span><span class='line'>    Mid=(len(InputArray)-1)//2
+</span><span class='line'>    a=InputArray[0]
+</span><span class='line'>    b=InputArray[Mid]
+</span><span class='line'>    c=InputArray[len(InputArray)-1]
+</span><span class='line'>    if (b&gt;a and b&lt;c) or (b&lt;a and b&gt;c):
+</span><span class='line'>        InputArray[0],InputArray[Mid]=InputArray[Mid],InputArray[0]
+</span><span class='line'>    elif (c&gt;a and c&lt;b) or (c&lt;a and c&gt;b):
+</span><span class='line'>        InputArray[0],InputArray[len(InputArray)-1]=InputArray[len(InputArray)-1],InputArray[0]
+</span><span class='line'>    i=0
+</span><span class='line'>    j=1
+</span><span class='line'>    while j&lt;len(InputArray):
+</span><span class='line'>        Count+=1
+</span><span class='line'>        if InputArray[j]&lt;InputArray[0]:
+</span><span class='line'>            InputArray[j],InputArray[i+1]=InputArray[i+1],InputArray[j]
+</span><span class='line'>            i+=1
+</span><span class='line'>            j+=1
+</span><span class='line'>        else:
+</span><span class='line'>            j+=1
+</span><span class='line'>    InputArray[0],InputArray[i]=InputArray[i],InputArray[0]
+</span><span class='line'>    InputArray[:i],Count=QuickSort(InputArray[:i],Count)
+</span><span class='line'>    InputArray[i+1:],Count=QuickSort(InputArray[i+1:],Count)
+</span><span class='line'>    return InputArray,Count
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'># Read file
+</span><span class='line'>file="QuickSort.txt"
+</span><span class='line'>f=open(file,'r')
+</span><span class='line'>InputArray=map(int,f.readlines())
+</span><span class='line'>f.close()
+</span><span class='line'>Copy=InputArray
+</span><span class='line'>
+</span><span class='line'># QuickSort
+</span><span class='line'>Count=0
+</span><span class='line'>InputArray,Count=QuickSort(InputArray,Count)
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>if InputArray==sorted(Copy):
+</span><span class='line'>    print "Correct"
+</span><span class='line'>    print Count
+</span><span class='line'>else:
+</span><span class='line'>    print "Wrong"
+</span><span class='line'>    print InputArray</span></code></pre></td></tr></table></div></figure>
+
+
+<p>代码可以到<a href="http://pan.baidu.com/s/1bn15Qs3">这里</a>下载。答案是138382。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Algorithms: Design and Analysis Part 1 -- Programming Questions (Week1)]]></title>
+    <link href="http://pikipity.github.io/blog/cousera-algorithm-week1.html"/>
+    <updated>2015-08-15T09:05:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/cousera-algorithm-week1</id>
+    <content type="html"><![CDATA[<p>这里主要记录下来在 &ldquo;Algorithms: Design and Analysis Part 1&rdquo; 的Programming Questions 中的算法、实现和作业中的困难。我是用的是 Python。Week 1 Programming Question 的题目可以到<a href="http://pan.baidu.com/s/1bnnY6IF">这里</a>查看，作业用到的数据可以到<a href="http://pan.baidu.com/s/1bnnY6GB">这里</a>下载。</p>
+
+<!--more-->
+
+
+<p>第一周，作业是要求使用 &ldquo;Merge Sort&rdquo; 方法对给定的数列排序，并记录下颠倒元素组（inversions）的个数。对于颠倒元素组，如果在一个数组中<code>a[i]&gt;a[j]</code>但是<code>i&lt;j</code>，就可以将其定义为一个颠倒元素组。例如，在<code>2, 4, 1, 3, 5</code>中，有三组<code>(2,1)</code>，<code>(4,1)</code>和<code>(4,3)</code>。</p>
+
+<p>&ldquo;Merge Sort&rdquo; 方法比较简单（毕竟才第一周）。方法主要思想就是把一个大问题变为小问题，通过解决所有的小问题来实现大问题的解决。那么这个方法也就分为两步：</p>
+
+<ol>
+<li>大问题分解为小问题（Devide）：这一步中，要将这个数组从中间进行拆分，一直拆分到数组足够小为止，对于排序问题，最小的数组应该是仅包含两个元素的数组。</li>
+<li>解决所有的小问题实现大问题的解决（Merge）：这一步中，要将刚才拆分出来的所有小问题以回溯的方式逐层解决。</li>
+</ol>
+
+
+<p>拿一个例子来讲解一下，加入我们要排序的数组是<code>2, 4, 1, 3, 5</code>，按照上面的步骤：</p>
+
+<ol>
+<li><p>首先将大问题进行拆分，如图。</p>
+
+<p><img src="https://lh3.googleusercontent.com/U2vRnRKgdwpZyAq0JgDYyfDXuW8nKXRogksTGijd1AI=w499-h310-no" alt="Divide" /></p></li>
+<li>然后从下向上依次解决小问题：
+
+<ul>
+<li><p>最下层有两个数组<code>(2, 4)</code>和<code>(1)</code>，很显然不存在颠倒元素组</p>
+
+<p><img src="https://lh3.googleusercontent.com/3vNenhYhV08wqUabVfFLvS3cXa0ntz23uDN2JT3c0kg=w498-h311-no" alt="Merge 1" /></p></li>
+<li><p>然后将最下层的两个数组<code>(2, 4)</code>和<code>(1)</code>进行合并，合并的同时进行排序。注意：在每次合并的时候，两个数组一定是已经各自排好序的，所以如果第一个数组的第 i 个元素大于第二个数组的第 k 个元素，那么第一个数组的第 i+1, i+2, i+3 … 个元素都大于第二个数组的第 k 个元素，也就是说，如果第一个数组的长度为 L，那么就有 (L-i+1) 个颠倒元素组。如图：</p>
+
+<p><img src="https://lh3.googleusercontent.com/0sfNLXizKUa_ObsxffGuTgqpKnBS1BKHNNRDM4lBEoQ=w502-h309-no" alt="Merge 2" /></p></li>
+<li><p>类似的步骤对倒数第二层使用，就可以得到最终的结果了。</p>
+
+<p><img src="https://lh3.googleusercontent.com/iVssNpbM-JAXv6l4vZ1APNi7z7sjH2pHLavXS4UevSs=w498-h312-no" alt="Merge 3" /></p></li>
+</ul>
+</li>
+</ol>
+
+
+<p>在这个方法中需要特别注意的三点：</p>
+
+<ol>
+<li><p>在每次合并的时候，两个数组一定是已经各自排好序的，所以如果第一个数组的第 i 个元素大于第二个数组的第 k 个元素，那么第一个数组的第 i+1, i+2, i+3 … 个元素都大于第二个数组的第 k 个元素，也就是说，如果第一个数组的长度为 L，那么就有 (L-i+1) 个颠倒元素组，如图。需要注意的是，这里的 i 和 k 都是指的第 X 个元素，对于不同的编程语言，由于元素起始编号不同，那么对于第 X 个元素的引用方式也会不同，常规情况下（例如 C，C++，java 等），起始元素编号为0，所以第 i 个元素应该为 a[i-1] 而不是 a[i]，而对于 MATLAB，起始元素是1，所以第 i 个元素就是 a[i]。所以在计算颠倒元素个数的时候，要注意应该是 (L-i) 还是 (L-i+1)</p>
+
+<p><img src="https://lh3.googleusercontent.com/1T-ktT5mwmmAL-tZNfDj42q7x-6pN51fHCwsAJtkyqQ=w670-h183-no" alt="如何统计颠倒元素个数" /></p></li>
+<li><p>在合并的时候，可以每次都比较两个数组中的第一个元素，然后将小的那个从原数组中排出，放到存放结果的数组的最后，如图</p>
+
+<p><img src="https://lh3.googleusercontent.com/GeGbgUlVSU5Dju__OYYJIEKY6hzq2Eh7oCHW5reNI7E=w564-h300-no" alt="如何合并两个数组" /></p></li>
+<li>最后在统计颠倒元素组个数的时候，记得要将所有的颠倒元素组加起来，包括拆分和合并两个部分。</li>
+</ol>
+
+
+<p>最后是代码部分，我用的是 Python：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>def SortCount(input_array):
+</span><span class='line'>    if len(input_array) &gt; 1:
+</span><span class='line'>        lower_part, count1 = SortCount(input_array[:len(input_array)//2])
+</span><span class='line'>        upper_part, count2 = SortCount(input_array[len(input_array)//2:])
+</span><span class='line'>        merge_part, count3 = MergeCount(lower_part,upper_part)
+</span><span class='line'>        return merge_part, count1+count2+count3
+</span><span class='line'>    else:
+</span><span class='line'>        return input_array, 0
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>def MergeCount(lower_part,upper_part):
+</span><span class='line'>    count = 0
+</span><span class='line'>    merge_result = []
+</span><span class='line'>    while lower_part and upper_part:
+</span><span class='line'>        if lower_part[0] &lt;= upper_part[0]:
+</span><span class='line'>            merge_result.append(lower_part.pop(0))
+</span><span class='line'>        else:
+</span><span class='line'>            count += len(lower_part)
+</span><span class='line'>            merge_result.append(upper_part.pop(0))
+</span><span class='line'>    merge_result  += lower_part + upper_part
+</span><span class='line'>    return merge_result, count
+</span><span class='line'>
+</span><span class='line'>file="IntegerArray.txt"
+</span><span class='line'>f=open(file,'r')
+</span><span class='line'>Array=map(int,f.readlines())
+</span><span class='line'>f.close()
+</span><span class='line'>SortArray,Count=SortCount(Array)
+</span><span class='line'>print Count</span></code></pre></td></tr></table></div></figure>
+
+
+<p>代码可以到<a href="http://pan.baidu.com/s/1bnz3TXd">这里</a>下载。作业用到的数据可以到<a href="http://pan.baidu.com/s/1bnnY6GB">这里</a>下载。答案：2407905288</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[迟到的情人节礼物]]></title>
+    <link href="http://pikipity.github.io/blog/sorry-for-my-love.html"/>
+    <updated>2015-02-25T17:50:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/sorry-for-my-love</id>
+    <content type="html"><![CDATA[<p><img src="https://lh4.googleusercontent.com/-_RC8xbUb_qg/VO2YyxQ7VnI/AAAAAAAABpQ/VtCPXQRJek8/s320/Starbound.gif" alt="I Love You" /></p>
+
+<p>一份迟到的情人节礼物，在 Starbound 游戏里搭建的霓虹灯。本来设计的电路更复杂一点，但是做完之后，发现电脑实在运行不动，最后只能删减成这样了，下面是完整版的视频。</p>
+
+<p><embed src="http://player.youku.com/player.php/sid/XODk5MTAzMDQ0/v.swf" allowFullScreen="true" quality="high" width="480" height="400" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash"></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[我终于回来了]]></title>
+    <link href="http://pikipity.github.io/blog/i-am-well.html"/>
+    <updated>2014-08-22T10:12:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/i-am-well</id>
+    <content type="html"><![CDATA[<p>从大四下学期开始一直到现在完全没有闲下来更新一下网站，忙着发论文啊、出国交换啊、比赛啊，一个FYP到处使，现在终于是把那点东西的剩余价值榨取干净了，最终的结果就是更新速度终于从最初的一天一更变到了半年一更。接下来的日子里应该不会把这个网站舍弃掉，但是更新速度肯定会大幅下降，所以网站简介也要改一改了，争取把访问量拉升回来。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[女王传记--冰雪奇缘]]></title>
+    <link href="http://pikipity.github.io/blog/let-it-go.html"/>
+    <updated>2014-03-15T08:53:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/let-it-go</id>
+    <content type="html"><![CDATA[<p><embed height="452" width="544" quality="high" allowfullscreen="true" type="application/x-shockwave-flash" src="http://static.hdslb.com/miniloader.swf" flashvars="aid=&page=0" pluginspage="http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash"></p>
+
+<p><a href="http://www.bilibili.tv/video/av965320/">这是11岁童星 Lexi Walker 唱的《冰雪奇缘》的主题曲《Let it go》的视频</a>，完全就是上帝给饭吃系列。移动设备到 <a href="http://youtu.be/PulwD1sZ4KY">Youtube</a> 看吧。</p>
+
+<!--more-->
+
+
+<p>其实<a href="http://zh.wikipedia.org/wiki/%E5%86%B0%E9%9B%AA%E5%A5%87%E7%BC%98">《冰雪奇缘》</a>也推出了很长时间了，如果你还没有看，请一定要去看一下，迪士尼的这部作品和以往的作品完全不同，可以说是一次成功的大胆尝试。角色不再是黑白分明，所有人都是亦正亦邪，人际关系更加复杂，主角身上第一次出现了大量的负面情感的描写，结局也是超乎寻常的出（大）人（快）意（人）料（心），看完之后感觉可以说是真正的大人小孩都可以看的神作吧（之前的迪士尼的作品，简单的人际关系会让大人们看起来很太无聊吧）。先看一下 Youtube 上<a href="http://www.youtube.com/watch?v=WLXoeJdyi50&amp;feature=share">囧星人的评测</a>吧！（无法嵌入，只能连接了。我超级推荐这个人的评测，不论动画、电影还是剧集，他说的几乎就是我想说的，言简意赅，吐槽犀利，可惜 B 站小学生太多，把人家吓回到了 Youtube 上去了）</p>
+
+<p>那么让我们看看这部迪士尼这部划时代意义的神作吧！（请支持正版，电影院效果据说超神，尤其是 3D 的，最后友情提醒，中文与日文版会严重影响观影感受）：</p>
+
+<p><a href="http://www.bilibili.tv/video/av986603/#">B 站《冰雪奇缘》视频（我怀疑所示可能会挂，速看）</a></p>
+
+<p>《Let it go》原唱：</p>
+
+<p><embed align="middle" allowfullscreen="false" allowscriptaccess="sameDomain" bgcolor="#ffffff" flashvars="id=18338&#38;head=http://mpub.chinadaily.com.cn/xmls/" height="84" name="mp3" pluginspage="http://get.adobe.com/flashplayer/" quality="high" scale="noscale" src="http://mpub.chinadaily.com.cn/files/mp3v2.swf" type="application/x-shockwave-flash" width="380"></p>
+
+<p>《Let it go》英文歌词：</p>
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">Let it go</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">Can't hold you back anymore</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">Let it go</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">Turn my back and slam the door</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">The snow blows white on the mountain tonight</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">Not a footprint to be seen</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">A kingdom of isolation</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">And it looks like I'm the Queen</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">The wind is howling like the swirling storm inside</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">Couldn't keep it in, heaven knows I tried</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">Don't let them in</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">Don't let them see</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">Be the good girl</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">You always had to be</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">Conceal, don't feel</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">Don't let them know</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">Well, now they know</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">Let it go</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">Can't hold you back anymore</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">Let it go</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">Turn my back and slam the door</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">And here I stand, and here I'll stay</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">Let it go</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">The cold never bothered me anyway</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">It's funny how some distance</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">Makes everything seem small</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">And the fears that once controlled me</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">Can't get to me at all</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">Up here in the cold thin air</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">I finally can breathe</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">I know I left a life behind</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">But I'm too relieved to grieve</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">Let it go</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">Can't hold you back anymore</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">Let it go</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">Turn my back and slam the door</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">And here I stand</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">And here I'll stay</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">Let it go</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">The cold never bothered me anyway</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">Standing frozen in the life I've chosen</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">You won't find me, the past is so behind me</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">Buried in the snow</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">Let it go</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">Can't hold you back anymore</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">Let it go</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">Turn my back and slam the door</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">And here I stand</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">And here I'll stay</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">Let it go</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">The cold never bothered me anyway</p>
+
+
+<p>《Let it go》中文歌词：</p>
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">随它去吧</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">无法再留住你</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">随它吧</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">转过身关上门</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">今晚的山林被白雪覆盖</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">不见一个足迹</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">与世隔绝的王国</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">我像是个女王</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">大风狂啸正孕育着风暴</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">无法阻挡，天知道我有多努力</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">别让他们进来</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">别让他们看见</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">做个好女孩</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">你必须一直这样</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">要隐藏，不能动情</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">不要让他们知道</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">现在，他们知道了</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">随它去吧</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">无法再留住你</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">随它去吧</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">转过身关上门</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">我站在这里，我会一直待在这里</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">随它去吧</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">这寒意并不会困扰我</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">有趣的是，距离</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">会让每件事都显得渺小</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">曾经掌控我的恐惧</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">已无法使我动摇</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">在这寒冷的空气中</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">我终于可以呼吸</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">我明白那段日子已结束</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">但我却觉释然，没有悲伤</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">随它去吧</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">无法再留住你</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">随它去吧</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">转过身关上门</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">我站在这里</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">我会一直待在这里</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">随它去吧</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">这寒意不会困扰我</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">在我选择的生活中坚定生活</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">你找不到我，过去已经过去</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">深埋雪中</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">随它去吧</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">转过身关上门</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">我站在这里</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">我会一直待在这里</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">随它吧</p>
+
+
+
+
+<p style="MARGIN: 0px 3px 15px; TEXT-INDENT: 30px">这寒意不会困扰我</p>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Mathmatica 9.0.1 for Mac OS]]></title>
+    <link href="http://pikipity.github.io/blog/mathmatica-9-macos.html"/>
+    <updated>2014-03-05T21:36:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/mathmatica-9-macos</id>
+    <content type="html"><![CDATA[<p><a href="http://pan.baidu.com/s/1nt5CcQ1">这里</a>不是 Mac 版的 Mathmatica 9.0.1，<a href="http://pan.baidu.com/s/1nt5CcQ1">这里</a>没有附带 Mathmatica 9.0.1 for Mac OS 的 keygen 生成器，同样<a href="http://pan.baidu.com/s/1nt5CcQ1">这里</a>也没有附带详细的 keygen 生成器使用说明。请相信我的朋友不要点击了。</p>
+
+<p><img src="https://lh3.googleusercontent.com/-gH56hGr88cc/Uxcp60Uci3I/AAAAAAAABeE/kbPmaAWiyVY/s400/1_150.jpg" alt="不管你信不信，反正我信了" /></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Wolfram 语言]]></title>
+    <link href="http://pikipity.github.io/blog/wolfram-language.html"/>
+    <updated>2014-03-04T22:34:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/wolfram-language</id>
+    <content type="html"><![CDATA[<p><a href="http://www.wolfram.com/wolfram-language/">Wolfram 语言</a>是由数学软件巨头 <a href="http://www.wolfram.com/">Wolfram Research</a> 开发，可能说这个公司名字你还想不起来它是谁，但是这个公司开发的符号数学软件 <a href="http://www.wolfram.com/mathematica/?fp=middle">Mathmatica</a> 总该听说过吧，毕竟是三大数学软件之一（三大数学软件：Mathmatica，Matlab，Maple），还有他们公司开发的知识型搜索引擎 <a href="https://www.wolframalpha.com/">“Wolfram Alpha”</a> 据说是 Siri 的幕后技术，非常强大。Wolfram 语言可以说是符号运算的集大成者，将一切符号化，使编程语言更加“人性化”。下面是这个语言的一个介绍与 demo，虽然是语言介绍，但是你会发现，每一个命令都相当于一个“小”程序，让我回想起了第一次接触 Mathmatica 时候的“恐惧”，不要以为它仅仅是一个数学软件的编程语言，不要用你所了解的 Matlab 语言去想象它，它是和你之前听说的任何一样编程语言都完全不同的。人类对于世界的理解就是符号化的，如果计算机可以以符号化的思维思考世界，那么。。。或许 Wolfram 语言可以实现这些。现在，已经实现了<a href="http://www.wolfram.com/raspberry-pi/?fp=middle">将 Wolfram 语言搭载在树莓 Pi 上</a>。（我猜测应该是需要联网的，这么强大的语言其库文件必然非常庞大，使用起来内存占用等也是问题，家用电脑运行真的大丈夫？但是我还是很期待啊！但是价格肯定和 Mathmatica、Wolfram Alpha 一样不菲吧。。。）</p>
+
+<p><embed height="452" width="544" quality="high" allowfullscreen="true" type="application/x-shockwave-flash" src="http://static.hdslb.com/miniloader.swf" flashvars="aid=988838&page=1" pluginspage="http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash"></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[那些年不得不放弃的梦想]]></title>
+    <link href="http://pikipity.github.io/blog/break-dream.html"/>
+    <updated>2014-03-04T22:31:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/break-dream</id>
+    <content type="html"><![CDATA[<p>现实的残酷就是追逐梦想的代价。啥也不说了，看视频吧。</p>
+
+<p><embed height="452" width="544" quality="high" allowfullscreen="true" type="application/x-shockwave-flash" src="http://static.hdslb.com/miniloader.swf" flashvars="aid=988573&page=1" pluginspage="http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash"></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[空之境界--未来福音（720P）]]></title>
+    <link href="http://pikipity.github.io/blog/weilaifuyin.html"/>
+    <updated>2014-03-03T10:10:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/weilaifuyin</id>
+    <content type="html"><![CDATA[<p>《空之境界》最新剧场版《未来福音》720P中文字幕（建议第一遍关闭弹幕欣赏）。主要剧情（我是来剧透的）：黑桐干也再次拐骗纯良少女，两仪式新衣登场以及揭露两仪织的“初夜”到底被谁夺走。那么敬请收看“两仪末那”为您带来的《有生之年系列之揭秘&ndash;黑桐干也到底是攻是受？》。（附送海报一张）</p>
+
+<p><embed height="452" width="544" quality="high" allowfullscreen="true" type="application/x-shockwave-flash" src="http://static.hdslb.com/miniloader.swf" flashvars="aid=972858&page=1" pluginspage="http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash"></p>
+
+<p><img src="https://lh3.googleusercontent.com/-JM-vLOE6PUU/UxPpfGcrFiI/AAAAAAAABds/FIdw1JZFZf4/s512/f_10338915_1.jpg" alt="黑桐干也和两个女人、一个男人的故事" /></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[自动家庭电源控制系统半成品放出]]></title>
+    <link href="http://pikipity.github.io/blog/auto-home-control.html"/>
+    <updated>2014-02-17T20:20:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/auto-home-control</id>
+    <content type="html"><![CDATA[<p>自动家庭电源控制系统基本完成，各个模块基本实现了预期功能，各个模块直接的衔接工作也基本完成，其实年前就已经赶工完成了，本来想趁着过年在家再继续完善一下，但是又犯懒了，什么也没做。</p>
+
+<p>本来预期为了节省成本，想使用 8051 作为控制核心，结果发现控制什么的太麻烦了，尤其是无线模块部分，而且和电脑跨平台连接也相当的复杂，最后还是选择使用了 Arduino，开发难度瞬间降低。我又将其和 <a href="http://pikipity.github.io/blog/little-mr.html">Little Mr.</a> 结合了一下，使其更加有趣。</p>
+
+<p>更加具体的项目介绍在<a href="http://pikipity.github.io/Home-Control/">这里</a>，整个项目的内容在<a href="https://github.com/pikipity/Home-Control.git">这里下载</a>，这还有三段 demo 是视频：</p>
+
+<ol>
+<li><p>电脑控制软件的使用方法（8051 为控制核心）</p>
+
+<p><iframe height="498" width="510" src="http://player.youku.com/embed/XNjY2NzcwMzcy" frameborder="0" allowfullscreen></iframe></p></li>
+<li><p>如何使用 little Mr. 进行控制（8051 为控制核心）</p>
+
+<p><iframe height="498" width="510" src="http://player.youku.com/embed/XNjY2NzcwNzIw" frameborder="0" allowfullscreen></iframe></p></li>
+<li><p>Little Mr. 与 Arduino 结合（Arduino 为控制核心）</p>
+
+<p><iframe height="498" width="510" src="http://player.youku.com/embed/XNjY2NzcxMjY0" frameborder="0" allowfullscreen></iframe></p></li>
+</ol>
+
+
+<p>这个项目到这里就算是完结了吧，德国 Parce 公司已经有成品放出，正在 indiegogo 上筹资，和我设想的产品从外貌到功能如出一辙，大家可以到<a href="http://www.indiegogo.com/projects/the-parce-idea">这里围观一下</a>，虽然其强调的是省电功能，但是一样具有学习功能，从介绍上看，这种学习功能是使用 Wi-Fi 进行联网之后的一个云端服务。（这种东西果然只靠个人是难以完成的啊。。。╮(╯▽╰)╭）</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Little Mr. (Processing)]]></title>
+    <link href="http://pikipity.github.io/blog/little-mr.html"/>
+    <updated>2014-01-25T11:53:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/little-mr</id>
+    <content type="html"><![CDATA[<p><img src="https://lh4.googleusercontent.com/-4rtsj4SZzO8/UuM2hEEYOSI/AAAAAAAABcw/mQbtyYFSs2E/s650/58b1OOOPIC1a.jpg" alt="新年快乐" /></p>
+
+<p>现在拜年有点早，但是到新年那天可能就没有时间发东西了，先拜个早年了。</p>
+
+<p><img src="https://lh6.googleusercontent.com/-HbH2WbH4u_Y/UuCKi-omRgI/AAAAAAAABcc/fLa4WUNNEuM/s512/%25E5%25B1%258F%25E5%25B9%2595%25E5%25BF%25AB%25E7%2585%25A7%25202014-01-23%2520%25E4%25B8%258A%25E5%258D%258811.13.14.png" alt="Little Mr." /></p>
+
+<p>这次用 processing 做了个小东西，我管它叫 &ldquo;Little Mr."，能跑能说话，现在只能进行几个简单的问答，允许用户自己输入问答配对。反正东西暂时做成这样了，后续还会加点小功能吧。想做个桌面宠物，但是到现在都不知道如何入手。。。更详细的介绍和使用说明去看<a href="https://github.com/pikipity/Little_Mr.git">我的 Github </a>吧。下面是一段演示视频：</p>
+
+<iframe height="510" width="489" src="http://player.youku.com/embed/XNjY1NzYyMzAw" frameborder="0" allowfullscreen></iframe>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[奇奇怪怪的机器人]]></title>
+    <link href="http://pikipity.github.io/blog/robot-youtube1.html"/>
+    <updated>2014-01-19T16:02:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/robot-youtube1</id>
+    <content type="html"><![CDATA[<p>在 Youtube 上看到几个机器人的视频，觉得这几个机器人挺特别，就搬运到了优酷上。视频放在这里，有兴趣的可以点开看一看。（顺便一提，今天改进了一下前几天写的<a href="http://pikipity.github.io/">“兰顿蚂蚁”的程序</a>，可以在支持色彩的终端上用色块代替字符，也就这样了，兰顿蚂蚁画出来的东西真是乱起八糟啊。。。o(╯□╰)o）</p>
+
+<!--more-->
+
+
+<h3>蜘蛛机器人</h3>
+
+<iframe height="498" width="510" src="http://player.youku.com/embed/XNjYyMjg1MzQ0" frameborder="0" allowfullscreen></iframe>
+
+
+<h3>自组装蛇形机器人</h3>
+
+<iframe height="498" width="510" src="http://player.youku.com/embed/XNjYyMjg3NjY4" frameborder="0" allowfullscreen></iframe>
+
+
+<h3>气球机器人（超漂亮）</h3>
+
+<iframe height="498" width="510" src="http://player.youku.com/embed/XNjYyMjg2NzA4" frameborder="0" allowfullscreen></iframe>
+
+
+<h3>MorpHex 机器人</h3>
+
+<iframe height="498" width="510" src="http://player.youku.com/embed/XNjYyMjg2MDU2" frameborder="0" allowfullscreen></iframe>
+
+
+<h3>蜻蜓机器人</h3>
+
+<iframe height="498" width="510" src="http://player.youku.com/embed/XNjYyMjg1NjAw" frameborder="0" allowfullscreen></iframe>
+
+
+<h3>Carleton University 机器人课</h3>
+
+<p>人家机器人课玩乐高！！我们还在苦逼的用 Matlab 仿真。%>_&lt;%</p>
+
+<iframe height="498" width="510" src="http://player.youku.com/embed/XNjYyMjg4MDky" frameborder="0" allowfullscreen></iframe>
+
+
+<h3>Pololu 3pi 机器人</h3>
+
+<p>这个机器人超好玩，小巧又可以自己 DIY，土豪们可以考虑入手啊。<a href="http://www.pololu.com/product/975">官网销售</a></p>
+
+<iframe height="498" width="510" src="http://player.youku.com/embed/XNjYyMjg3MDY0" frameborder="0" allowfullscreen></iframe>
+
+
+<h3>Parrot MiniDrone and Parrot Jumping Sumo</h3>
+
+<p>这两个机器人最近很火（官网新闻 <a href="http://blog.parrot.com/2014/01/07/parrot-minidrone/">Parrot MiniDrone</a> 和 <a href="http://blog.parrot.com/2014/01/07/parrot-jumping-sumo/">Parrot Jumping Sumo</a>），但一样是土豪的玩具。%>_&lt;%</p>
+
+<iframe height="498" width="510" src="http://player.youku.com/embed/XNjU3OTcyMjA0" frameborder="0" allowfullscreen></iframe>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[兰顿蚂蚁（Ncurses）]]></title>
+    <link href="http://pikipity.github.io/blog/langton-ant.html"/>
+    <updated>2014-01-17T09:38:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/langton-ant</id>
+    <content type="html"><![CDATA[<p><img src="https://lh4.googleusercontent.com/-y22D4cBCYE4/UtiMAcZme4I/AAAAAAAABb0/3pzCr03dDQc/s353/LangtonsAntAnimated.gif" alt="兰顿蚂蚁规则演示" /></p>
+
+<p>“生命游戏”已经快被玩坏了，但是“兰顿蚂蚁”貌似很少有人做，可能是因为变化没有那么多，看起来不是那么有意思吧。</p>
+
+<p>“兰顿蚂蚁”也是细胞自动机的一种案例，在一个只有黑白两种方格的世界里，兰顿规定了一种蚂蚁的行动方式：</p>
+
+<ul>
+<li>如果蚂蚁当前在黑格，那么右转90度，将此格变为白色，前进一步；</li>
+<li>如果蚂蚁当前在白格，那么左转90度，将此格变为黑色，前进一步。</li>
+</ul>
+
+
+<p>我用 Ncurses 写了一个一只蚂蚁的程序，黑格用“#”表示，白格什么也没有（或者说是空格），蚂蚁根据朝向不同，字母也不同，朝上是“U”，朝下是“D”，朝左是“L”，朝右是“R”。程序可以到<a href="https://github.com/pikipity/Langton_ant.git">我的 Github 下载</a></p>
+
+<p>下面是此程序的一段演示视频：</p>
+
+<iframe height="498" width="510" src="http://player.youku.com/embed/XNjYyNjI0NjEy" frameborder="0" allowfullscreen></iframe>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Lytro Camera -- 光场相机]]></title>
+    <link href="http://pikipity.github.io/blog/light-field-camera.html"/>
+    <updated>2014-01-04T08:35:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/light-field-camera</id>
+    <content type="html"><![CDATA[<p><img src="https://lh3.googleusercontent.com/-v_sSVgUCrLk/UsdaMN5vqPI/AAAAAAAABbM/AZxnmd6vAtE/s576/Lytro.jpg" alt="Lytro Camera" /></p>
+
+<p><a href="http://en.wikipedia.org/wiki/Light-field_camera">光场相机</a>自从1908年第一次提出之后，就一直是雷声大雨点小。2011年 Lytro 公司发布了<a href="https://www.lytro.com/camera/#software-3d">上图这款消费级的光场相机</a>，受到各方面的关注之后就慢慢淡出人们的视野了。</p>
+
+<p>这里有一段视频，来简单介绍一下光场相机：</p>
+
+<iframe height="498" width="510" src="http://player.youku.com/embed/XNjU3MDY4ODA0" frameborder="0" allowfullscreen></iframe>
+
+
+<p>另外一个视频简单介绍了光场相机拍摄出来的相片的优点：</p>
+
+<iframe height="498" width="510" src="http://player.youku.com/embed/XNjU3MTM2Mjg0" frameborder="0" allowfullscreen></iframe>
+
+
+<p>这款产品做的相当不错，包括了相关的处理软件，并可以和社交网站连接直接上传照片，官方也有一个<a href="https://pictures.lytro.com/">让用户展示照片的平台</a>。虽然价格貌似贵了一些，但是和那些高级单反相机相比，还是没有什么的吧。下面是一个 Lytro 相机拍摄的照片分享（鼠标点击图片就可以重新对焦，鼠标拖动可以改变视角）</p>
+
+<iframe width="400" height="415" src="http://pictures.lytro.com/lytroweb/pictures/431172/embed" frameborder="0" allowfullscreen scrolling="no"></iframe>
+
+
+<p>我认为之所以光场相机现在叫好不叫座，主要还是由于人们的使用习惯难以改变。大多人已经习惯了先对焦再拍照的习惯，这种先拍照后对焦的方式无疑是要改变大多数人的认知的。或许在未来，每个人手上的相机，甚至是手机上的相机，都是光场相机。但是现在，要让大众迅速接受这样一种从外观到使用都超乎想象的“东西”，还是非常困难的。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[40行代码大赛 -- Cocoa China]]></title>
+    <link href="http://pikipity.github.io/blog/40-line-code-award.html"/>
+    <updated>2014-01-03T09:15:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/40-line-code-award</id>
+    <content type="html"><![CDATA[<p>在2013年的最后四天里，<a href="http://www.cocoachina.com/bbs/thread.php?fid=6&amp;page=1">Cocoa China 论坛</a>举行了一个<a href="http://www.cocoachina.com/bbs/read.php?tid=175903&amp;page=1">“40行代码大赛”</a>，看谁可以使用不超过40行的代码就写出提现 Geek 精神的原创程序，语言不限，objective-C 最好。</p>
+
+<p>虽然已经结束了，但是参赛作品的质量都不容小觑，很值得学习。下面是我看到的很有创意的几个作品：</p>
+
+<ol>
+<li><a href="http://www.cocoachina.com/bbs/read.php?tid=177830">用shader实现的生命游戏</a></li>
+<li><a href="http://www.cocoachina.com/bbs/read.php?tid=175964">用二分法查找算法+递归对数组快速匹配单词（外加模糊查找，不连续关键词查找）</a></li>
+<li><a href="http://www.cocoachina.com/bbs/read.php?tid=177832">代码片段：不加载图片，实现世界地图的显示和旋转</a></li>
+<li><a href="http://www.cocoachina.com/bbs/read.php?tid=177219">一键打包</a></li>
+<li><a href="http://www.cocoachina.com/bbs/read.php?tid=176148">用十种语言说“我爱你” (IOS7)</a></li>
+<li><a href="http://www.cocoachina.com/bbs/read.php?tid=177222&amp;fpage=2">不使用一张图片，实现漂亮的霓虹灯特效</a></li>
+<li><a href="http://www.cocoachina.com/bbs/read.php?tid=177183&amp;fpage=2">输入的时候自动对银行账号进行格式化</a></li>
+<li><a href="http://www.cocoachina.com/bbs/read.php?tid=176160&amp;fpage=2">根据分辨率缩放并旋转图片。最重要的是，消除图片白边</a></li>
+<li><a href="http://www.cocoachina.com/bbs/read.php?tid=176055&amp;fpage=2">一弧形展示代碼片段</a></li>
+<li><a href="http://www.cocoachina.com/bbs/read.php?tid=176052&amp;fpage=3">圣诞动画</a></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[字符雨效果 -- Ncurses]]></title>
+    <link href="http://pikipity.github.io/blog/character-rain-ncurse.html"/>
+    <updated>2013-12-27T16:42:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/character-rain-ncurse</id>
+    <content type="html"><![CDATA[<p>今天突然想到可以用 ncurses 实现一下《黑客帝国》中字符雨的效果，应该会很好看，顺便复习一下早已丢掉的 C++。代码很简单，可以到<a href="https://github.com/pikipity/Character_rain_the_matrix.git">这里</a>下载。</p>
+
+<p><img src="https://lh5.googleusercontent.com/-caNd3rPWReM/Ur077_y4FwI/AAAAAAAABas/vC5-57tCXZc/s720/12%25E6%259C%2588%252027%252C%25202013%252016%253A31.gif" alt="程序效果" /></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[你好，zsh]]></title>
+    <link href="http://pikipity.github.io/blog/introduction-to-zsh.html"/>
+    <updated>2013-12-25T17:43:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/introduction-to-zsh</id>
+    <content type="html"><![CDATA[<p><img src="https://lh5.googleusercontent.com/-0o9D53zyzsc/Urqxkk8sX8I/AAAAAAAABaM/NUvbaYHXQWA/s337/oh-my-zsh-logo.png" alt="on-my-zsh" /></p>
+
+<p>随着直接使用 shell 的次数增多，越来越感觉 bash shell 各种意义上的不方便：没有自动补全，输入错误指令不能自动校正等等。于是开始寻找一个用起来比较方便快捷的新 shell。在寻找的过程中发现了 zsh。</p>
+
+<p>我没有尝试原版的 zsh（官方网站在<a href="http://www.zsh.org/">这里</a>）。而是直接根据大多数人的推荐，安装了 oh-my-zsh（Github 项目主页在<a href="https://github.com/robbyrussell/oh-my-zsh.git">这里</a>）。用过之后，我就再也不想碰 bash 了。如果你仅仅想知道它和 bash 相比，有什么好处，请移步到<a href="http://www.quora.com/What-are-the-advantages-and-disadvantages-of-using-zsh-instead-of-bash-or-other-shells">这里</a>看看吧，大家说好的东西才是真的好 :-D 。这里我只说说在我眼中 zsh 的好处：</p>
+
+<ol>
+<li>bash 能做的它都能做，而且在 bash 里怎么做，在 zsh 里就怎么做，可以说学习代价降到了最低。</li>
+<li><p>超级好用的自动补全，命令及命令参数不再需要打完整了，打一半，然后 Tab 键，所有可选信息就展示出来，用 Tab 键选择，然后回车输入就可以了，简直方便快捷。尤其是输入路径的时候，再也不用 ls 去看路径的内容了，cd + Tab 搞定一切，省心省力。</p>
+
+<p><img src="https://lh4.googleusercontent.com/-9L_9-Fr5U4o/UrqxkmsrcXI/AAAAAAAABaI/BEJ-MS1QJUk/s599/%25E5%25B1%258F%25E5%25B9%2595%25E5%25BF%25AB%25E7%2585%25A7%25202013-12-25%2520%25E4%25B8%258B%25E5%258D%25886.05.50.png" alt="自动补全" /></p></li>
+<li><p>自动纠错功能非常好用，再也不用每条命令都明明白白的记住了，记个大概，剩下的交给 zsh 自动纠错了。</p>
+
+<p><img src="https://lh5.googleusercontent.com/-wqtEVfxhZNg/UrqxlPka2cI/AAAAAAAABaY/3hKt9aOAR5Y/s353/%25E5%25B1%258F%25E5%25B9%2595%25E5%25BF%25AB%25E7%2585%25A7%25202013-12-25%2520%25E4%25B8%258B%25E5%258D%25886.09.05.png" alt="自动纠错" /></p></li>
+<li><p>oh-my-zsh 提供多种多样的主题，无论怎么样，总有一款适合你。如果全都不合适，也可以自己定制。主题（主题库在<a href="https://github.com/robbyrussell/oh-my-zsh/wiki/themes">这里</a>）也不是简简单单改改颜色那么简单欧！！主题配合 oh-my-zsh 自带的 git 插件一起使用，让 git 的使用更加方便快捷！！</p>
+
+<p><img src="https://lh3.googleusercontent.com/-jyeEtbcDv8k/Urqxkj5eWUI/AAAAAAAABaQ/-CxipTrdNuo/s538/theme-oh-my-zsh.png" alt="一种 oh-my-zsh 的主题" /></p></li>
+</ol>
+
+
+<p>在 Mac 下，推荐将 zsh 与 iTerm（在<a href="http://iterm.sourceforge.net/index.shtml">这里</a>下载）配合使用，增加更多的可定制功能，尤其是输入快捷键，将常用指令与快捷键结合之后，现在完全不用记命令了 ~\(≧▽≦)/~</p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Categories: Ios | 折腾来折腾去]]></title>
+  <link href="http://pikipity.github.io/blog/categories/ios/atom.xml" rel="self"/>
+  <link href="http://pikipity.github.io/"/>
+  <updated>2016-02-15T21:04:31+08:00</updated>
+  <id>http://pikipity.github.io/</id>
+  <author>
+    <name><![CDATA[pikipity]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[脑电波控制 Iphone 拍摄感兴趣的东西（Youtube）]]></title>
+    <link href="http://pikipity.github.io/blog/brain-wave-iphone-camera.html"/>
+    <updated>2013-12-14T20:38:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/brain-wave-iphone-camera</id>
+    <content type="html"><![CDATA[<iframe width="560" height="315" src="//www.youtube.com/embed/W67LvAYAkY4?rel=0" frameborder="0" allowfullscreen></iframe>
+
+
+<p>更多可以到<a href="http://neurowear.com/projects_detail/neurocam.html">官网</a>看看。这个网站还有很多将脑电与手机应用结合的 project。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[IOS7 是在 Word 里面设计出来的么？]]></title>
+    <link href="http://pikipity.github.io/blog/ios-in-word.html"/>
+    <updated>2013-10-23T23:05:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/ios-in-word</id>
+    <content type="html"><![CDATA[<p>这个视频就是用来吐槽 IOS7 设计的吧，233333</p>
+
+<p><embed src="http://player.youku.com/player.php/sid/XNjI1MTI5Mjgw/v.swf" allowFullScreen="true" quality="high" width="480" height="400" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash"></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[解决澳门大学 Ummoodle 上 PDF 文件在 IOS 无法正常打开或下载的问题]]></title>
+    <link href="http://pikipity.github.io/blog/ummoodle-pdf.html"/>
+    <updated>2013-10-04T21:11:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/ummoodle-pdf</id>
+    <content type="html"><![CDATA[<p>澳门大学的 ummoodle 在更新之后就出现了 pdf 文件在 IOS 设备上无法正常打开的状况，打开包含 pdf 的网页之后就会出现如下画面：</p>
+
+<p><img src="https://lh3.googleusercontent.com/-QQxd0viyyg8/Uk7Cc9wZh5I/AAAAAAAABRE/reSNdTtOBrA/s512/%25E7%2585%25A7%25E7%2589%2587%252004-10-2013%252009%252020%252019%2520PM.png" alt="无法拖动和下载的 pdf 文件" /></p>
+
+<p>pdf 文件就好像一个没有完整显示的图片一样在那里，没法下载和拖动。但是此问题仅限于 IOS 设备里的浏览器，电脑上的浏览器可以正常显示，Android 设备上无法显示文件，但是会显示一条链接，点击连接之后就可以下载文件了，所以很显然是 IOS 设备的浏览器对于网页的解析出现了问题，于是我研究了一下一个含有 pdf 文件的网页，发下了下面的一段代码：</p>
+
+<pre><code>&lt;object id="resourceobject" data="https://ummoodle.umac.mo/pluginfile.php/74630/mod_resource/content/1/elec414-2013-2.pdf" type="application/pdf" width="800" height="600"&gt;
+
+&lt;param name="src" value="https://ummoodle.umac.mo/pluginfile.php/74630/mod_resource/content/1/elec414-2013-2.pdf" /&gt;
+
+Click &lt;a href="https://ummoodle.umac.mo/pluginfile.php/74630/mod_resource/content/1/elec414-2013-2.pdf" &gt;elec414-2013-2.pdf&lt;/a&gt; link to view the file.
+
+&lt;/object&gt;
+</code></pre>
+
+<p>很显然，网页本身是想调用 IOS 内置的 pdf 阅览器来浏览 pdf 文件，但是由于浏览器排版的原因（固定宽高的设定很明显不适合移动设备啊），导致此被预览的 pdf 文件被其他区块所覆盖，进而导致用户无法对 pdf 文件进行操作。由于 Android 系统没有内置 pdf 阅览器，所以只会显示文件链接，从而避免了排版问题。</p>
+
+<p>既然原因找到，那么就来想一想解决方法吧。很显然，学校对网页的改进还需要时间，那么就从自身做起吧，基本来说想到了两种解决方案：</p>
+
+<ol>
+<li>禁用 IOS 内置的 pdf 阅览器。这个方法比较复杂，由于 IOS 取消了 safari 设置中“禁用内置 pdf 阅览器”的选项，导致现在想要禁用 pdf 阅览器就必须直接删除<code>/Library/</code>下的 pdf 阅览器的插件才行，必须越狱之后安装 iFile 才可以。此方法不仅麻烦，由于需要触碰到系统文件，还比较危险，一旦删错文件，后果不堪设想。</li>
+<li>使用 moodle 的 APP，例如 <a href="https://itunes.apple.com/us/app/my-moodle/id461289000?mt=8">My Moodle</a> 和 <a href="https://itunes.apple.com/au/app/moodle-mobile/id633359593?mt=8">Moodle Mobile</a>，暂时我还没有使用过，但是据使用者说，可以正常打开 pdf 文件。</li>
+<li><p>直接浏览目标网页的 html 源代码，找到 pdf 文件原始地址来打开。我选择使用这种方法，一次设置之后，以后使用也很方便，熟练以后，因为 ummoodle 的各个网页的 html 代码结构都差不多，所以也是很快捷的。由于 IOS 上的 safari 浏览器无法直接查看源代码，所以需要借助一些可以查看 html 的网站来实现这个方法，我借助的是<a href="http://ole.michelsen.dk/blog/view-source-on-the-ipad-and-iphone/">这个</a>网站的方法。原理就是利用 “GeSHi” 这个小程序将网页发送给 “ole.michelsen.dk” 的服务器来解析网页的 html 代码，然后显示出来（还带有代码高亮呦！！）。具体的设置如下：</p>
+
+<ol>
+<li><p>在 IOS 上用 safari 随便打开一个网页，然后保存为书签，为了以后方便，书签起名叫“查看源代码”</p>
+
+<p><img src="https://lh6.googleusercontent.com/-GJzD1e5flq4/Uk7CacaecPI/AAAAAAAABQM/7yNUfqyc85s/s512/%25E7%2585%25A7%25E7%2589%2587%252004-10-2013%252009%252002%252034%2520PM.png" alt="我这里保存 Google 为书签" /></p>
+
+<p><img src="https://lh3.googleusercontent.com/-UwnXN2sL5Dc/Uk7CaT4DWHI/AAAAAAAABQY/TRDTziQF2pQ/s512/%25E7%2585%25A7%25E7%2589%2587%252004-10-2013%252009%252003%252059%2520PM.png" alt="书签起名叫“查看源代码”" /></p></li>
+<li><p>打开<a href="http://ole.michelsen.dk/viewsource/bookmarklet.min.js">这个</a>链接，将里面的内容全选并复制。</p>
+
+<p><img src="https://lh3.googleusercontent.com/-HMF-lKk1y-M/Uk7CclMamRI/AAAAAAAABRA/HzhlBHulUBA/s512/%25E7%2585%25A7%25E7%2589%2587%252004-10-2013%252009%252007%252032%2520PM.png" alt="复制所有内容" /></p></li>
+<li><p>在书签中找到刚才保存的书签，并将刚才复制的内容粘贴到此书签的 URL 处，点击“完成”保存书签就可以了。</p>
+
+<p><img src="https://lh4.googleusercontent.com/-HsLL8-EF6tk/Uk7CaRtwBII/AAAAAAAABQU/Tjad3nkRsko/s512/%25E7%2585%25A7%25E7%2589%2587%252004-10-2013%252009%252004%252027%2520PM.png" alt="编辑“查看源代码”书签" /></p>
+
+<p><img src="https://lh4.googleusercontent.com/-WzvU_jk6DA0/Uk7CbGpBFeI/AAAAAAAABQg/fm0VEzchE0U/s512/%25E7%2585%25A7%25E7%2589%2587%252004-10-2013%252009%252004%252040%2520PM.png" alt="将复制的内容粘贴到书签 URL 处" />
+如果想要下载某个网页的 pdf 文件，就先打开那个含 pdf 文件的网页，然后点击“查看源代码”的书签，就会打开网页的源代码，然后找到其中包含 pdf 文件源地址的部分（很好找的），点击源地址下载就可以了。</p></li>
+</ol>
+
+
+<p><img src="https://lh3.googleusercontent.com/-f0W97s6s1pQ/Uk7ON6MtNQI/AAAAAAAABRY/iqaaVByPcYk/s512/%25E7%2585%25A7%25E7%2589%2587%252004-10-2013%252009%252005%252051%2520PM.png" alt="含有 pdf 文件的网站，点击“查看源代码”的书签（可以把书签放在书签栏方便查找）" /></p>
+
+<p><img src="https://lh5.googleusercontent.com/-oCYL-kJ0eCM/Uk7CbpDIoEI/AAAAAAAABQs/73VVyzHxwg8/s512/%25E7%2585%25A7%25E7%2589%2587%252004-10-2013%252009%252006%252016%2520PM.png" alt="html 中包含 pdf 文件源地址的部分" /></p>
+
+<p><img src="https://lh4.googleusercontent.com/-I6jQKkkt67A/Uk7CcDHtE2I/AAAAAAAABQ4/_Q-EJqEbLYk/s512/%25E7%2585%25A7%25E7%2589%2587%252004-10-2013%252009%252006%252028%2520PM.png" alt="点击 pdf 文件源地址就可以正常打开 pdf 文件了" /></p></li>
+</ol>
+
+
+<p>PS: ICTO 回复了相关问题，回复邮件内容如下：</p>
+
+<pre><code>For this case, please advice your teacher to change the "Appearance" option of the PDF file to "New window" in UMMoodle and this will solve your problem.
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[人人都是艺术家]]></title>
+    <link href="http://pikipity.github.io/blog/everyone-is-artister.html"/>
+    <updated>2013-05-14T13:54:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/everyone-is-artister</id>
+    <content type="html"><![CDATA[<p>如果你认为没有艺术细胞的普通人就画不出具有艺术气息的画作，那么你就大错特错了。在<a href="http://weavesilk.com/">Silk</a>上，你随便画几笔都能得到超级漂亮的画作，不仅有<a href="http://weavesilk.com/">网页版</a>，还有<a href="http://click.linksynergy.com/fs-bin/stat?id=1ld*hl4tNqs&amp;offerid=146261&amp;type=3&amp;subid=0&amp;tmpid=1826&amp;RD_PARM1=https%253A%252F%252Fitunes.apple.com%252Fus%252Fapp%252Fsilk-interactive-generative%252Fid436590129%253Fmt%253D8%2526uo%253D4%2526partnerId%253D30">iphone 和 ipad 版</a>。人人都是艺术家~~~~~~~</p>
+
+<p><img src="https://lh3.googleusercontent.com/-B0yMeLeEd6c/UZHRYsrHN3I/AAAAAAAAA0U/Xp25NucJdyY/s912/%25E4%25B8%258B%25E8%25BD%25BD.png" alt="别问我我画的是什么，因为我也不知道" /></p>
+
+<p><img src="https://lh6.googleusercontent.com/-pPl5gb14n-Q/UZHRY_Z9L8I/AAAAAAAAA0Y/y2_HQsSmRJ0/s912/%25E4%25B8%258B%25E8%25BD%25BD%2520%25281%2529.png" alt="本来想画朵花的" /></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[iOS 6.1.2 更新发布]]></title>
+    <link href="http://pikipity.github.io/blog/ios-updata.html"/>
+    <updated>2013-02-20T16:20:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/ios-updata</id>
+    <content type="html"><![CDATA[<p>苹果发布了 iOS 固件更新，修复了 Exchange 日历错误。更新描述如下：</p>
+
+<blockquote><p>修复了可能导致网络流量上升与电池电量下降的 Exchange 日历错误。</p></blockquote>
+
+<p>与此同时，苹果还将 iTunes 更新至 v11.0.2 版。在视图显示中新增了作曲家视图的设置，并提高了访问大量播放列表时的响应速度。同时还修复了已购买的内容无法在资料库中显示的问题。</p>
+
+<p>此次更新覆盖包括 iPad 2/3/4、iPad mini、iPhone 3GS/4/4S/5、iPod touch 4G/5G 在内的多款 iOS 设备，果迷们可以通过 iOS 系统更新（设置-通用-系统更新）或 iTunes 升级到 iOS 6.1.2 最新固件。</p>
+
+<p>iOS 6.1.2 仍未封堵最新越狱工具所利用到的漏洞，越狱团队 evad3rs 已将 iOS 6.x 完美越狱工具 <a href="http://evasi0n.com/">Evasi0n</a> 更新至v1.4版以应对最新固件。</p>
+
+<p><img src="/images/post/ios-6.1.2.jpg" width="450pt"></p>
+]]></content>
+  </entry>
+  
+</feed>

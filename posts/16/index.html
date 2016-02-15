@@ -1,0 +1,567 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>折腾来折腾去</title>
+  <meta name="author" content="pikipity">
+
+  
+  <meta name="description" content="在看了很多关于MOSFET介绍后发现这些资料都有一个共同的毛病，就是对于PMOS的介绍少的可怜，往往就是一句“和NMOS类似”就一带而过，但是NMOS和PMOS还是有很多不一样的，所以在这里对NMOS和PMOS的Large Signal Analysis和Small Signal &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://pikipity.github.io/posts/16/index.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="折腾来折腾去" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38118079-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">折腾来折腾去</a></h1>
+  
+    <h2>pikipity的blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="pikipity.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/projects">Projects</a></li>
+       <li><a href="/aboutme">AboutMe</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/mosfet.html">MOSFET分析总结</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-02-17T15:05:00+08:00'><span class='date'>2013年02月17日</span> <span class='time'>3:05 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>在看了很多关于<a href="http://en.wikipedia.org/wiki/MOSFET">MOSFET</a>介绍后发现这些资料都有一个共同的毛病，就是对于PMOS的介绍少的可怜，往往就是一句“和NMOS类似”就一带而过，但是NMOS和PMOS还是有很多不一样的，所以在这里对NMOS和PMOS的Large Signal Analysis和Small Signal Analysis做一下总结归纳。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/mosfet.html">继续阅读</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/keil-and-proteus.html">Proteus和Keil的简单教程</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-02-16T21:38:00+08:00'><span class='date'>2013年02月16日</span> <span class='time'>9:38 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>这篇主要简单介绍一下单片机仿真软件Proteus和单片机编程软件Keil，方便各位读者能够快速的在自己电脑上搭建一个8051单片机的软件仿真平台。</p>
+
+<h3>单片机仿真软件 &ndash; Proteus</h3>
+
+<p>如果你在平时的电路仿真中稍微留意一下的你会发现<a href="http://baike.baidu.com/view/1867313.htm">Spice</a>在仿真中都无法仿真单片机系统，所以这里需要介绍一下这个单片机仿真软件<a href="http://baike.baidu.com/view/40936.htm">Proteus</a>。由英国<a href="http://www.labcenter.com/index.cfm">Labcenter electronics公司</a>出品的<a href="http://baike.baidu.com/view/5822.htm">EDA软件</a>，可以很好的仿真一部分单片机及其外围器材。并具有自动布线和智能生成原理图的功能。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/keil-and-proteus.html">继续阅读</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/updata-macbook.html">苹果更新MacBook配置并降低产品价格</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-02-16T10:12:00+08:00'><span class='date'>2013年02月16日</span> <span class='time'>10:12 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="/images/post/macbook_2013_2_16.png" width="550pt"></p>
+
+<p>13寸配备Retina显示屏及128GB闪存的MacBook Pro降价到10988元，降幅高达1500元</p>
+
+<p>两款15寸的Retina MacBook Pro虽然未降价，但是配置提升。15寸低配处理器从2.3GHz升级到2.4GHz，高配从2.6GHz升级到了2.7GHz并且内存从8GB升级到了16GB。</p>
+
+<p>还有不仅是MacBook Pro，13寸256GB闪存的MacBook Air降价到了10488元</p>
+
+<p>具体购买信息可以在<a href="http://store.apple.com/cn/browse/home/shop_mac/family/macbook_pro?afid=p227%7C450545&amp;cid=AOS-CN-AFF-MACBOOK+PRO">MacBook Pro在线商店</a>和<a href="http://store.apple.com/cn/browse/home/shop_mac/family/macbook_air?afid=p227%7C450545&amp;cid=AOS-CN-AFFC-MACBOOKAIR">MacBook Air在线商店</a>查询</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/bdrip.html">钓球</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-02-12T18:08:00+08:00'><span class='date'>2013年02月12日</span> <span class='time'>6:08 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>很欢快的一部动画片，画风也有点特别，看完之后想说一句</p>
+
+<p><strong><em>这是江之岛的宣传片么！！！</em></strong></p>
+
+<p><a href="http://www.bilibili.tv/video/av466900/index_1.html#"><img src="/images/post/BDrip.jpg" alt="电梯直通bilibili专辑层" width="550pt"></a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/nisemonogatari-vice-tracks.html">伪物语副音轨</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-02-12T13:22:00+08:00'><span class='date'>2013年02月12日</span> <span class='time'>1:22 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>各种吐槽，各种喜感，各种《伪物语》的声优日常</p>
+
+<p><a href="http://www.bilibili.tv/video/av469616/#"><img src="/images/post/Vice_tracks.jpg" alt="电梯直通bilibili专辑层"></a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/brain-function.html">左脑 vs. 右脑</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-02-12T12:41:00+08:00'><span class='date'>2013年02月12日</span> <span class='time'>12:41 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="/images/post/brain_function_1.jpg" width="550pt"></p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/brain-function.html">继续阅读</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/minecraft-apple.html">这只是人家的一个离散数学的作业而已</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-02-12T11:59:00+08:00'><span class='date'>2013年02月12日</span> <span class='time'>11:59 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://en.wikipedia.org/wiki/Reddit">Reddit</a>用户Sam Schwab用<a href="http://player.youku.com/player.php/sid/XNTA4MzE5NjM2/v.swf">Minecraft搭建了一个Apple总部</a>，目的就是为了做一下离散数学的作业</p>
+
+<p><a href="http://player.youku.com/player.php/sid/XNTA4MzE5NjM2/v.swf"><img src="/images/post/Minecraft_apple.png" alt="用Minecraft搭建了一个Apple总部" width="550pt"></a></p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/minecraft-apple.html">继续阅读</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/21th-ioccc-winner.html">别再说你懂C，这才是真正的C</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-02-12T11:19:00+08:00'><span class='date'>2013年02月12日</span> <span class='time'>11:19 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>第二十一届<a href="http://www.ioccc.org/index.html">混乱编码大赛（IOCCC）</a>已经过去很久很久了，下一届可能还要等上一段时间吧，让我们来回顾一下那些大神们的C语言艺术。:-O 全部都可编译成功 :-O</p>
+
+<p>最具隐蔽性奖：美国 Don Yang（看这名字像华裔）</p>
+
+<p><img src="/images/post/12_IOCCC_3.jpg" alt="nyaruko.c" width="550pt"></p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/21th-ioccc-winner.html">继续阅读</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013-beatific-message.html">蛇年祝福短信</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-02-12T11:08:00+08:00'><span class='date'>2013年02月12日</span> <span class='time'>11:08 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>祝蛇年吉祥，前程似锦，吉星高照，财运亨通，合家欢乐，飞黄腾达，福如东海，寿比南山，幸福美满，官运亨通，美梦连连。</p>
+
+<p>送你一份春节美食，成分：真心、思念、快乐。营养：温馨、幸福。制造商：你的朋友。有效期：一生。祝你蛇年万事如意!</p>
+
+<p>鸿运滚滚来，四季都发财。蛇年好事多，幸福喜颜开。步步再高升，事事顺着来。老友多联系，莫将我忘怀!</p>
+
+<p>堆积365天的想念，凝聚千丝万缕的柔情，拼却春夏秋冬的痴恋，采撷夜空璀璨的星宿，只为祝你春节快乐!</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013-beatific-message.html">继续阅读</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/next-year.html">明年交给你了</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-02-12T11:02:00+08:00'><span class='date'>2013年02月12日</span> <span class='time'>11:02 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>超精美的十二生肖接力图</p>
+
+<p><img src="/images/post/next_year.jpg" alt="十二生肖接力图" width="550pt"></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/posts/17">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/posts/15">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me -- pikipity</h1>
+  <ul id="post">
+  pikipity 的小博客，搜罗有意思的科技话题，展示自己的所知所学所感。<p>
+  
+  <img src="/images/myface.gif" width="100pt"><p>
+  
+  如果发现问题，请在文章后面留言指出或是直接点<a href="mailto:pikipityw@gmail.com">这里</a>发邮件给我指正，谢谢。<p>
+  
+  pikipity Blog: <a href="http://pikipity.github.io/">pikipity.github.io</a><p>
+  
+  pikipity Email: <a href="mailto:pikipityw@gmail.com">pikipityw.gmail.com</a><p>
+  
+  使用IE浏览器可能无法得到完美的浏览体验，建议更换为<a href="https://www.google.com/intl/en/chrome/browser/"> Chrome 浏览器</a><p>
+
+  </ul>
+</section>
+<section>
+  <h1>Category List</h1>
+    <span id="tag-cloud"><a href='/blog/categories/algorithm' style='font-size: 107.89473684210526%'>algorithm(5)</a> <a href='/blog/categories/arduino' style='font-size: 109.47368421052632%'>arduino(6)</a> <a href='/blog/categories/assembly' style='font-size: 111.05263157894737%'>assembly(7)</a> <a href='/blog/categories/c-plus-plus' style='font-size: 103.15789473684211%'>c++(2)</a> <a href='/blog/categories/cartoon' style='font-size: 111.05263157894737%'>cartoon(7)</a> <a href='/blog/categories/circuit' style='font-size: 104.73684210526315%'>circuit(3)</a> <a href='/blog/categories/game' style='font-size: 115.78947368421052%'>game(10)</a> <a href='/blog/categories/github' style='font-size: 104.73684210526315%'>github(3)</a> <a href='/blog/categories/google' style='font-size: 126.84210526315789%'>google(17)</a> <a href='/blog/categories/ios' style='font-size: 111.05263157894737%'>ios(7)</a> <a href='/blog/categories/life' style='font-size: 160.0%'>life(38)</a> <a href='/blog/categories/linux' style='font-size: 112.63157894736842%'>linux(8)</a> <a href='/blog/categories/mac' style='font-size: 125.26315789473685%'>mac(16)</a> <a href='/blog/categories/matlab' style='font-size: 125.26315789473685%'>matlab(16)</a> <a href='/blog/categories/movie' style='font-size: 106.3157894736842%'>movie(4)</a> <a href='/blog/categories/octopress' style='font-size: 104.73684210526315%'>octopress(3)</a> <a href='/blog/categories/others' style='font-size: 115.78947368421052%'>others(10)</a> <a href='/blog/categories/processing' style='font-size: 111.05263157894737%'>processing(7)</a> <a href='/blog/categories/python' style='font-size: 109.47368421052632%'>python(6)</a> <a href='/blog/categories/scm' style='font-size: 128.42105263157896%'>scm(18)</a> <a href='/blog/categories/technology' style='font-size: 126.84210526315789%'>technology(17)</a> </span>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week4.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week4)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week3.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week3)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week12summary.html">Algorithms: Design and Analysis Part 1 – Programming Questions (Week1 and Week 2 Summary)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week2.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week2)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week1.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week1)</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+<h1>Copyright Agreement</h1>
+<ul id="copyright">
+<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh"><img
+  alt="知识共享许可协议" style="border-width:0"
+  src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png"
+  /></a><br />本作品采用<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh">知识
+  共享署名-非商业性使用-相同方式共享 3.0 未本地化版本许可协议</a>进行
+  许可。<p>
+
+  如果您想转载本网站下的博文，请注明作者和出处。如果文章内没有特别说明，文章皆为原创，请将出处注明为那篇文章的网址；如果文章内特别指明为转载，请将出处注明为原始文章的网址。非常感谢。<p>
+</ul>
+</section><section>
+  <h1>Who are visiting</h1>
+  <ul id="for_fun">
+  <script type="text/javascript" src="http://jb.revolvermaps.com/2/1.js?i=1p1ij0eyux4&amp;s=190&amp;m=7&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+  </ul>
+</section>
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - pikipity -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

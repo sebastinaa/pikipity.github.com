@@ -1,0 +1,325 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>用 Alfred 快速启动 MATLAB - 折腾来折腾去</title>
+  <meta name="author" content="pikipity">
+
+  
+  <meta name="description" content="大概很多人都会难以忍受 MATLAB 启动时候漫长的等待，那是因为 MATLAB 的窗口化是基于 java 的，加载 java 永远是一个让人蛋疼的事情。但是如果你使用的是 Linux 或是 Mac OS X，那么你完全没必要把时间都花费在等待 MATLAB 准备和打开 java 的过程上。 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://pikipity.github.io/blog/open-matlab-fast-using-alfred.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="折腾来折腾去" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38118079-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">折腾来折腾去</a></h1>
+  
+    <h2>pikipity的blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="pikipity.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/projects">Projects</a></li>
+       <li><a href="/aboutme">AboutMe</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">用 Alfred 快速启动 MATLAB</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-08-05T18:44:00+08:00'><span class='date'>2013年08月05日</span> <span class='time'>6:44 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>大概很多人都会难以忍受 MATLAB 启动时候漫长的等待，那是因为 MATLAB 的窗口化是基于 java 的，加载 java 永远是一个让人蛋疼的事情。但是如果你使用的是 Linux 或是 Mac OS X，那么你完全没必要把时间都花费在等待 MATLAB 准备和打开 java 的过程上。我们真正使用 MATLAB 是使用它的命令行，而它的图形化界面，除了修改图片和使用具有 GUI 的 toolbox，一般很少用到，所以到用到的时候在加载 java 就可以了，而且由于加载 java 和启用命令行的操作分开了，同时运行的线程和占用的内存都减少了，java 的加载速度也会相应提升。总而言之，就是让你觉得 Matlab 快了很多很多。</p>
+
+<p><img src="https://lh3.googleusercontent.com/-IPC7qvN44iA/Uf-RDQ06AZI/AAAAAAAAA8E/oyQ6i78YWwo/s800/%25E5%25B1%258F%25E5%25B9%2595%25E5%25BF%25AB%25E7%2585%25A7%25202013-08-05%2520%25E4%25B8%258B%25E5%258D%25887.46.50.png" alt="终端使用 MATLAB" /></p>
+
+<p>这里使用的技巧并不高深，只是让 <a href="http://www.alfredapp.com/">Alfred</a> 执行一段 shell 命令，并为这个命令定制关键词，方便以后用 <a href="http://www.alfredapp.com/">Alfred</a> 搜索。</p>
+
+<p><a href="http://www.alfredapp.com/">Alfred</a> 是 Mac OS X 上的一款快速启动、查询工具，类似于 Mac OS X 自带的 spotlight，但是功能上则强大很多。spotlight仅能查询文件并快速打开，<a href="http://www.alfredapp.com/">Alfred</a> 则不仅如此，查询网页、查询词典、替代计算器、查询 iTunes、执行指定 shell 命令、workflow 或是 AppleScript 等等，而且这些功能全部集成到一个搜索条中，超级方便快捷。现在，spotlight 早已经被我禁用了，完全由 <a href="http://www.alfredapp.com/">Alfred</a> 代替。<a href="http://www.alfredapp.com/">Alfred</a> 的官网在<a href="http://www.alfredapp.com/">这里</a>，你可以免费下载和使用，但是免费版中部分功能被限制，用起来还是很不爽的，你可以通过购买获得 Powerpack 激活码，然后就可以享用 <a href="http://www.alfredapp.com/">Alfred</a> 所有强大的功能了。如果你不想付钱，你可以到<a href="http://pan.baidu.com/share/link?shareid=2139275050&amp;uk=4080321956">这里</a>下载 <em>X解程序</em>，但是 v1 旧版的X解程序，官网提供的新版 v2 的X解还请自行 <a href="https://www.google.com">Google</a> 之。</p>
+
+<p><img src="https://lh5.googleusercontent.com/-M187kHThsnM/Uf-RDKTJYBI/AAAAAAAAA8A/QMe45cbl_gI/s512/%25E5%25B1%258F%25E5%25B9%2595%25E5%25BF%25AB%25E7%2585%25A7%25202013-08-05%2520%25E4%25B8%258B%25E5%258D%25887.00.51.png" alt="Alfred 使用画面" /></p>
+
+<p>这里就不介绍软解的安装与X解还有基本配置了，毕竟软件很简单，一目了然。直奔主题，如何让其执行一段 shell 命令来在终端下打开 MATLAB。</p>
+
+<p>首先，你要知道如何在终端下打开 MATLAB。找到你电脑上的 MATLAB 程序，我指的不是那个 app 在哪，而是在那个 app 上右键，点击显示包内容之后，找到一个文件名叫 matlab 的程序（我记得应该就是一个 shell 脚本），记录下它的路径（右键单击“拷贝路径”中的“Path”，例如我的路径就是<code>/Applications/MATLAB/MATLAB_R2011a.app/bin/matlab</code>）。然后你只要在终端中直接执行这个路径，MATLAB 就会打开了。但是你会发现，依然是以图形化界面的方式打开，所以你需要在路径后面加一些启动参数，常用的启动参数如下</p>
+
+<pre><code>-nodesktop  不启动图形化界面
+-nosplash   无欢迎信息
+</code></pre>
+
+<p>你也可以在后面使用参数<code>-r</code>，这样，MATLAB打开后就会自动执行后面的命令（需要执行的命令空一格用引号引起来放在后面就可以了，例如<code>-r "x=1:10;plot(x)"</code>）。</p>
+
+<p>现在就要将这个启动 MATLAB 的 shell 命令添加入 <a href="http://www.alfredapp.com/">Alfred</a> 中。打开 <a href="http://www.alfredapp.com/">Alfred</a> 的 &ldquo;Preferences"，在 “Extensions” 中添加一个 shell 命令，名字随便起一个就好了。"Title&rdquo; 是你将会在 <a href="http://www.alfredapp.com/">Alfred</a> 中搜索看到的名字，起一个好认的就可以了。"Description" 是你将在 <a href="http://www.alfredapp.com/">Alfred</a> 中显示在名字下面的小字，简单注释一下就可以了。"Keyword" 一定要使用，不然每次打名字就太累了，这里可以设置快捷键，以后搜索的时候打入这个关键字就可以了。"Options" 中的 &ldquo;Silent&rdquo; 必须取消掉，不然 MATLAB 会在后台启动而不显示。"Command" 就不多说了，把你要执行的命令放进来就可以了。"Parameter" 是设置你将来搜索的时候是否需要参数，"Auto Detect" 就可以了。保存，就可以使用了。</p>
+
+<p><img src="https://lh4.googleusercontent.com/-DWMROP6I7qA/Uf-RC77dmCI/AAAAAAAAA74/4XxBwboOPjA/s640/%25E5%25B1%258F%25E5%25B9%2595%25E5%25BF%25AB%25E7%2585%25A7%25202013-08-05%2520%25E4%25B8%258B%25E5%258D%25886.59.51.png" alt="设置画面" /></p>
+
+<p>如果，你觉得设置很麻烦，可以下载我已经设置好的文件，但是要注意把 &ldquo;matlab&rdquo; 的路径改为自己电脑上的路径。第一个文件就是简单的在终端打开 MATLAB，但是它还会打开 &ldquo;workspace&rdquo; 并清空终端（因为我唯一需要的窗口就是 &ldquo;workspace"，用来看一下当前保存了哪些变量，当然你也可以用<code>CommandHistory</code>打开命令历史记录）。第二个文件是在终端打开 MATLAB，并执行你输入的一条命令，例如你在 <a href="http://www.alfredapp.com/">Alfred</a> 中输入 <code>matlab "a=5;"</code>，就会打开 MATLAB 之后创建一个变量<code>a</code>。</p>
+
+<ul>
+<li><a href="http://pan.baidu.com/share/link?shareid=2246469849&amp;uk=4080321956">Matlab Terminal</a></li>
+<li><a href="http://pan.baidu.com/share/link?shareid=2452208514&amp;uk=4080321956">Matlab Command</a></li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">pikipity</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2013-08-05T18:44:00+08:00'><span class='date'>2013年08月05日</span> <span class='time'>6:44 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/mac/'>mac</a>, <a class='category' href='/blog/categories/matlab/'>matlab</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/interesting-websites.html" title="Previous Post: 推荐两个网站">&laquo; 推荐两个网站</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/i-am-sorry.html" title="Next Post: 非常抱歉">非常抱歉 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+    
+        <section imagesd="comment">
+	<br>
+	<br>
+        <h1>Comments</h1>
+	<br>
+	<p></p>
+        <!-- Duoshuo Comment BEGIN -->
+	<div class="ds-thread"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"pikipity"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- Duoshuo Comment END -->
+       </section>
+       
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me -- pikipity</h1>
+  <ul id="post">
+  pikipity 的小博客，搜罗有意思的科技话题，展示自己的所知所学所感。<p>
+  
+  <img src="/images/myface.gif" width="100pt"><p>
+  
+  如果发现问题，请在文章后面留言指出或是直接点<a href="mailto:pikipityw@gmail.com">这里</a>发邮件给我指正，谢谢。<p>
+  
+  pikipity Blog: <a href="http://pikipity.github.io/">pikipity.github.io</a><p>
+  
+  pikipity Email: <a href="mailto:pikipityw@gmail.com">pikipityw.gmail.com</a><p>
+  
+  使用IE浏览器可能无法得到完美的浏览体验，建议更换为<a href="https://www.google.com/intl/en/chrome/browser/"> Chrome 浏览器</a><p>
+
+  </ul>
+</section>
+<section>
+  <h1>Category List</h1>
+    <span id="tag-cloud"><a href='/blog/categories/algorithm' style='font-size: 107.89473684210526%'>algorithm(5)</a> <a href='/blog/categories/arduino' style='font-size: 109.47368421052632%'>arduino(6)</a> <a href='/blog/categories/assembly' style='font-size: 111.05263157894737%'>assembly(7)</a> <a href='/blog/categories/c-plus-plus' style='font-size: 103.15789473684211%'>c++(2)</a> <a href='/blog/categories/cartoon' style='font-size: 111.05263157894737%'>cartoon(7)</a> <a href='/blog/categories/circuit' style='font-size: 104.73684210526315%'>circuit(3)</a> <a href='/blog/categories/game' style='font-size: 115.78947368421052%'>game(10)</a> <a href='/blog/categories/github' style='font-size: 104.73684210526315%'>github(3)</a> <a href='/blog/categories/google' style='font-size: 126.84210526315789%'>google(17)</a> <a href='/blog/categories/ios' style='font-size: 111.05263157894737%'>ios(7)</a> <a href='/blog/categories/life' style='font-size: 160.0%'>life(38)</a> <a href='/blog/categories/linux' style='font-size: 112.63157894736842%'>linux(8)</a> <a href='/blog/categories/mac' style='font-size: 125.26315789473685%'>mac(16)</a> <a href='/blog/categories/matlab' style='font-size: 125.26315789473685%'>matlab(16)</a> <a href='/blog/categories/movie' style='font-size: 106.3157894736842%'>movie(4)</a> <a href='/blog/categories/octopress' style='font-size: 104.73684210526315%'>octopress(3)</a> <a href='/blog/categories/others' style='font-size: 115.78947368421052%'>others(10)</a> <a href='/blog/categories/processing' style='font-size: 111.05263157894737%'>processing(7)</a> <a href='/blog/categories/python' style='font-size: 109.47368421052632%'>python(6)</a> <a href='/blog/categories/scm' style='font-size: 128.42105263157896%'>scm(18)</a> <a href='/blog/categories/technology' style='font-size: 126.84210526315789%'>technology(17)</a> </span>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week4.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week4)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week3.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week3)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week12summary.html">Algorithms: Design and Analysis Part 1 – Programming Questions (Week1 and Week 2 Summary)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week2.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week2)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week1.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week1)</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+<h1>Copyright Agreement</h1>
+<ul id="copyright">
+<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh"><img
+  alt="知识共享许可协议" style="border-width:0"
+  src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png"
+  /></a><br />本作品采用<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh">知识
+  共享署名-非商业性使用-相同方式共享 3.0 未本地化版本许可协议</a>进行
+  许可。<p>
+
+  如果您想转载本网站下的博文，请注明作者和出处。如果文章内没有特别说明，文章皆为原创，请将出处注明为那篇文章的网址；如果文章内特别指明为转载，请将出处注明为原始文章的网址。非常感谢。<p>
+</ul>
+</section><section>
+  <h1>Who are visiting</h1>
+  <ul id="for_fun">
+  <script type="text/javascript" src="http://jb.revolvermaps.com/2/1.js?i=1p1ij0eyux4&amp;s=190&amp;m=7&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+  </ul>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - pikipity -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

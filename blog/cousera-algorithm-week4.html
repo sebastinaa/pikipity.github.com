@@ -1,0 +1,534 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Algorithms: Design and Analysis Part 1 -- Programming Questions (Week4) - 折腾来折腾去</title>
+  <meta name="author" content="pikipity">
+
+  
+  <meta name="description" content="这里主要记录下来在 “Algorithms: Design and Analysis Part 1” 的Programming Questions 中的算法、实现和作业中的困难。我是用的是 Python。Week 3 Programming Question 在这里。 Week 4 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://pikipity.github.io/blog/cousera-algorithm-week4.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="折腾来折腾去" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38118079-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">折腾来折腾去</a></h1>
+  
+    <h2>pikipity的blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="pikipity.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/projects">Projects</a></li>
+       <li><a href="/aboutme">AboutMe</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week4)</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-08-24T14:26:00+08:00'><span class='date'>2015年08月24日</span> <span class='time'>2:26 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>这里主要记录下来在 “Algorithms: Design and Analysis Part 1” 的Programming Questions 中的算法、实现和作业中的困难。我是用的是 Python。<a href="http://pikipity.github.io/blog/cousera-algorithm-week3.html">Week 3 Programming Question 在这里</a>。 <a href="http://pan.baidu.com/s/1mgrKHw0">Week 4 Programming Question 的题目可以到这里查看</a>，<a href="http://pan.baidu.com/s/1hq93IOO">作业用到的数据可以到这里下载</a>。</p>
+
+<!--more-->
+
+
+<p>第四周，作业要求找出 &ldquo;Strongly Connected Components&rdquo; (SCC) 并计算其内部所含点的数量。如果一幅图上的任意一点都可以经由边与其他所有点相连，这个图就被称为 SCC，可以直观的理解为内部的点形成了回路的图。对于定向图，寻找 SCC 的方法基本可以分为以下几个步骤：</p>
+
+<ol>
+<li>生成定向图的反向图；</li>
+<li>对生成的反向图中的点进行深度优先搜索，纪录搜索结束的时间，最先搜索完成的点（也就是最底层的点）记为1，其次搜索完成的点（次底层点）记为2，依次类推；</li>
+<li>对原定向图进行深度优先搜索，点的搜索顺序按照刚刚得到的完成顺序由大到小进行，纪录每一个点的上层点 (leader)；</li>
+<li>根据每个点的上层点 (leader)，倒推得到 SCC。</li>
+</ol>
+
+
+<p>作业的难点在于深度优先算法在 python 中的实现。由于作业给的图非常大，如果在 python 中使用迭代的方式循环调用同一个函数来实现深度优先搜索，很有可能会导致达到迭代次数上限，所以只能用普通的循环语句来实现。推荐熟悉并使用 <a href="https://docs.python.org/2.7/library/itertools.html">“itertools”</a> 这个模组，循环执行某个固定功能的时候非常好用。</p>
+
+<p>Python 代码如下。由于给的图非常大，即使是图的读入过程都可能会很漫长，所以我将整个进度打印在屏幕上，方便监视。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+<span class='line-number'>94</span>
+<span class='line-number'>95</span>
+<span class='line-number'>96</span>
+<span class='line-number'>97</span>
+<span class='line-number'>98</span>
+<span class='line-number'>99</span>
+<span class='line-number'>100</span>
+<span class='line-number'>101</span>
+<span class='line-number'>102</span>
+<span class='line-number'>103</span>
+<span class='line-number'>104</span>
+<span class='line-number'>105</span>
+<span class='line-number'>106</span>
+<span class='line-number'>107</span>
+<span class='line-number'>108</span>
+<span class='line-number'>109</span>
+<span class='line-number'>110</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># -*- coding: utf-8 -*-
+</span><span class='line'>import time
+</span><span class='line'>from itertools import groupby
+</span><span class='line'>from collections import defaultdict
+</span><span class='line'>
+</span><span class='line'>def dfs(input_graph,order,step):
+</span><span class='line'>    # Depth-First Search
+</span><span class='line'>    leader=dict()
+</span><span class='line'>    time=0
+</span><span class='line'>    finish_time=dict()
+</span><span class='line'>    visited=set()
+</span><span class='line'>    track=[]
+</span><span class='line'>    N=0
+</span><span class='line'>    for node in order:
+</span><span class='line'>        N+=1
+</span><span class='line'>        if step==1:
+</span><span class='line'>            print "%.5f%% -- DFS for reverse graph"%(N/float(len(order))*100)
+</span><span class='line'>        else:
+</span><span class='line'>            print "%.5f%% -- DFS for graph"%(N/float(len(order))*100)
+</span><span class='line'>        if node not in visited:
+</span><span class='line'>            current_source=node
+</span><span class='line'>            visited.add(node)
+</span><span class='line'>            leader[node]=current_source
+</span><span class='line'>            track.extend(list(set(input_graph[node])-visited))
+</span><span class='line'>            while track:
+</span><span class='line'>                p=track[-1]
+</span><span class='line'>                visited.add(p)
+</span><span class='line'>                leader[p]=current_source
+</span><span class='line'>                if not set(input_graph[p])-visited:
+</span><span class='line'>                    track.pop()
+</span><span class='line'>                    time+=1
+</span><span class='line'>                    finish_time[p]=time
+</span><span class='line'>                else:
+</span><span class='line'>                    track.extend(list(set(input_graph[p])-visited))
+</span><span class='line'>            time+=1
+</span><span class='line'>            finish_time[node]=time
+</span><span class='line'>    return finish_time,leader
+</span><span class='line'> 
+</span><span class='line'>
+</span><span class='line'>    
+</span><span class='line'>def readgraph(lines):
+</span><span class='line'>    # Generate graph
+</span><span class='line'>    graph=defaultdict(list)
+</span><span class='line'>    N=0
+</span><span class='line'>    for line in lines:
+</span><span class='line'>        N+=1
+</span><span class='line'>        print "%.5f%% -- Read graph"%(N/float(len(lines))*100)
+</span><span class='line'>        line=map(int,line.split())
+</span><span class='line'>        if line[0]!=line[1]:
+</span><span class='line'>            graph[line[0]].append(line[1])
+</span><span class='line'>            graph[line[1]]
+</span><span class='line'>    return graph
+</span><span class='line'>    
+</span><span class='line'>def reversegraph(lines):
+</span><span class='line'>    # Generate reverse graph
+</span><span class='line'>    regraph=defaultdict(list)
+</span><span class='line'>    N=0
+</span><span class='line'>    for line in lines:
+</span><span class='line'>        N+=1
+</span><span class='line'>        print "%.5f%% -- Generate reverse graph"%(N/float(len(lines))*100)
+</span><span class='line'>        line=map(int,line.split())
+</span><span class='line'>        if line[0]!=line[1]:
+</span><span class='line'>            regraph[line[1]].append(line[0])
+</span><span class='line'>            regraph[line[0]]
+</span><span class='line'>    return regraph
+</span><span class='line'>    
+</span><span class='line'>def leader2SCC(leader_dict):
+</span><span class='line'>    # Obtain length of SCC (reverse order) and SCC
+</span><span class='line'>    SCC=defaultdict(list)
+</span><span class='line'>    for i,k in groupby(leader_dict.keys(),leader_dict.get):
+</span><span class='line'>        SCC[i].extend(list(k))
+</span><span class='line'>    SCC_len=sorted([len(SCC[x]) for x in SCC.keys()],reverse=True)
+</span><span class='line'>    while len(SCC_len)&lt;5:
+</span><span class='line'>        SCC_len.append(0)
+</span><span class='line'>    return SCC,SCC_len
+</span><span class='line'>    
+</span><span class='line'>
+</span><span class='line'>file=["SCC.txt"]
+</span><span class='line'>for file_name in file:
+</span><span class='line'>    print ""
+</span><span class='line'>    # Record time
+</span><span class='line'>    t1=time.clock()
+</span><span class='line'>    # Read file
+</span><span class='line'>    f=open(file_name)
+</span><span class='line'>    lines=f.readlines()
+</span><span class='line'>    f.close()
+</span><span class='line'>    # Generate graph and reverse graph
+</span><span class='line'>    graph=readgraph(lines)
+</span><span class='line'>    regraph=reversegraph(lines)
+</span><span class='line'>    # DFS for reverse graph and count finish time
+</span><span class='line'>    finish_time_regraph,leader_regraph=dfs(regraph,sorted(regraph.keys(),reverse=True),1)
+</span><span class='line'>    # reorder finish time
+</span><span class='line'>    finishtime=[0]*len(finish_time_regraph)
+</span><span class='line'>    finishtime=sorted(finish_time_regraph,key=finish_time_regraph.get,reverse=True)
+</span><span class='line'>    # DFS for graph based on finish time to get SCC
+</span><span class='line'>    finish_time_graph,leader_graph=dfs(graph,finishtime,2)
+</span><span class='line'>    SCC,SCC_len=leader2SCC(leader_graph)
+</span><span class='line'>    t2=time.clock()
+</span><span class='line'>    # print and store result
+</span><span class='line'>    print file_name+" result:"
+</span><span class='line'>    if len(SCC_len)&gt;5:
+</span><span class='line'>        SCC_len=SCC_len[0:5]
+</span><span class='line'>    print SCC_len
+</span><span class='line'>    print "time: %.3f CPU seconds"%(t2-t1)
+</span><span class='line'>    f=open('result.txt','w')
+</span><span class='line'>    f.write('''
+</span><span class='line'>    "%s" results: %s
+</span><span class='line'>    time: %.3f CPU seconds
+</span><span class='line'>    '''%(file_name,SCC_len,t2-t1))
+</span><span class='line'>    f.close()</span></code></pre></td></tr></table></div></figure>
+
+
+<p>答案：434821,968,459,313,211。总用时：730.875 CPU seconds。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">pikipity</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-08-24T14:26:00+08:00'><span class='date'>2015年08月24日</span> <span class='time'>2:26 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/algorithm/'>algorithm</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/cousera-algorithm-week3.html" title="Previous Post: Algorithms: Design and Analysis Part 1 -- Programming Questions (Week3)">&laquo; Algorithms: Design and Analysis Part 1 -- Programming Questions (Week3)</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+    
+        <section imagesd="comment">
+	<br>
+	<br>
+        <h1>Comments</h1>
+	<br>
+	<p></p>
+        <!-- Duoshuo Comment BEGIN -->
+	<div class="ds-thread"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"pikipity"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- Duoshuo Comment END -->
+       </section>
+       
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me -- pikipity</h1>
+  <ul id="post">
+  pikipity 的小博客，搜罗有意思的科技话题，展示自己的所知所学所感。<p>
+  
+  <img src="/images/myface.gif" width="100pt"><p>
+  
+  如果发现问题，请在文章后面留言指出或是直接点<a href="mailto:pikipityw@gmail.com">这里</a>发邮件给我指正，谢谢。<p>
+  
+  pikipity Blog: <a href="http://pikipity.github.io/">pikipity.github.io</a><p>
+  
+  pikipity Email: <a href="mailto:pikipityw@gmail.com">pikipityw.gmail.com</a><p>
+  
+  使用IE浏览器可能无法得到完美的浏览体验，建议更换为<a href="https://www.google.com/intl/en/chrome/browser/"> Chrome 浏览器</a><p>
+
+  </ul>
+</section>
+<section>
+  <h1>Category List</h1>
+    <span id="tag-cloud"><a href='/blog/categories/algorithm' style='font-size: 107.89473684210526%'>algorithm(5)</a> <a href='/blog/categories/arduino' style='font-size: 109.47368421052632%'>arduino(6)</a> <a href='/blog/categories/assembly' style='font-size: 111.05263157894737%'>assembly(7)</a> <a href='/blog/categories/c-plus-plus' style='font-size: 103.15789473684211%'>c++(2)</a> <a href='/blog/categories/cartoon' style='font-size: 111.05263157894737%'>cartoon(7)</a> <a href='/blog/categories/circuit' style='font-size: 104.73684210526315%'>circuit(3)</a> <a href='/blog/categories/game' style='font-size: 115.78947368421052%'>game(10)</a> <a href='/blog/categories/github' style='font-size: 104.73684210526315%'>github(3)</a> <a href='/blog/categories/google' style='font-size: 126.84210526315789%'>google(17)</a> <a href='/blog/categories/ios' style='font-size: 111.05263157894737%'>ios(7)</a> <a href='/blog/categories/life' style='font-size: 160.0%'>life(38)</a> <a href='/blog/categories/linux' style='font-size: 112.63157894736842%'>linux(8)</a> <a href='/blog/categories/mac' style='font-size: 125.26315789473685%'>mac(16)</a> <a href='/blog/categories/matlab' style='font-size: 125.26315789473685%'>matlab(16)</a> <a href='/blog/categories/movie' style='font-size: 106.3157894736842%'>movie(4)</a> <a href='/blog/categories/octopress' style='font-size: 104.73684210526315%'>octopress(3)</a> <a href='/blog/categories/others' style='font-size: 115.78947368421052%'>others(10)</a> <a href='/blog/categories/processing' style='font-size: 111.05263157894737%'>processing(7)</a> <a href='/blog/categories/python' style='font-size: 109.47368421052632%'>python(6)</a> <a href='/blog/categories/scm' style='font-size: 128.42105263157896%'>scm(18)</a> <a href='/blog/categories/technology' style='font-size: 126.84210526315789%'>technology(17)</a> </span>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week4.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week4)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week3.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week3)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week12summary.html">Algorithms: Design and Analysis Part 1 – Programming Questions (Week1 and Week 2 Summary)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week2.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week2)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week1.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week1)</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+<h1>Copyright Agreement</h1>
+<ul id="copyright">
+<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh"><img
+  alt="知识共享许可协议" style="border-width:0"
+  src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png"
+  /></a><br />本作品采用<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh">知识
+  共享署名-非商业性使用-相同方式共享 3.0 未本地化版本许可协议</a>进行
+  许可。<p>
+
+  如果您想转载本网站下的博文，请注明作者和出处。如果文章内没有特别说明，文章皆为原创，请将出处注明为那篇文章的网址；如果文章内特别指明为转载，请将出处注明为原始文章的网址。非常感谢。<p>
+</ul>
+</section><section>
+  <h1>Who are visiting</h1>
+  <ul id="for_fun">
+  <script type="text/javascript" src="http://jb.revolvermaps.com/2/1.js?i=1p1ij0eyux4&amp;s=190&amp;m=7&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+  </ul>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - pikipity -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

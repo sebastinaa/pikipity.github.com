@@ -1,0 +1,400 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Kramdown 语法文档翻译（二） - 折腾来折腾去</title>
+  <meta name="author" content="pikipity">
+
+  
+  <meta name="description" content="上接kramdown 语法文档翻译（一） 段落 一个段落的第一行可以加入三个空格的缩进，其他行可以有任意数量的缩进，因为段落支持自动换行。但是需要补充的一点就是，当一个“定义列表行”出现的时候，一个段落会自动中断。 你可以用一个或多个空行来区分两个连续的段落。 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://pikipity.github.io/blog/kramdown-syntax-chinese-2.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="折腾来折腾去" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38118079-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">折腾来折腾去</a></h1>
+  
+    <h2>pikipity的blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="pikipity.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/projects">Projects</a></li>
+       <li><a href="/aboutme">AboutMe</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Kramdown 语法文档翻译（二）</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-05-19T10:42:00+08:00'><span class='date'>2013年05月19日</span> <span class='time'>10:42 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>上接<a href="http://pikipity.github.io/blog/kramdown-syntax-chinese-1.html">kramdown 语法文档翻译（一）</a></p>
+
+<h3>段落</h3>
+
+<p>一个段落的第一行可以加入三个空格的缩进，其他行可以有任意数量的缩进，因为段落支持自动换行。但是需要补充的一点就是，当一个“定义列表行”出现的时候，一个段落会自动中断。</p>
+
+<p>你可以用一个或多个空行来区分两个连续的段落。需要注意的是源文件中的一个空行并不意味着在输出文件中也是一个空行（因为“懒语法”）！如果你希望在输出中有一个空行（就好像 <code>&lt;br/&gt;</code> 标签），你需要在一行结束加上至少两个空格或是两个斜线！注意，一个段落的最后一行不可以是空行，这种空行会被忽略。开头和结尾的空格不会被纳入段落文字中。</p>
+
+<p>下面给出的是一个段落效果的举例（<code>⋅</code>代表空格）：</p>
+
+<pre><code>This para line starts at the first column. However,
+⋅⋅⋅⋅⋅⋅the following lines can be indented any number of spaces/tabs.
+⋅⋅⋅The para continues here.
+
+⋅⋅This is another paragraph, not connected to the above one. But⋅⋅
+with a hard line break. \\
+And another one.
+</code></pre>
+
+<p>效果如下：</p>
+
+<p>This para line starts at the first column. However,
+      the following lines can be indented any number of spaces/tabs.
+   The para continues here.</p>
+
+<p>  This is another paragraph, not connected to the above one. But<br/>
+with a hard line break. \
+And another one.</p>
+
+<h3>标题</h3>
+
+<p>krandown支持 &ldquo;Setex&rdquo; 和 &ldquo;atx&rdquo; 格式的标题。所有形式都可以在一个独立的文件中使用</p>
+
+<ul>
+<li><p>&ldquo;Setext&rdquo; 格式</p>
+
+<p>&ldquo;Setext&rdquo; 格式必须以一行文字（标题文字）和一行只有等号（对于第一级标题）或者破折号（对于第二级标题）。标题文字可以在开头加入三个空格，但是开头和结尾的空格都不会被纳入标题文字中。等号和破折号的数量没有区分，一个就足够了，但是多个可能更好看。等号和破折号必须顶头开始。下面是一个例子：</p>
+
+<pre><code>First level header
+==================
+
+Second level header
+-----
+
+   Other first level header
+=
+</code></pre>
+
+<p> 因为 &ldquo;Setext&rdquo; 的标题是在一个块级元素的开始，所以这意味着它们之前必须有空行。但是它们之后不需要有空行:</p>
+
+<pre><code> This is a normal
+ paragraph.
+
+ And a Header
+ ---------------
+ And a paragraph
+
+ &gt; This is a blockquote.
+
+ And a Header
+ ----------------
+</code></pre>
+
+<p> 但是为了文档的易读性最好在 &ldquo;Setext&rdquo; 标题的后面也用一个空行。</p>
+
+<p> 值得一提的是一种边缘情况：</p>
+
+<pre><code> header
+ ---
+ para
+</code></pre>
+
+<p> 一般来说，"Setext" 标题比“横线规律”（后面将提到）考前</p></li>
+<li><p>“atx” 格式</p>
+
+<p>&ldquo;atx&rdquo; 格式的标题必须以一行以一个或多个井号字符开头然后跟标题文字的文字开始。在井号符号之前不允许有空格。井号的数量代表标题的级数：一个井号代表第一级标题，两个代表第二级标题，以此类推直到最多六个井号代表第六级标题。在标题文字之后你可以加入任意数量的井号。任何标题文字开头和结尾的空格都不会纳入到标题文字中。下面是一个举例：</p>
+
+<pre><code># First level hearder
+
+### Third level header ###
+
+## Second level header #################
+</code></pre>
+
+<p>下过如下：</p>
+
+<h1>First level hearder</h1>
+
+<h3>Third level header</h3>
+
+<h2>Second level header</h2></li>
+<li><p>表明标题 ID</p>
+
+<p>kranmdown 支持一种非常好的方法来设置标题的 ID，这种方法来自于 <a href="http://michelf.com/projects/php-markdown/extra/">PHP Markdown Extra</a> 和 <a href="http://maruku.rubyforge.org/">Maruku</a>：如果你在标题后面跟一个左大括号（和标题文字至少以一个空格隔开）、一个井号、标题 ID 和 一个右大括号，那么就为一个标题设置了一个 ID。如果你在 &ldquo;atx&rdquo; 风格的标题后面跟有一个井号，那么标题 ID 必须跟在结尾的井号之后。下面是一个例子：</p>
+
+<pre><code>Hello    {#id}
+-------
+
+# Hello   {#id}
+
+# Hello   {#id}
+</code></pre></li>
+</ul>
+
+
+<p>PS: 此项翻译工程即将变成有生之年系列了。。。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">pikipity</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2013-05-19T10:42:00+08:00'><span class='date'>2013年05月19日</span> <span class='time'>10:42 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/octopress/'>octopress</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/google-i-slash-o-live.html" title="Previous Post: Google I/O 直播">&laquo; Google I/O 直播</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/what-to-eat-v1-dot-0-publish.html" title="Next Post: '今天晚上吃神马？' 基本完成">'今天晚上吃神马？' 基本完成 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+    
+        <section imagesd="comment">
+	<br>
+	<br>
+        <h1>Comments</h1>
+	<br>
+	<p></p>
+        <!-- Duoshuo Comment BEGIN -->
+	<div class="ds-thread"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"pikipity"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- Duoshuo Comment END -->
+       </section>
+       
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me -- pikipity</h1>
+  <ul id="post">
+  pikipity 的小博客，搜罗有意思的科技话题，展示自己的所知所学所感。<p>
+  
+  <img src="/images/myface.gif" width="100pt"><p>
+  
+  如果发现问题，请在文章后面留言指出或是直接点<a href="mailto:pikipityw@gmail.com">这里</a>发邮件给我指正，谢谢。<p>
+  
+  pikipity Blog: <a href="http://pikipity.github.io/">pikipity.github.io</a><p>
+  
+  pikipity Email: <a href="mailto:pikipityw@gmail.com">pikipityw.gmail.com</a><p>
+  
+  使用IE浏览器可能无法得到完美的浏览体验，建议更换为<a href="https://www.google.com/intl/en/chrome/browser/"> Chrome 浏览器</a><p>
+
+  </ul>
+</section>
+<section>
+  <h1>Category List</h1>
+    <span id="tag-cloud"><a href='/blog/categories/algorithm' style='font-size: 107.89473684210526%'>algorithm(5)</a> <a href='/blog/categories/arduino' style='font-size: 109.47368421052632%'>arduino(6)</a> <a href='/blog/categories/assembly' style='font-size: 111.05263157894737%'>assembly(7)</a> <a href='/blog/categories/c-plus-plus' style='font-size: 103.15789473684211%'>c++(2)</a> <a href='/blog/categories/cartoon' style='font-size: 111.05263157894737%'>cartoon(7)</a> <a href='/blog/categories/circuit' style='font-size: 104.73684210526315%'>circuit(3)</a> <a href='/blog/categories/game' style='font-size: 115.78947368421052%'>game(10)</a> <a href='/blog/categories/github' style='font-size: 104.73684210526315%'>github(3)</a> <a href='/blog/categories/google' style='font-size: 126.84210526315789%'>google(17)</a> <a href='/blog/categories/ios' style='font-size: 111.05263157894737%'>ios(7)</a> <a href='/blog/categories/life' style='font-size: 160.0%'>life(38)</a> <a href='/blog/categories/linux' style='font-size: 112.63157894736842%'>linux(8)</a> <a href='/blog/categories/mac' style='font-size: 125.26315789473685%'>mac(16)</a> <a href='/blog/categories/matlab' style='font-size: 125.26315789473685%'>matlab(16)</a> <a href='/blog/categories/movie' style='font-size: 106.3157894736842%'>movie(4)</a> <a href='/blog/categories/octopress' style='font-size: 104.73684210526315%'>octopress(3)</a> <a href='/blog/categories/others' style='font-size: 115.78947368421052%'>others(10)</a> <a href='/blog/categories/processing' style='font-size: 111.05263157894737%'>processing(7)</a> <a href='/blog/categories/python' style='font-size: 109.47368421052632%'>python(6)</a> <a href='/blog/categories/scm' style='font-size: 128.42105263157896%'>scm(18)</a> <a href='/blog/categories/technology' style='font-size: 126.84210526315789%'>technology(17)</a> </span>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week4.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week4)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week3.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week3)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week12summary.html">Algorithms: Design and Analysis Part 1 – Programming Questions (Week1 and Week 2 Summary)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week2.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week2)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week1.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week1)</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+<h1>Copyright Agreement</h1>
+<ul id="copyright">
+<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh"><img
+  alt="知识共享许可协议" style="border-width:0"
+  src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png"
+  /></a><br />本作品采用<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh">知识
+  共享署名-非商业性使用-相同方式共享 3.0 未本地化版本许可协议</a>进行
+  许可。<p>
+
+  如果您想转载本网站下的博文，请注明作者和出处。如果文章内没有特别说明，文章皆为原创，请将出处注明为那篇文章的网址；如果文章内特别指明为转载，请将出处注明为原始文章的网址。非常感谢。<p>
+</ul>
+</section><section>
+  <h1>Who are visiting</h1>
+  <ul id="for_fun">
+  <script type="text/javascript" src="http://jb.revolvermaps.com/2/1.js?i=1p1ij0eyux4&amp;s=190&amp;m=7&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+  </ul>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - pikipity -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,391 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>第六章 计时器/计数器 - 折腾来折腾去</title>
+  <meta name="author" content="pikipity">
+
+  
+  <meta name="description" content="计时器与计数器使用的寄存器和它们的工作原理是一样的，当计时时脉从“0”变为“1”的时候，内部的累加器加一，当累加器溢出的时候，检查中断，如果中断置能，便进入中断，否则重新开始计数。它们唯一的不同就是使用的计时时脉不一样，计时器使用的是内部时脉，因为内部时脉很稳定，所以可以用来计算时间； &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://pikipity.github.io/blog/scm-priciple-6.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="折腾来折腾去" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38118079-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">折腾来折腾去</a></h1>
+  
+    <h2>pikipity的blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="pikipity.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/projects">Projects</a></li>
+       <li><a href="/aboutme">AboutMe</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">第六章 计时器/计数器</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-04-04T09:29:00+08:00'><span class='date'>2013年04月04日</span> <span class='time'>9:29 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>计时器与计数器使用的寄存器和它们的工作原理是一样的，当计时时脉从“0”变为“1”的时候，内部的累加器加一，当累加器溢出的时候，检查中断，如果中断置能，便进入中断，否则重新开始计数。它们唯一的不同就是使用的计时时脉不一样，计时器使用的是内部时脉，因为内部时脉很稳定，所以可以用来计算时间；计数器使用的是从 T1 或者 T0 口输入的外部时脉，如果这个外部时脉的信号代表一个事件发生的次数，那么计时/计数器就是在计算这个事件发生的次数。8051中有两个计时/计数器&ndash; Timer0 和 Timer1。</p>
+
+<h2>控制寄存器</h2>
+
+<p>计时/计数器由两个寄存器来控制，它们分别为 TCON 和 TMOD。Timer0 和 Timer1 各有16位用来存放累加数目的寄存器（根据使用的模式不一样，这16位的功能不一样，不一定全部用来计数）。存放 Timer0 累加数目的寄存器是 TH0（高八位）和 TL0（低八位）；存放 Timer1 累加数目的寄存器是 TH1（高八位）和 TL1（低八位）。</p>
+
+<h3>TCON</h3>
+
+<p>TCON 允许位元寻址。每一位代表的意思如下：</p>
+
+<pre><code>TF1  TR1  TF0  TR0  IE1  IT1  IE0  IT0
+</code></pre>
+
+<ul>
+<li>TF1 和 TF0: Timer1/Timer0 的溢出旗标。当用来存放累加数目的寄存器（也就是 THx 和 TLx）溢出的时候硬件自动置一，当进入对应中断向量的时候硬件自动清零。</li>
+<li>TR1 和 TR0：Timer1/Timer0 的运行控制位。置一则开启 Timer1/Timer0，Timer1/Timer0 便开始计时或者计数；清零则关闭 Timer1/Timer0，Timer1/Timer0 停止计时或者计数（其实还会受到 TMOD 中 GATE 位的影响，在设置的时候需要注意）。</li>
+<li>IE1 和 IE0: 外部中断 INT1/INT0 边缘触发旗标。当检测到外部中断信号源边缘的时候，硬件自动置一，进入 INT1/INT0 所对应的的中断服务时，硬件自动清零</li>
+<li>IT1 和 IT0：INT1/INT0 触发方式控制位。当置一的时候，外部中断源处于下降沿的时候触发对应的外部中断服务；清零的时候，外部中断源处于低电平（也就是“0”）的时候触发对应的外部中断服务（如果一直处于低电平，就会不停的触发中断服务，使用 INT1/INT0 的时候需要注意）。</li>
+</ul>
+
+
+<p>由于 IEx 和 ITx 是用来控制外部中断 INTx 的，这一部分先不管它们，以后再介绍。TFx 会在进入中断之后硬件自动清零，所以当我们使用计时/计数器的中断服务的时候一般不用管这一位。所以对于计时/计数器，一般真正使用的只有 TRx 位，用来启动和停用 计时/计数器。</p>
+
+<h3>TMOD</h3>
+
+<p>TMOD 不可以位元寻址。TMOD是用来选择8051的计时/计数器工作模式的。在8051中，计时/计数器有四种模式，区别主要是集中在 THx 和 TLx 的16位如何使用的问题上，这四种模式分别为：</p>
+
+<p>|&mdash;+&mdash;+&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;-|
+|M1 |M0 |计时/计数器模式      |
+|:-:|:-:|:&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;:|
+|0  |0  |13位计时器          |
+|0  |1  |16位计时/计数器      |
+|1  |0  |8位自动重载计时/计数器|
+|1  |1  |两个8位计时/计数器    |
+|&mdash;+&mdash;+&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;-|</p>
+
+<ul>
+<li>13位计时器：一般很少用到，现在的部分8051系列已经去掉了这个功能。使用 THx 的8位和TLx 的第5位组成的13位来存放累加的数字。</li>
+<li>16位计时/计数器：非常常用，用 THx 和 TLx 的整个16位来存放累加数字。可以存放的数字很大，但是每次进入中断之后都需要软件重新载入下次计时/计数的初始值。</li>
+<li>8位自动重载计时/计数器：TLx 用来存放累加的数字，当 TLx 溢出之后，会自动将 THx 中的数字加载到 TLx 中，作为下次计时/计数的初始值。虽然可以存放的数字不大，但是不用每次进入中断之后用软件重新载入，方便，且速度更快。</li>
+<li>两个8位计时/计数器：一般很少用到，现在的部分8051系列已经去掉了这个功能。在这个功能下，Timer1 不能使用，所有跟 Timer1 有关的控制位都转而控制 TH0，TL0则继续由 Timer0 的控制位控制。及其没有用处，因为得到的效果还不如用 Timer0 和 Timer1 分别设置为两个8位自动重载计时/计数器。</li>
+</ul>
+
+
+<p>TMOD 每一位对应的意思如下（前四位对应 Timer1，后四位对应 Timer0）：</p>
+
+<pre><code>GATE  C/T  M1  M0  GATE  C/T  M1  M0
+</code></pre>
+
+<ul>
+<li>GATE：选择开启方式是硬件控制还是软件控制。当置一的时候，开启方式是硬件控制，当 TCON 中 TRx 置一且 INTx 为高的时候，对应的计时/计数器才开始计时/计数，否则不开启；当清零的时候，开启方式为软件控制，TRx 置一就可以开启。</li>
+<li>C/T：计时器和计数器选择位。置一则为计数器，清零则为计时器。</li>
+<li>M1 和 M0：计时/计数器模式选择位，对应的模式见上表。</li>
+</ul>
+
+
+<h2>设置思路</h2>
+
+<p>在使用计时/计数器的时候要先对其进行设置，例如选择哪个计时/计数器，什么模式，初值为何，都要预先设置，但由于涉及的寄存器有四个，所以考虑的时候有些复杂，下面介绍的是设置的基本思路。</p>
+
+<p>首先，你要明确以下几个问题，然后再开始设置：</p>
+
+<ol>
+<li>你要使用哪个计时/计数器，是 Timer0 还是 Timer1？用做计时器还是计数器？</li>
+<li>你所使用的计时/计数器什么时候开启？开启方式是什么，是软件开启还是硬件开启？</li>
+<li>你所使用的计时/计数器的工作模式是上面四种中的哪一个？</li>
+<li>开启的时候，计时/计数的初值是多少？每次运行完中断之后的重载值是多少？</li>
+</ol>
+
+
+<p>明确了以上问题，就可以开始设置计时/计数器了。可以遵照下面几步走：</p>
+
+<ol>
+<li><p>设置 TMOD。建议 Timer0 和 Timer1 分开设置，运用 <code>ANL</code> 和 <code>ORL</code> 两个命令，在不干扰另一个计时/计数器的情况下，设置自己需要的那一个。虽然命令行数增加，运行时间增加，但是多消耗的时间很少可以忽略，好处是不会混淆。<code>ANL</code> 用来清零，需要清零的位放零，其他位放一，<code>ORL</code>用来置一，需要置一的位放一，其他位放零。例如要设置使用 Timer0作为计数器，软件开启，模式为16位计时/计数器，可以这样设置 TMOD：</p>
+
+<pre><code>ANL TMOD,#11110101B
+ORL TMOD,#00000101B
+</code></pre></li>
+<li><p>设置计时/计数的初值，根据选择的模式和需要，对 THx 和 TLx 进行赋值。当将其作为计时器的时候会有个计时周期（也就是多久进行一次加一操作）的问题。</p>
+
+<p>对于
+8051而言，存在两种时间：时钟周期和机械周期。时钟周期就是时钟电路的振荡频率所对应的周期，也就是 $$\frac{1}{f<em>{osc}}$$。机械周期是 CPU 完成一个基本操作（取指令，读或写数据等）所需要的时间，8051中12个时钟周期等于一个机械周期，也就是$$\frac{12}{f</em>{osc}}$$。计时器的计时周期就是机械周期，对于$$12MHz$$震荡频率而言，也就是$$1\mu s$$。这样我们就可以计算出我们需要的初值是多少了。如果选择的模式是16位计时/计数器，我们可以用如下方式进行赋值（x就是你要预设的初值）：</p>
+
+<pre><code> MOV TH0,#HIGH (65536-x)
+ MOV TL0,#LOW (65536-x)
+</code></pre>
+
+<p> 如果是8位自动重载计时/计数器，可以这样设置初值（y是要重载的值，x是预设的初值）：</p>
+
+<pre><code> MOV TH0,#(256-y)
+ MOV TL0,#(256-x)
+</code></pre></li>
+<li>开启，跟你的需要，在必要时候，将 TRx 置一。</li>
+</ol>
+
+
+<p><img src="https://lh6.googleusercontent.com/-f35zg4EmAZw/UVz2cCeJePI/AAAAAAAAAqU/uyTI6Cl2kE0/s640/Countdown%2520timer%2520with%2520microcontroller%2520AT89C51.png" width="480" alt="AT89C51 制作的时钟（图片来自 Engineers Garage）"></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">pikipity</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2013-04-04T09:29:00+08:00'><span class='date'>2013年04月04日</span> <span class='time'>9:29 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/assembly/'>assembly</a>, <a class='category' href='/blog/categories/scm/'>scm</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/use-uart-in-proteus.html" title="Previous Post: 在 Proteus 中使用 UART串口与PC进行互动仿真">&laquo; 在 Proteus 中使用 UART串口与PC进行互动仿真</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/22-years-old.html" title="Next Post: 今天开始可以登记结婚了">今天开始可以登记结婚了 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+    
+        <section imagesd="comment">
+	<br>
+	<br>
+        <h1>Comments</h1>
+	<br>
+	<p></p>
+        <!-- Duoshuo Comment BEGIN -->
+	<div class="ds-thread"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"pikipity"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- Duoshuo Comment END -->
+       </section>
+       
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me -- pikipity</h1>
+  <ul id="post">
+  pikipity 的小博客，搜罗有意思的科技话题，展示自己的所知所学所感。<p>
+  
+  <img src="/images/myface.gif" width="100pt"><p>
+  
+  如果发现问题，请在文章后面留言指出或是直接点<a href="mailto:pikipityw@gmail.com">这里</a>发邮件给我指正，谢谢。<p>
+  
+  pikipity Blog: <a href="http://pikipity.github.io/">pikipity.github.io</a><p>
+  
+  pikipity Email: <a href="mailto:pikipityw@gmail.com">pikipityw.gmail.com</a><p>
+  
+  使用IE浏览器可能无法得到完美的浏览体验，建议更换为<a href="https://www.google.com/intl/en/chrome/browser/"> Chrome 浏览器</a><p>
+
+  </ul>
+</section>
+<section>
+  <h1>Category List</h1>
+    <span id="tag-cloud"><a href='/blog/categories/algorithm' style='font-size: 107.89473684210526%'>algorithm(5)</a> <a href='/blog/categories/arduino' style='font-size: 109.47368421052632%'>arduino(6)</a> <a href='/blog/categories/assembly' style='font-size: 111.05263157894737%'>assembly(7)</a> <a href='/blog/categories/c-plus-plus' style='font-size: 103.15789473684211%'>c++(2)</a> <a href='/blog/categories/cartoon' style='font-size: 111.05263157894737%'>cartoon(7)</a> <a href='/blog/categories/circuit' style='font-size: 104.73684210526315%'>circuit(3)</a> <a href='/blog/categories/game' style='font-size: 115.78947368421052%'>game(10)</a> <a href='/blog/categories/github' style='font-size: 104.73684210526315%'>github(3)</a> <a href='/blog/categories/google' style='font-size: 126.84210526315789%'>google(17)</a> <a href='/blog/categories/ios' style='font-size: 111.05263157894737%'>ios(7)</a> <a href='/blog/categories/life' style='font-size: 160.0%'>life(38)</a> <a href='/blog/categories/linux' style='font-size: 112.63157894736842%'>linux(8)</a> <a href='/blog/categories/mac' style='font-size: 125.26315789473685%'>mac(16)</a> <a href='/blog/categories/matlab' style='font-size: 125.26315789473685%'>matlab(16)</a> <a href='/blog/categories/movie' style='font-size: 106.3157894736842%'>movie(4)</a> <a href='/blog/categories/octopress' style='font-size: 104.73684210526315%'>octopress(3)</a> <a href='/blog/categories/others' style='font-size: 115.78947368421052%'>others(10)</a> <a href='/blog/categories/processing' style='font-size: 111.05263157894737%'>processing(7)</a> <a href='/blog/categories/python' style='font-size: 109.47368421052632%'>python(6)</a> <a href='/blog/categories/scm' style='font-size: 128.42105263157896%'>scm(18)</a> <a href='/blog/categories/technology' style='font-size: 126.84210526315789%'>technology(17)</a> </span>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week4.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week4)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week3.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week3)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week12summary.html">Algorithms: Design and Analysis Part 1 – Programming Questions (Week1 and Week 2 Summary)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week2.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week2)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week1.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week1)</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+<h1>Copyright Agreement</h1>
+<ul id="copyright">
+<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh"><img
+  alt="知识共享许可协议" style="border-width:0"
+  src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png"
+  /></a><br />本作品采用<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh">知识
+  共享署名-非商业性使用-相同方式共享 3.0 未本地化版本许可协议</a>进行
+  许可。<p>
+
+  如果您想转载本网站下的博文，请注明作者和出处。如果文章内没有特别说明，文章皆为原创，请将出处注明为那篇文章的网址；如果文章内特别指明为转载，请将出处注明为原始文章的网址。非常感谢。<p>
+</ul>
+</section><section>
+  <h1>Who are visiting</h1>
+  <ul id="for_fun">
+  <script type="text/javascript" src="http://jb.revolvermaps.com/2/1.js?i=1p1ij0eyux4&amp;s=190&amp;m=7&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+  </ul>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - pikipity -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

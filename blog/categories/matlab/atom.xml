@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Categories: Matlab | 折腾来折腾去]]></title>
+  <link href="http://pikipity.github.io/blog/categories/matlab/atom.xml" rel="self"/>
+  <link href="http://pikipity.github.io/"/>
+  <updated>2016-02-15T21:04:31+08:00</updated>
+  <id>http://pikipity.github.io/</id>
+  <author>
+    <name><![CDATA[pikipity]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Yaskawa 3D 模型再更新]]></title>
+    <link href="http://pikipity.github.io/blog/update-yaskawa-3d.html"/>
+    <updated>2013-12-07T20:44:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/update-yaskawa-3d</id>
+    <content type="html"><![CDATA[<p>继<a href="http://pikipity.github.io/blog/improve-draw-circle-yaskawa-3d-model.html">《Yaskawa 3D 模型画圆的改进》</a>更新后，再次进行连续更新，这次终于搞定了录像部分了，本想让保存 frame 的矩阵在各个函数之间传递，但是不知道为什么每次传递的时候都会发生一些不可预料的事情，不是矩阵中所有数据丢失就是部分数据混乱，最后只好是保存为 appdata 了。现在可以保存两个 demo 录像了。但是不建议对第一个 demo 使用，因为运行期间会占用大约 2G 的内存空间（因为产生的 frame 太多了）。下面就是两个 demo 程序自己抓取的视频（抓取之后生成的 avi 视频非常大，优酷压缩之后画质就渣了）。</p>
+
+<iframe height="498" width="510" frameborder="0" src="http://player.youku.com/embed/XNjQ0OTM4NTg0" allowfullscreen></iframe>
+
+
+
+
+<iframe height="498" width="510" src="http://player.youku.com/embed/XNjQ0OTA2NjEy" frameborder="0" allowfullscreen></iframe>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Yaskawa 3D 模型画圆的改进]]></title>
+    <link href="http://pikipity.github.io/blog/improve-draw-circle-yaskawa-3d-model.html"/>
+    <updated>2013-12-06T10:56:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/improve-draw-circle-yaskawa-3d-model</id>
+    <content type="html"><![CDATA[<p>在<a href="http://pikipity.github.io/blog/yaskawa-3d-matlab.html">《3D Yaskawa 机器臂演示（Matlab）》</a>中，我展示了我用 Matlab 制作的 Yaskawa 3D 模型，其中 Demo2 的画圆部分是有问题。最初考虑，如果想要匀速画圆，那么向心加速度是一定的，于是不停地在考虑，如何改进 Simulink 的 model 使其通过向心加速度来计算出相应的 x,y,z 方向上的速度，进而计算需要的角度，最终也没有想出来。最近，又重新思考了这个问题，发现自己完完全全是想多了。</p>
+
+<p>重新定位现在遇到的问题：<strong>找出匀速圆周运动的速度在三个坐标轴上的分解量</strong>。由于我要画的圆只是在一个水平面上，z 轴的分解量是0，那么也就是：<strong>找出匀速圆周运动的速度在 x,y 两个坐标轴上的分解量</strong>。进而继续简化问题，就得到了：<strong>找出一个大小恒定的向量在 x,y 方向上的分解量</strong>。于是问题瞬间简单了，根据下图所示，</p>
+
+<p>$$V_x=V\sin(\alpha+\frac{\pi}{2})$$</p>
+
+<p>$$V_y=V\sin(\alpha)$$</p>
+
+<p><img src="https://lh5.googleusercontent.com/-CWrkCOyy5BY/UqFBZPo_d8I/AAAAAAAABZk/_59DnDkciPw/s720/draw_circle.jpg" alt="计算 x,y 轴上速度的分量" /></p>
+
+<p>也就是说，将之前 Simulink 中 Vx 和 Vy 换为两个 sine wave 就可以了。这么简单的问题竟然让我想了这么久。。。</p>
+
+<p>替换之后，不仅仅运行速度大大提升，画出来的圆也更圆了。问题解决。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[3D Yaskawa 机器臂演示（Matlab）]]></title>
+    <link href="http://pikipity.github.io/blog/yaskawa-3d-matlab.html"/>
+    <updated>2013-11-25T17:30:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/yaskawa-3d-matlab</id>
+    <content type="html"><![CDATA[<p><img src="https://lh3.googleusercontent.com/-ty3uhBgoYjY/UpL6TaePauI/AAAAAAAABX4/l2egtnPhFfA/s720/%25E5%25B1%258F%25E5%25B9%2595%25E5%25BF%25AB%25E7%2585%25A7%25202013-11-25%2520%25E4%25B8%258B%25E5%258D%25883.19.34.png" alt="3D Yaskawa Robot Arm (Matlab)" /></p>
+
+<p>使用 Matlab 建立了一个 6 自由度的 3D Yaskawa 模型演示。此演示文件可以到<a href="https://github.com/pikipity/Yaskawa3D_matlab.git">我的 Github 下载</a>。主要参考了 Don Riley 的 3D PUMA 演示文件，具体介绍可以看<a href="http://pikipity.github.io/blog/3d-puma-demo.html">这里</a>。</p>
+
+<p>使用 AutoCAD 建立的模型，文件在 <code>model</code> 文件夹中，用 <code>stlread.m</code> 函数将其导入 Matlab 中，然后用 Matlab 自带的 <code>patch</code> 函数进行绘制。</p>
+
+<p>此演示中包括了六轴的基本转动（kinematics）和根据目标位置进行六轴的控制（inverse kinematics）。Inverse kinematics 使用的是 simulink 进行计算，所以第一次运行的时候会比较慢，请耐心等待（Mac 可能需要打开 X11）。</p>
+
+<p>此演示中包括两个 demo，一个是控制机器臂绘制 “UM” 字样，一个是控制控制机器臂绘制一个圆形，由于圆形是由多个直线进行连接而成，结果可能并不圆。</p>
+
+<p>下面是此演示的三段视频地址：</p>
+
+<ol>
+<li><p>基本功能演示视频</p>
+
+<p><iframe height="498" width="510" src="http://player.youku.com/embed/XNjM5NTA3ODgw" frameborder="0" allowfullscreen></iframe></p></li>
+<li><p>Demo 1 演示视频</p>
+
+<p><iframe height="498" width="510" src="http://player.youku.com/embed/XNjM5NTA4Mjk2" frameborder="0" allowfullscreen></iframe></p></li>
+<li><p>Demo 2 演示视频</p>
+
+<p><iframe height="498" width="510" src="http://player.youku.com/embed/XNjM5NTA4NDY0" frameborder="0" allowfullscreen></iframe></p></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[3D PUMA 机器人手臂演示（by Don Riley）]]></title>
+    <link href="http://pikipity.github.io/blog/3d-puma-demo.html"/>
+    <updated>2013-11-17T16:36:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/3d-puma-demo</id>
+    <content type="html"><![CDATA[<p>最近需要用 MATLAB 制作一个 3D 的机器人手臂演示，于是就去网上搜索了一下，在 <a href="http://www.mathworks.com/matlabcentral/fileexchange">MATLAB Center</a> 找到了一个 3D PUMA 机器人手臂非常好的演示软件。第一，制作很精良，可以任意调整每个关节的角度，可以画出移动轨迹，并有一个绘制螺旋的 Demo；第二，文件本身清晰易懂。这简直就是学习的完美教程。此演示文件可以到<a href="http://www.mathworks.com/matlabcentral/fileexchange/14932-3d-puma-robot-demo">这里</a>下载。下面是我录制的一段此文件运行的视频。</p>
+
+<iframe height="498" width="700" src="http://player.youku.com/embed/XNjM1OTM4NjA4" frameborder="0" allowfullscreen></iframe>
+
+
+<p>唯一的缺点就是，作者 Don Riley 并没有给出其是如何构建模型的。于是我去<a href="http://www.mathworks.com/matlabcentral/fileexchange/authors/1558">他的主页</a>看了一下，发现他还有一个将 CAD 的 STL 格式文件转换成 MATLAB 的 MAT 格式文件的项目，支持 AutoCAD, Cadkey, and Pro/Engineer，看来他就是先用 CAD 建好模型，再用这个函数导入到 MATLAB 的了。此转换函数文件可以到<a href="http://www.mathworks.com/matlabcentral/fileexchange/3642-cad2matdemo-m">这里</a>下载。</p>
+
+<p>另外，此作者还有一个 2D 3段机器人手臂的演示程序，制作一样极其精良，下载地址在<a href="http://www.mathworks.com/matlabcentral/fileexchange/157-robot-demo">这里</a>。</p>
+
+<p><img src="http://www.mathworks.com/matlabcentral/fx_files/157/1/demobot.jpg" alt="2D 3段机器人手臂的演示程序" /></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[MATLAB 的函数中清理公用 Workspace]]></title>
+    <link href="http://pikipity.github.io/blog/clear-workspace-matlab.html"/>
+    <updated>2013-10-16T18:51:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/clear-workspace-matlab</id>
+    <content type="html"><![CDATA[<p>今天在编写一个 MATLAB 函数的时候，尝试使用 <code>clear all;</code> 来清理掉 workspace，结果运行后发现完全没有效果。查找了一下 MATLAB 的帮助文件才发现，每个函数在运行的时候都有自己的 workspace，所以如果在函数内部使用 <code>clear</code> 的话，清空的是函数自己的 workspace，不会影响到公用的 workspace。于是又到<a href="http://www.mathworks.com/matlabcentral/"> mathwork 的 MATLAB Center </a> 逛了一下，发现了一种很好的方法：使用 <code>evalin()</code> 函数。<a href="http://www.mathworks.com/matlabcentral/newsreader/view_thread/253314">原帖在这里</a>。</p>
+
+<p>总结一下，就是使用下面的语句：</p>
+
+<pre><code>evalin('caller','clear all');
+</code></pre>
+
+<p>或者使用</p>
+
+<pre><code>evalin('base','clear all');
+</code></pre>
+
+<p>主要区别是，前一个不仅会清空公用 workspace，也会清空其他函数的 workspace。后一个仅仅只清空公用的 workspace。</p>
+]]></content>
+  </entry>
+  
+</feed>

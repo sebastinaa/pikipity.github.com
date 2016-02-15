@@ -1,0 +1,741 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>折腾来折腾去</title>
+  <meta name="author" content="pikipity">
+
+  
+  <meta name="description" content="澳门大学的 ummoodle 在更新之后就出现了 pdf 文件在 IOS 设备上无法正常打开的状况，打开包含 pdf 的网页之后就会出现如下画面： pdf 文件就好像一个没有完整显示的图片一样在那里，没法下载和拖动。但是此问题仅限于 IOS 设备里的浏览器，电脑上的浏览器可以正常显示， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://pikipity.github.io/posts/5/index.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="折腾来折腾去" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38118079-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">折腾来折腾去</a></h1>
+  
+    <h2>pikipity的blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="pikipity.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/projects">Projects</a></li>
+       <li><a href="/aboutme">AboutMe</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/ummoodle-pdf.html">解决澳门大学 Ummoodle 上 PDF 文件在 IOS 无法正常打开或下载的问题</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-10-04T21:11:00+08:00'><span class='date'>2013年10月04日</span> <span class='time'>9:11 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>澳门大学的 ummoodle 在更新之后就出现了 pdf 文件在 IOS 设备上无法正常打开的状况，打开包含 pdf 的网页之后就会出现如下画面：</p>
+
+<p><img src="https://lh3.googleusercontent.com/-QQxd0viyyg8/Uk7Cc9wZh5I/AAAAAAAABRE/reSNdTtOBrA/s512/%25E7%2585%25A7%25E7%2589%2587%252004-10-2013%252009%252020%252019%2520PM.png" alt="无法拖动和下载的 pdf 文件" /></p>
+
+<p>pdf 文件就好像一个没有完整显示的图片一样在那里，没法下载和拖动。但是此问题仅限于 IOS 设备里的浏览器，电脑上的浏览器可以正常显示，Android 设备上无法显示文件，但是会显示一条链接，点击连接之后就可以下载文件了，所以很显然是 IOS 设备的浏览器对于网页的解析出现了问题，于是我研究了一下一个含有 pdf 文件的网页，发下了下面的一段代码：</p>
+
+<pre><code>&lt;object id="resourceobject" data="https://ummoodle.umac.mo/pluginfile.php/74630/mod_resource/content/1/elec414-2013-2.pdf" type="application/pdf" width="800" height="600"&gt;
+
+&lt;param name="src" value="https://ummoodle.umac.mo/pluginfile.php/74630/mod_resource/content/1/elec414-2013-2.pdf" /&gt;
+
+Click &lt;a href="https://ummoodle.umac.mo/pluginfile.php/74630/mod_resource/content/1/elec414-2013-2.pdf" &gt;elec414-2013-2.pdf&lt;/a&gt; link to view the file.
+
+&lt;/object&gt;
+</code></pre>
+
+<p>很显然，网页本身是想调用 IOS 内置的 pdf 阅览器来浏览 pdf 文件，但是由于浏览器排版的原因（固定宽高的设定很明显不适合移动设备啊），导致此被预览的 pdf 文件被其他区块所覆盖，进而导致用户无法对 pdf 文件进行操作。由于 Android 系统没有内置 pdf 阅览器，所以只会显示文件链接，从而避免了排版问题。</p>
+
+<p>既然原因找到，那么就来想一想解决方法吧。很显然，学校对网页的改进还需要时间，那么就从自身做起吧，基本来说想到了两种解决方案：</p>
+
+<ol>
+<li>禁用 IOS 内置的 pdf 阅览器。这个方法比较复杂，由于 IOS 取消了 safari 设置中“禁用内置 pdf 阅览器”的选项，导致现在想要禁用 pdf 阅览器就必须直接删除<code>/Library/</code>下的 pdf 阅览器的插件才行，必须越狱之后安装 iFile 才可以。此方法不仅麻烦，由于需要触碰到系统文件，还比较危险，一旦删错文件，后果不堪设想。</li>
+<li>使用 moodle 的 APP，例如 <a href="https://itunes.apple.com/us/app/my-moodle/id461289000?mt=8">My Moodle</a> 和 <a href="https://itunes.apple.com/au/app/moodle-mobile/id633359593?mt=8">Moodle Mobile</a>，暂时我还没有使用过，但是据使用者说，可以正常打开 pdf 文件。</li>
+<li><p>直接浏览目标网页的 html 源代码，找到 pdf 文件原始地址来打开。我选择使用这种方法，一次设置之后，以后使用也很方便，熟练以后，因为 ummoodle 的各个网页的 html 代码结构都差不多，所以也是很快捷的。由于 IOS 上的 safari 浏览器无法直接查看源代码，所以需要借助一些可以查看 html 的网站来实现这个方法，我借助的是<a href="http://ole.michelsen.dk/blog/view-source-on-the-ipad-and-iphone/">这个</a>网站的方法。原理就是利用 “GeSHi” 这个小程序将网页发送给 “ole.michelsen.dk” 的服务器来解析网页的 html 代码，然后显示出来（还带有代码高亮呦！！）。具体的设置如下：</p>
+
+<ol>
+<li><p>在 IOS 上用 safari 随便打开一个网页，然后保存为书签，为了以后方便，书签起名叫“查看源代码”</p>
+
+<p><img src="https://lh6.googleusercontent.com/-GJzD1e5flq4/Uk7CacaecPI/AAAAAAAABQM/7yNUfqyc85s/s512/%25E7%2585%25A7%25E7%2589%2587%252004-10-2013%252009%252002%252034%2520PM.png" alt="我这里保存 Google 为书签" /></p>
+
+<p><img src="https://lh3.googleusercontent.com/-UwnXN2sL5Dc/Uk7CaT4DWHI/AAAAAAAABQY/TRDTziQF2pQ/s512/%25E7%2585%25A7%25E7%2589%2587%252004-10-2013%252009%252003%252059%2520PM.png" alt="书签起名叫“查看源代码”" /></p></li>
+<li><p>打开<a href="http://ole.michelsen.dk/viewsource/bookmarklet.min.js">这个</a>链接，将里面的内容全选并复制。</p>
+
+<p><img src="https://lh3.googleusercontent.com/-HMF-lKk1y-M/Uk7CclMamRI/AAAAAAAABRA/HzhlBHulUBA/s512/%25E7%2585%25A7%25E7%2589%2587%252004-10-2013%252009%252007%252032%2520PM.png" alt="复制所有内容" /></p></li>
+<li><p>在书签中找到刚才保存的书签，并将刚才复制的内容粘贴到此书签的 URL 处，点击“完成”保存书签就可以了。</p>
+
+<p><img src="https://lh4.googleusercontent.com/-HsLL8-EF6tk/Uk7CaRtwBII/AAAAAAAABQU/Tjad3nkRsko/s512/%25E7%2585%25A7%25E7%2589%2587%252004-10-2013%252009%252004%252027%2520PM.png" alt="编辑“查看源代码”书签" /></p>
+
+<p><img src="https://lh4.googleusercontent.com/-WzvU_jk6DA0/Uk7CbGpBFeI/AAAAAAAABQg/fm0VEzchE0U/s512/%25E7%2585%25A7%25E7%2589%2587%252004-10-2013%252009%252004%252040%2520PM.png" alt="将复制的内容粘贴到书签 URL 处" />
+如果想要下载某个网页的 pdf 文件，就先打开那个含 pdf 文件的网页，然后点击“查看源代码”的书签，就会打开网页的源代码，然后找到其中包含 pdf 文件源地址的部分（很好找的），点击源地址下载就可以了。</p></li>
+</ol>
+
+
+<p><img src="https://lh3.googleusercontent.com/-f0W97s6s1pQ/Uk7ON6MtNQI/AAAAAAAABRY/iqaaVByPcYk/s512/%25E7%2585%25A7%25E7%2589%2587%252004-10-2013%252009%252005%252051%2520PM.png" alt="含有 pdf 文件的网站，点击“查看源代码”的书签（可以把书签放在书签栏方便查找）" /></p>
+
+<p><img src="https://lh5.googleusercontent.com/-oCYL-kJ0eCM/Uk7CbpDIoEI/AAAAAAAABQs/73VVyzHxwg8/s512/%25E7%2585%25A7%25E7%2589%2587%252004-10-2013%252009%252006%252016%2520PM.png" alt="html 中包含 pdf 文件源地址的部分" /></p>
+
+<p><img src="https://lh4.googleusercontent.com/-I6jQKkkt67A/Uk7CcDHtE2I/AAAAAAAABQ4/_Q-EJqEbLYk/s512/%25E7%2585%25A7%25E7%2589%2587%252004-10-2013%252009%252006%252028%2520PM.png" alt="点击 pdf 文件源地址就可以正常打开 pdf 文件了" /></p></li>
+</ol>
+
+
+<p>PS: ICTO 回复了相关问题，回复邮件内容如下：</p>
+
+<pre><code>For this case, please advice your teacher to change the "Appearance" option of the PDF file to "New window" in UMMoodle and this will solve your problem.
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/attack-on-titan.html">巨人的猎手</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-10-03T20:28:00+08:00'><span class='date'>2013年10月03日</span> <span class='time'>8:28 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="https://lh4.googleusercontent.com/-r3XfVFu4YSU/Uk1xgsz8cyI/AAAAAAAABOE/3ONWh1lL_jk/s800/%25E5%25B1%258F%25E5%25B9%2595%25E5%25BF%25AB%25E7%2585%25A7%25202013-10-03%2520%25E4%25B8%258B%25E5%258D%25889.30.19.png" alt="巨人的猎手" /></p>
+
+<p>今天给大家推荐一款国人制作的 3D 网页游戏&ndash;《巨人的猎手》，属于《进击的巨人》的同人游戏，由你来扮演《进击的巨人》中的五名主角在不同的地图上猎杀巨人。可以单机玩，也可以局域网联机玩。每个角色都有不同的特殊技。操作方面还是很复杂的：</p>
+
+<ul>
+<li>WASD：上下左右</li>
+<li>左shift：跳跃（使用气筒喷射，可快速前进）</li>
+<li>左control：闪避（钩住巨人飞起时可利用闪避跳到更高处）</li>
+<li>Q：左挂钩（按住是发射，松开就收回了，所以要是想用钩锁挂住并将自己拉近就按住不要松开，发射挂钩和跳跃都会消耗燃气，燃气量显示在屏幕下方中间，如果消耗没了就不能发射挂钩和跳跃了）</li>
+<li>E：有挂钩（机制和左挂钩一样）</li>
+<li>空格键：左右挂钩同时发射（机制和左挂钩一样）</li>
+<li>鼠标左键：普通攻击（就是挥刀）</li>
+<li>鼠标右键：特殊攻击（不同角色特殊攻击不同）</li>
+<li>R: 换刀片（刀片数量有限，数量显示在屏幕下方中间部分，换完就要等死了）</li>
+<li>P：暂停</li>
+<li>T：重启游戏（如果挂了，就按“T”吧）</li>
+<li>C：改变镜头</li>
+<li>X：显示/隐藏瞄准用的准星（准星代表剑的挥舞方向，准星旁边的数字代表最近的是物体离你的举例，准星旁边的"&lt;&ldquo;代表左挂钩方向，&rdquo;>&ldquo;代表右挂钩方向，如果是红色代表物体太远以致挂钩无法钩住或刀无法砍到，白色代表挂钩可以钩住物体或刀可以砍到）</li>
+<li>Backspace：全屏</li>
+<li>N：行礼</li>
+</ul>
+
+
+<p>玩了几分钟之后我彻底的“回想起了巨人的恐惧”，太难杀了，因为只有攻击巨人颈后那一小片区域才能杀死巨人，巨人会根据你所在的位置做不同的动作，如果你在天上，就顺手抓住你，如果你在头附近就直接张嘴咬你，如果你在地上还会蹲下把你抓起来，总之想绕到背后超级难，就算你好不容易上到脖子上了，可能还会被巨人抓痒痒一样一下抓住。最好在正式玩之前用“trainning”地图（"tranning"地图里巨人不会动）练练手，熟悉一下操作。我总结了一下，就是远远的找准目标之后，远距离绕到目标背后，用钩锁或是跳跃快速前进，找准时机用钩锁上脖子，果断出刀，如果打偏，不要浪费刀刃，放弃之后赶快用钩锁或跳跃快速逃跑摆脱巨人的追踪。</p>
+
+<p><a href="http://fenglee.com/game/aog/">《巨人的猎手》游戏网址在这里</a></p>
+
+<p>游戏作者“鴌Feng”是一个国内的独立游戏制作人，<a href="http://fenglee.com/blog/">其博客在这里</a>，<a href="http://fenglee.com/blog/html/257.html">《巨人的猎手》的介绍博文在这里</a>，Feng大大过去还制作过几款同样游戏性很高（就是很好玩）的游戏，<a href="http://fenglee.com/">你可以在这里找到他的作品</a>，我只能说：</p>
+
+<blockquote><p>此乃大神，需要顶礼膜拜~~~（膜拜中。。。膜拜中。。。膜拜中。。。膜拜中。。。）</p></blockquote>
+
+<p><img src="https://lh5.googleusercontent.com/-HGUx9chktuE/Uk1w4DgHGPI/AAAAAAAABN4/hT95c2ojVvo/s720/%25E5%25B1%258F%25E5%25B9%2595%25E5%25BF%25AB%25E7%2585%25A7%25202013-10-03%2520%25E4%25B8%258B%25E5%258D%25889.12.37.png" alt="巨人我来啦！受死吧！" /></p>
+
+<p><img src="https://lh3.googleusercontent.com/-cqa1rgIfx4A/Uk1w4MmxVGI/AAAAAAAABN8/faFdboZPD5E/s720/%25E5%25B1%258F%25E5%25B9%2595%25E5%25BF%25AB%25E7%2585%25A7%25202013-10-03%2520%25E4%25B8%258B%25E5%258D%25889.20.02.png" alt="迅速惨死在巨人的怀抱中。。。" /></p>
+
+<p>看女流姐卖萌玩《巨人的猎手》（此为老版本，巨人还很丑，貌似只有一张地图一个人物，现已多次更新，游戏性大大提高）：</p>
+
+<p><embed src="http://player.youku.com/player.php/sid/XNjA1MDcxMTQ0/v.swf" allowFullScreen="true" quality="high" width="480" height="400" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash"></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/melrose-box-arduino.html">俄罗斯方块（Arduino）</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-09-29T13:34:00+08:00'><span class='date'>2013年09月29日</span> <span class='time'>1:34 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>经过一个星期闲着无聊地编写和调试，终于可以用 Arduino 玩俄罗斯方块了。四个按钮分别控制左、右、加速下落、转动。使用 LCD12864（QC12864B） 来显示游戏画面。为了寻找可以用来控制 QC12864B 的 Arduino 库花了很长时间，最终选择了 <a href="https://code.google.com/p/u8glib/">u8glib</a>，因为这个库支持的 LCD 控制器非常丰富。<a href="https://code.google.com/p/u8glib/">u8glib 库可以在这里下载</a>，<a href="http://pan.baidu.com/s/1qrhEF">关于 QC12864B 以及如何使用 u8glib 来控制 QC12864B 的资料可以在这里下载</a>，资料中包含一个从网上找来的使用 Arduino 做示波器的例子，使用的就是 <a href="https://code.google.com/p/u8glib/">u8glib</a> 库。</p>
+
+<p>我制作的这个<a href="http://pikipity.github.io/Melrose_box">俄罗斯方块游戏机的项目主页在这里</a>。</p>
+
+<p>面包板连接图：</p>
+
+<p><img src="https://lh3.googleusercontent.com/-MMKU4QZefc4/UkepsoONq0I/AAAAAAAABNI/wASf1AFsVVE/s512/Melrose_box_Scheme_bb.png" alt="面包板连接图" /></p>
+
+<p>运行效果：</p>
+
+<p><img src="https://lh6.googleusercontent.com/-uDiZRNthjjI/Uketz4ePskI/AAAAAAAABNk/zKLtFjShG7U/s640/begin.jpg" alt="运行效果1" /></p>
+
+<p><img src="https://lh5.googleusercontent.com/-PdvRIs9ik6g/UketzzLefkI/AAAAAAAABNc/_8sDPpLxf18/s640/playing.jpg" alt="运行效果2" /></p>
+
+<p><img src="https://lh5.googleusercontent.com/-nyWIb1rcJgc/UketznUnOoI/AAAAAAAABNg/9YnAebKKDXY/s640/finish.jpg" alt="运行效果3" /></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/ultrasonic-distance-measurement-using-arduino.html">利用 Arduino 进行超声波测距</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-09-21T10:32:00+08:00'><span class='date'>2013年09月21日</span> <span class='time'>10:32 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>在<a href="http://pikipity.github.io/blog/arduino-dht11-lcd1602.html">昨天测量温度的装置</a>上又加上了 HC-SR04 来进行超声波测距，先利用 DHT11 测量温度，然后利用温度来计算出较为准确的声速（根据<a href="http://en.wikipedia.org/wiki/Relativistic_Euler_equations">相对论的欧拉方程</a>，声速（米每秒）=331+0.6*温度（摄氏度）），再利用 HC-SR04 测得的超声波来回的时间计算出距离，并在 LCD1602 上显示。</p>
+
+<p>HC-SR04 的使用非常简单，<a href="http://www.doc88.com/p-737494835063.html">这里有一份 HC-SR04 的中文手册</a>，首先向 Trig 引脚输入一个不小于10us的高电平，然后测量 Echo 引脚返回的高电平的时间 t，然后利用公式：距离=t*声速/2，就可以计算得到距离了。但是需要注意：</p>
+
+<ol>
+<li>测量周期要在60ms以上，防止回声影响。</li>
+<li>计算距离时单位要统一，利用<code>pulseIn()</code>函数返回的时间单位是“微秒”，测量结果单位一般是“厘米”，所以声速要从“米每秒”换算为“厘米每微秒”，也就是除以10000。</li>
+<li>测量距离为2cm~400cm，太近的话会有盲区，太远的话由于返回信号太弱难以检测。</li>
+</ol>
+
+
+<p><a href="https://github.com/pikipity/Ultrasonic_distance_measurement_using_Arduino.git">程序可以到这里下载</a>，其中 “HC_SR04_Arduino” 文件夹中是一个 HC-SR04 的 Arduino 测试程序，“display_LCD1602” 文件夹中是这次的程序，"scheme" 文件夹中是电路图。</p>
+
+<p>程序中使用 &ldquo;Time&rdquo; 库来实现定时器中断的功能，<a href="http://srmonk.blogspot.com/2012/01/arduino-timer-library.html">&ldquo;Time&rdquo; 库可以在这里下载</a>，如果你觉得看英文比较烦得话，可以看<a href="http://yehnan.blogspot.com/2012/03/arduino.html">这里这个中文简易教程</a>。</p>
+
+<p>电路图：</p>
+
+<p><img src="https://lh5.googleusercontent.com/-2ggKDjtrfuY/Uj0D_AibosI/AAAAAAAABMw/4VVXk4M1NiY/s640/Breadboard_bb.png" alt="面包板连接图" /></p>
+
+<p><img src="https://lh3.googleusercontent.com/-P3TPBqNYi1E/Uj0D_AqZCmI/AAAAAAAABMs/KXupBqQvZj8/s576/Breadboard_schem.png" alt="电路图" /></p>
+
+<p>结果（LCD 上，第一行为湿度和温度，第二行为距离）：</p>
+
+<p><img src="https://lh5.googleusercontent.com/-lM53a5xTLsA/Uj0D_fkuoxI/AAAAAAAABM0/eefNICQs9Ys/s512/result.jpg" alt="结果" /></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/arduino-dht11-lcd1602.html">用 Arduino 测量温度和湿度</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-09-20T22:00:00+08:00'><span class='date'>2013年09月20日</span> <span class='time'>10:00 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>今天中秋放假闲在宿舍里，于是就用 Arduino 做了一个测量温度和湿度的小装置，使用 DHT11 测量温度和湿度，然后用 LCD1602 来显示。</p>
+
+<p><a href="http://wenku.baidu.com/view/bb12c7c7d5bbfd0a795673dd.html">这里有一个 DHT11 的简单介绍</a>，包括引脚的意义和解法还有一个 Arduino 的例程。DHT11 的使用还是很简单的，基本思路就是先发送给 DHT11 一个信号，将其激活，成功激活后，DHT11 会返回一个信号，之后 DHT11 就会连续发送40位的二进制数据，这40bits的数据包括湿度数值、温度数值和校检数值，其中湿度数值和温度数值都是16位的定点二进制小数（<a href="http://pikipity.github.io/blog/scm-principle-3.html">定点二进制小数在这里有介绍</a>），其中前8位为整数位，后8位为小数位，具体排列如下：</p>
+
+<pre><code>8位湿度整数位 8位湿度小数位 8位温度整数位 8位温度小数位 8位校检数值
+</code></pre>
+
+<p>DHT11 具体操作步骤如下：</p>
+
+<ol>
+<li>发送启动信号：拉低引脚至少18ms，拉高引脚20us到40us</li>
+<li>检测 DHT11 的返回信号：如果可以检测到一个低信号80us，然后一个高信号80us，则启动成功，进入下一步开始接受数据，否则启动失败。</li>
+<li>开始接受数据：低信号时等待下一位数据，高信号时计算高信号的宽度，如果是26us到28us，则此位为“0”，如果是70us，则此位为“1”，共40位。</li>
+</ol>
+
+
+<p>使用 DHT11 要注意的是：</p>
+
+<ol>
+<li>湿度单位为“%RH”（<a href="http://zh.wikipedia.org/wiki/%E7%9B%B8%E5%B0%8D%E6%BF%95%E5%BA%A6">相对湿度</a>），温度单位为“℃”（摄氏度）。</li>
+<li>它的精度并不高，湿度误差为±5%RH，温度为±2℃。</li>
+<li>校检数值使用方法：如果湿度整数位加上温度整数位等于校检数值，那么传输无误，否则存在传输错误。</li>
+<li>采样周期不得小于1秒钟</li>
+</ol>
+
+
+<p>LCD1602 就简单很多了，直接使用 Arduino 自带的 “LiquidCrystal” 库就可以很轻松的进行控制了，库中所包含的函数、使用方法和例程可以到<a href="http://arduino.cc/en/Reference/LiquidCrystal">这里看 “LiquidCrystal” 官方说明文档</a>。</p>
+
+<p>以下是我设计的电路：</p>
+
+<p><img src="https://lh6.googleusercontent.com/-lWe2CscmyLw/Ujv5p3ZbUgI/AAAAAAAABMM/0Dv91ak3_9o/s640/Breadboard_bb.png" alt="面包板连接图" /></p>
+
+<p><img src="https://lh6.googleusercontent.com/-aX-NkrUuHvI/Ujv5piz0TnI/AAAAAAAABMQ/bdtvWYZfm1A/s720/Breadboard_schem.png" alt="电路连接图" /></p>
+
+<p><a href="https://github.com/pikipity/Display_Temp_and_Humi_using_LCD1602.git">程序可以到这里下载</a>。其中 “DHT11_Arduino” 文件夹中是对 DHT11 的测试，用的是串口显示测量结果，“LCD_Arduino” 文件夹中是对 LCD1602 的测试，显示的 &ldquo;hello World"，“display”  文件夹中是整个的代码，"Sketch&rdquo; 中是电路图和结果图。</p>
+
+<p>最终结果如下：</p>
+
+<p><img src="https://lh5.googleusercontent.com/-z0G7fuWmDjs/Ujv5pwiav-I/AAAAAAAABMU/OTBrKNvVwxU/s640/result.jpg" alt="结果" /></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/introduction-to-terraria.html">让我们一起来征服世界</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-09-16T20:14:00+08:00'><span class='date'>2013年09月16日</span> <span class='time'>8:14 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="https://lh3.googleusercontent.com/-xBEV9XTEUq8/UjcIJFQTLzI/AAAAAAAABL0/MzrQc4KU-oU/s364/Logo.png" alt="Terraria" /></p>
+
+<p>今天推荐一款沙盒游戏 &ndash; <a href="http://www.terraria.org/">《Terraria》</a>。“沙盒游戏”是模拟游戏的一个分支，玩家在一个大世界下自由行动，通常没有明确的目标，玩家发挥想象自由创造，例如<a href="http://www.ali213.net/zt/spore/">《孢子》</a>、<a href="http://zh.wikipedia.org/wiki/%E4%BF%A0%E7%9B%9C%E7%8D%B5%E8%BB%8A%E6%89%8B%E7%B3%BB%E5%88%97">《侠盗猎车手》</a>、<a href="https://minecraft.net/">《minecraft》</a>都属于沙盒游戏，其中<a href="https://minecraft.net/">《minecraft》</a>的超高的自由度现在应该是无人不知无人不晓了。</p>
+
+<p>如果你知道 <a href="https://minecraft.net/">《minecraft》</a> 的话，<a href="http://www.terraria.org/">《Terraria》</a> 可以理解为 2D 的<a href="https://minecraft.net/">《minecraft》</a>，但是绝对不是等同，从资源到怪物都完全不同，故事背景就更是一点关系都没有了，唯一相同的就是极高的自由度和挖矿的重要性。如果你连 <a href="https://minecraft.net/">《minecraft》</a> 都不知道的话，看一看下面这个视频，如果你觉得发挥想象挖掘世界、创造物品挺有趣的话，那么我就及其推荐你玩一玩这款游戏，你可以充分享受自己发现世界、创造文明的乐趣。当然和 <a href="https://minecraft.net/">《minecraft》</a> 一样，可以联机和小伙伴们一起进行世界探索。</p>
+
+<p><embed height="452" width="544" quality="high" allowfullscreen="true" type="application/x-shockwave-flash" src="http://static.hdslb.com/miniloader.swf" flashvars="aid=127992&page=1" pluginspage="http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash"></p>
+
+<p>缺点也和 <a href="https://minecraft.net/">《minecraft》</a> 一样，新人入手比较困难，由于完全没有新手指南（NPC 新手向导除了会告诉你配方外还会告诉你一些小贴士，但是等你听完他的小贴士早就黑天了，然后僵尸来了，然后。。。就没然后了），新手可以到<a href="http://www.mcbbs.net/thread-4917-1-1.html">这里</a>看一看，至少可以帮助平安度过第一夜，然后就是你自由的探索了，等你遇到瓶颈的时候，可以到<a href="http://tieba.baidu.com/f?kw=terraria">贴吧</a>看一看，会很有启发的。当你将原版玩到腻了，就可以尝试打各种各样的 MOD，换种玩法继续玩。总之，这是一款一旦入手就不想放手的游戏。</p>
+
+<ul>
+<li>Windows 用户<a href="http://tieba.baidu.com/p/2591750651">这里</a>下载（注意看安装说明，需要安装一些其他的东西）。</li>
+<li>Windows 上的有钱人可以到 <a href="http://store.steampowered.com/app/105600/">Steam</a> 上购买，联机什么的就不是问题了。</li>
+<li>Mac OS X 用户<a href="http://pan.baidu.com/share/link?shareid=1013474534&amp;uk=4080321956">这里</a>下载（原始的 dmg 找不到了就把自己的 app 压缩了一下传上来了，可能连自己的人物和世界一起打包了，将就着用吧，无法联机，需要联机的请用 <a href="http://pikipity.github.io/blog/wine.html">Wine</a>）。</li>
+<li>IOS 用户可以到<a href="https://itunes.apple.com/us/app/id640364616?mt=8">这里</a>下载</li>
+<li>Andriod 用户可以到<a href="https://play.google.com/store/apps/details?id=com.and.games505.Terraria">这里</a>下载</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/processing-prectice-3d-dice.html">Processing 练习作 -- 3D 色子</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-09-12T00:24:00+08:00'><span class='date'>2013年09月12日</span> <span class='time'>12:24 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>processing 的练习作 &ndash; 3D 色子，旨在练习 processing 的 3D 效果制作。点击鼠标可以抛掷色子。色子的图案没有使用额外的图片，全部使用 processing 直接绘制。源代码在<a href="https://github.com/pikipity/3D_Dice.git">这里</a>。由于不是专注于正方体自由旋转落体的模拟，左移在色子的运动上做的很简单：上升和下落都是一个匀加速直线运动，每次落地撞击损失一半的速度；旋转方面每次根据坐标轴随机选取一个旋转方向，旋转速度和位移成正比；没有考虑触地之后的运动。</p>
+
+<p><img src="https://lh4.googleusercontent.com/-Qzgu5jWc-zY/UjCcf32YpqI/AAAAAAAABI4/myK3RPH83x8/s512/%25E5%25B1%258F%25E5%25B9%2595%25E5%25BF%25AB%25E7%2585%25A7%25202013-09-12%2520%25E4%25B8%258A%25E5%258D%258812.33.52.png" alt="程序截图" /></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/introduction-uncyclopedia.html">一本正经的恶搞 -- 伪基百科</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-09-10T04:33:00+08:00'><span class='date'>2013年09月10日</span> <span class='time'>4:33 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="https://lh5.googleusercontent.com/-Ths-brV6Q7E/Ui4wdOPGFsI/AAAAAAAABIo/Fed-Tb1wjr4/s152/Uncyclopedia_Logo_China_1.png" alt="适度恶搞，有益身心" /></p>
+
+<p>今天找资料的时候无意间发现了这样一个网站，里面全是无厘头的恶搞，看得我完全刹不住车了，不是没见过恶搞，但是像这样一本正经、诚意满满地恶搞还从来没有见过。这个网站就是 <a href="http://zh.uncyclopedia.info/wiki/%E9%A6%96%E9%A0%81">“伪基百科”</a>。页面从结构到文章形式完全仿照<a href="http://zh.wikipedia.org/">“维基百科”</a>，但是内容则没有一点是正经的，建议18岁以下儿童及身心脆弱者、极度爱党爱国人士不要点击进入。</p>
+
+<p><a href="http://zh.wikipedia.org/wiki/%E5%81%BD%E5%9F%BA%E7%99%BE%E7%A7%91">“维基百科”是这样介绍“伪基百科”的</a>：</p>
+
+<blockquote><p>伪基百科（英语：Uncyclopedia），是一个功能、操作方式与维基百科类似，但主要以恶搞为目的而创建的网站群。虽然号称是百科全书，但实际是一个试图以百科全书形式“搞笑”的网站。</p></blockquote>
+
+<p><a href="http://zh.uncyclopedia.info/wiki/%E7%B6%AD%E5%9F%BA%E7%99%BE%E7%A7%91">“伪基百科”是这样介绍“维基百科”的</a>：</p>
+
+<blockquote><p>維基百科（Wikipedia, the Evil and Useless Fucked-up Free Encyclopedia）是一個抄襲偽基百科架構的擺爛惡毒的垃圾網站，相同於偽基百科採用wiki(偽基)架構，亦堅持所有人皆可參與編輯其內容，在網站名稱上採用近似的發音。致使使用者在辨識上陷入重大錯誤，而不自知。</p>
+
+<p>不僅內容不盡不實，而且資訊富含錯誤量驚人，致使知名如王爾德者亦無法接受！王爾德因理解維基百科在各種意義上實現唬爛與豪洨本質，憤而投靠偽基百科，並成為偽基之神。維基百科依據所謂的「維基倒亂法」，在一定意義上反轉事實與虛幻的傳統形上學認識，影響後世對實在界的真實理解，誤以虛構作品裡的事物代之，規定真實世界的一切都是人類意識內後天創造出來的假有概念，對人類近代史發展上，極大程度之負面影響。</p>
+
+<p>相較於偽基百科唯一不同的是，維基百科堅持不有趣路線，所以比較多好人普遍接受這種不有趣，因而沉醉其中。基此諸多因素，維基百科出乎進步史觀上意料的發展成網路上最大的百科全書之一，與另外一個相較之下更形枯燥、味如嚼蠟，近一百年來號稱世界第一的大英百科全書編輯群氣得跳腳，潑婦罵街。維基百科亦因此諸多因素成為全世界第一個被罵是公廁的網站。
+基於被給予公廁的意義，維基百科從頭髮一直到腳趾開始武裝起來，進軍先進文明國家，嘗試以無聊KUSO的路線來同化偽基百科與大英百科全書，以各種可能的意義上欺騙大眾，進而實現愚民的目的性，雖然內容全是雜碎，但其數目確實令人望而快慰。
+在僅能保持被動的現有條件之下，防範維基百科大軍來襲，外型像一隻陽痿公雞的偽中華人民共和國的迷信馬克思的共匪創造了世界十七大奇境之一－－沒用的防火長城，亦無法阻擋維基百科的入侵，因為維基百科是一個被大陸共匪控制的垃圾百科。直至今日，因為太過枯燥乏味到快要沒命，沒有人要去維基百科，所以上帝便賦予了偽基百科的功能，試圖在知識的黑暗時代中開創一條可行的道路。</p></blockquote>
+
+<p>读完上面的你是不是发现自己已经不认识“维基百科”了。 o(╯□╰)o</p>
+
+<p>友情提示：由于两者从网页链接到名称都极为相似，做作业的时候注意不要找错网站啊！囧</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/light-controller.html">LED 亮度控制 -- Processing 练习作</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-09-08T20:52:00+08:00'><span class='date'>2013年09月08日</span> <span class='time'>8:52 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>又是一个自己制作的 processing 的练习作，旨在练习 processing 与 Arduino 的串口通信。使用 Processing 编写的可视化控制条，用户可以通过拉拽控制条来调整亮度的数值，通过串口将亮度输送给 Arduino，由 Arduino 实现 LED 灯亮度的调整。由于是很简单的控制，所以就没有考虑什么保护电阻之类的了，直接很简单将 LED 插在了开发板上。视频中就可以看出，当亮度 100% 的时候（也就是电压达到 5V 的时候），LED 会过亮，可能会损坏 LED。</p>
+
+<p>可以到<a href="https://github.com/pikipity/Light_Controller.git">这里</a>下载源码。</p>
+
+<p>程序截图：</p>
+
+<p><img src="https://lh6.googleusercontent.com/-IHYJhlfZPoc/UixyaVzcbYI/AAAAAAAABIM/jEakPgrxBqA/s800/%25E5%25B1%258F%25E5%25B9%2595%25E5%25BF%25AB%25E7%2585%25A7%25202013-09-08%2520%25E4%25B8%258B%25E5%258D%25888.03.49.png" alt="程序截图" /></p>
+
+<p>硬件连接：</p>
+
+<p><img src="https://lh6.googleusercontent.com/-agA7VbMa52g/UixyanVbgEI/AAAAAAAABIY/kfIqR_7uBRs/s640/%25E7%2585%25A7%25E7%2589%2587%252013-9-8%2520%25E4%25B8%258B%25E5%258D%25888%252001%252036.jpg" alt="硬件连接" /></p>
+
+<p>控制视频（没有任何处理直接传渣浪，果然画质惨不忍睹）：</p>
+
+<div><object id="ssss" width="480" height="370" ><param name="allowScriptAccess" value="always" /><embed pluginspage="http://www.macromedia.com/go/getflashplayer" src="http://you.video.sina.com.cn/api/sinawebApi/outplayrefer.php/vid=114236415_3342829334_OBrgGio5CWXK+l1lHz2stqlF+6xCpv2xhGm3v1CsJwdaVgiYJMXNb9wG5CvVBstD9HoLHcwydP8i1R4rbKtd/s.swf" type="application/x-shockwave-flash" name="ssss" allowFullScreen="true" allowScriptAccess="always" width="480" height="370"></embed></object></div>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/practice-for-processing.html">Processing 练习作 -- 小画板</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-09-05T16:57:00+08:00'><span class='date'>2013年09月05日</span> <span class='time'>4:57 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>在<a href="http://pikipity.github.io/blog/new-game-processing.html">这篇文章</a>中我简单介绍了用来编写视觉交互式软件的编程语言 <a href="https://processing.org/">processing</a>，这是我的一个练习作 &ndash; 一个简单的小画板，旨在练习 Processing 的基本命令和熟悉 Java 的语法。源代码可以到<a href="https://github.com/pikipity/Drawer.git">这里</a>下载。</p>
+
+<p>左侧选择工具，右侧选择画笔粗细和颜色。按"e"键结束当前工具输入（画直线、方框、圆形和不规则图形时有效）；按"r"键画布清零。</p>
+
+<p>截图：</p>
+
+<p><img src="https://lh6.googleusercontent.com/-CQpds8QLtt8/UihEwkBDmPI/AAAAAAAABH4/SeNgK7VRgr8/s640/%25E5%25B1%258F%25E5%25B9%2595%25E5%25BF%25AB%25E7%2585%25A7%25202013-09-05%2520%25E4%25B8%258B%25E5%258D%25884.43.37.png" alt="界面" /></p>
+
+<p>小问题：</p>
+
+<ol>
+<li>没有保存功能。</li>
+<li>颜色和画笔粗细比较单一。</li>
+<li>在画直线、方框、圆形和不规则图形时没有预览功能，不方便。</li>
+</ol>
+
+
+<p>在编写过程中就会发现 processing 语言在功能上还是有一定的欠缺的，比如不能够抓取一部分界面进行重绘，换句话说就是没有“撤销”功能，但是如果仅仅想编写一个静态的交互界面已经绰绰有余了，无怪乎很多 Arduino 教学网站都推荐这个语言。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/posts/6">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/posts/4">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me -- pikipity</h1>
+  <ul id="post">
+  pikipity 的小博客，搜罗有意思的科技话题，展示自己的所知所学所感。<p>
+  
+  <img src="/images/myface.gif" width="100pt"><p>
+  
+  如果发现问题，请在文章后面留言指出或是直接点<a href="mailto:pikipityw@gmail.com">这里</a>发邮件给我指正，谢谢。<p>
+  
+  pikipity Blog: <a href="http://pikipity.github.io/">pikipity.github.io</a><p>
+  
+  pikipity Email: <a href="mailto:pikipityw@gmail.com">pikipityw.gmail.com</a><p>
+  
+  使用IE浏览器可能无法得到完美的浏览体验，建议更换为<a href="https://www.google.com/intl/en/chrome/browser/"> Chrome 浏览器</a><p>
+
+  </ul>
+</section>
+<section>
+  <h1>Category List</h1>
+    <span id="tag-cloud"><a href='/blog/categories/algorithm' style='font-size: 107.89473684210526%'>algorithm(5)</a> <a href='/blog/categories/arduino' style='font-size: 109.47368421052632%'>arduino(6)</a> <a href='/blog/categories/assembly' style='font-size: 111.05263157894737%'>assembly(7)</a> <a href='/blog/categories/c-plus-plus' style='font-size: 103.15789473684211%'>c++(2)</a> <a href='/blog/categories/cartoon' style='font-size: 111.05263157894737%'>cartoon(7)</a> <a href='/blog/categories/circuit' style='font-size: 104.73684210526315%'>circuit(3)</a> <a href='/blog/categories/game' style='font-size: 115.78947368421052%'>game(10)</a> <a href='/blog/categories/github' style='font-size: 104.73684210526315%'>github(3)</a> <a href='/blog/categories/google' style='font-size: 126.84210526315789%'>google(17)</a> <a href='/blog/categories/ios' style='font-size: 111.05263157894737%'>ios(7)</a> <a href='/blog/categories/life' style='font-size: 160.0%'>life(38)</a> <a href='/blog/categories/linux' style='font-size: 112.63157894736842%'>linux(8)</a> <a href='/blog/categories/mac' style='font-size: 125.26315789473685%'>mac(16)</a> <a href='/blog/categories/matlab' style='font-size: 125.26315789473685%'>matlab(16)</a> <a href='/blog/categories/movie' style='font-size: 106.3157894736842%'>movie(4)</a> <a href='/blog/categories/octopress' style='font-size: 104.73684210526315%'>octopress(3)</a> <a href='/blog/categories/others' style='font-size: 115.78947368421052%'>others(10)</a> <a href='/blog/categories/processing' style='font-size: 111.05263157894737%'>processing(7)</a> <a href='/blog/categories/python' style='font-size: 109.47368421052632%'>python(6)</a> <a href='/blog/categories/scm' style='font-size: 128.42105263157896%'>scm(18)</a> <a href='/blog/categories/technology' style='font-size: 126.84210526315789%'>technology(17)</a> </span>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week4.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week4)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week3.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week3)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week12summary.html">Algorithms: Design and Analysis Part 1 – Programming Questions (Week1 and Week 2 Summary)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week2.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week2)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week1.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week1)</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+<h1>Copyright Agreement</h1>
+<ul id="copyright">
+<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh"><img
+  alt="知识共享许可协议" style="border-width:0"
+  src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png"
+  /></a><br />本作品采用<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh">知识
+  共享署名-非商业性使用-相同方式共享 3.0 未本地化版本许可协议</a>进行
+  许可。<p>
+
+  如果您想转载本网站下的博文，请注明作者和出处。如果文章内没有特别说明，文章皆为原创，请将出处注明为那篇文章的网址；如果文章内特别指明为转载，请将出处注明为原始文章的网址。非常感谢。<p>
+</ul>
+</section><section>
+  <h1>Who are visiting</h1>
+  <ul id="for_fun">
+  <script type="text/javascript" src="http://jb.revolvermaps.com/2/1.js?i=1p1ij0eyux4&amp;s=190&amp;m=7&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+  </ul>
+</section>
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - pikipity -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

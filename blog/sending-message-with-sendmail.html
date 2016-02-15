@@ -1,0 +1,348 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Matlab 小技巧：通过 Sendmail 来发送信息 - 折腾来折腾去</title>
+  <meta name="author" content="pikipity">
+
+  
+  <meta name="description" content="翻译自 &ldquo;Matlab Geeks&rdquo; 的 &ldquo;Sending messages with sendmail&rdquo;。 当你运行一段很长的代码的时候，坐在电脑前面看着程序运行是一件非常痛苦的事情。我发现，有时候，如果我不知道这段很长的代码要运行多长时间， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://pikipity.github.io/blog/sending-message-with-sendmail.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="折腾来折腾去" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38118079-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">折腾来折腾去</a></h1>
+  
+    <h2>pikipity的blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="pikipity.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/projects">Projects</a></li>
+       <li><a href="/aboutme">AboutMe</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Matlab 小技巧：通过 Sendmail 来发送信息</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-02-28T23:01:00+08:00'><span class='date'>2013年02月28日</span> <span class='time'>11:01 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>翻译自 <a href="http://matlabgeeks.com/">&ldquo;Matlab Geeks&rdquo;</a> 的 <a href="http://matlabgeeks.com/tips-tutorials/sending-messages-with-sendmail/">&ldquo;Sending messages with sendmail&rdquo;</a>。</p>
+
+<p>当你运行一段很长的代码的时候，坐在电脑前面看着程序运行是一件非常痛苦的事情。我发现，有时候，如果我不知道这段很长的代码要运行多长时间，或是有错误返回的时候我就会这样做（我还是坐在电脑前面因为我喜欢看猫的 gif 动画和学校破旧的屏幕吧，谁知道呢……）。但是你不需要这样做。当你的电脑正在“突突”运行的时候，离开去做其他事情吧。通过一个很有用的命令 “sendmail”，你就可以通过一些简单的命令发送信息到你的邮箱或是手机上了。通过这篇博文，我会分享几个简单的我通常用来提醒自己程序运行结束或是有错误的 .m 文件。</p>
+
+<p>首先，“sendmail” 需要4个参数：收件人联系信息、email的主题、email的信息和附件。例如，如果你想发送一个email到我们的邮箱 &ldquo;<a href="&#109;&#x61;&#105;&#108;&#x74;&#x6f;&#58;&#x73;&#117;&#x70;&#x70;&#x6f;&#x72;&#116;&#64;&#109;&#97;&#x74;&#x6c;&#x61;&#98;&#x67;&#101;&#x65;&#x6b;&#x73;&#46;&#99;&#111;&#109;">&#115;&#x75;&#x70;&#112;&#x6f;&#x72;&#116;&#x40;&#109;&#97;&#116;&#108;&#x61;&#x62;&#103;&#x65;&#x65;&#107;&#115;&#46;&#x63;&#111;&#x6d;</a>"，这里展示了你应如何做：</p>
+
+<pre><code>&gt;&gt; sendmail('support@matlabgeeks.com','Hello',...
+'Thanks for the awesome email information!');
+</code></pre>
+
+<p>不幸的是，“sendmail” 不是这么简单，这样仅仅会返回一个错误，除非你已经设置了你用来发送的 email 地址和你是用的 SMTP 服务器。</p>
+
+<pre><code>&gt;&gt; setpref('Internet','SMTP_Server','mail.__.com');
+&gt;&gt; setpref('Internet','E_mail','myID@__.com');
+% and/or 
+&gt;&gt; setpref('Internet','SMTP_Username','myID@__.com');
+</code></pre>
+
+<p>并且，如果你的服务器需要，你还必须加入你的账户密码。把你的密码放入明文中会使安全性很脆弱，要小心。</p>
+
+<pre><code>&gt;&gt;setpref('Internet','SMTP_Password',password);
+</code></pre>
+
+<p>现在，你可以发送邮件了！或者，如果你想发送一条短信的话，可以通过修改 “sendmail” 中收件人的部分来实现这个。例如，如果你想发送一条信息到你的 verizon 手机上，你可以用下面的命令：</p>
+
+<pre><code>&gt;&gt; sendmail('55555555555@vtext.com','Hello',...
+'What's going on tonight?');
+</code></pre>
+
+<p>信息可以发送到的手机号码的列表可以在 <a href="http://sms411.net/how-to-send-email-to-a-phone/">&ldquo;Mr. Tweney&rsquo;s page&rdquo;</a> 中找到。</p>
+
+<p>“sendmail” 一个非常好的用处就是当你的程序运行完之后发送信息给你。我已经<a href="http://matlabgeeks.com/wp-content/uploads/2013/02/sendmail_code.zip">附加</a>了一些描述如何做的文件到这篇博文上。正如你将会看到的，我已经封装了一个 try catch 循环在程序中，所以任何错误都会发送 email 给我。比如，尝试用 <code>a=5;</code>、<code>b=[2 3]</code> 或者 <code>b=2</code> 来运行 function</p>
+
+<pre><code>function sample_script(a, b)
+% sample error and completion file
+% what time is it?
+date_time = datestr(now);
+% try to do some type of command
+try C = [a; b];   
+   % if it works, return the time it finished
+   disp(C);
+    e_mail('support@matlabgeeks.com','matlabgeeks','vlugade',PASSWD,...
+    'Completed',['At : ',date_time]);
+catch err
+   % find the error type
+   errStr = err.identifier;
+e_mail('support@matlabgeeks.com','gmail','vlugade',PASSWD,...
+    'Completed',{['At : ',date_time], ['With error : ', errStr]});
+end
+</code></pre>
+
+<p>你也肯定注意到了，我使用 “e-mail” 这个 function 来发送我的信息。这个 “e-mail.m” 文件已经附加在了这里。总的来说，它和你可以在 “Mathworks” 上找到的非常像，但是可以更方便的修改成你要用的。参数和 &ldquo;sendmail&rdquo; 稍微有点不一样，它需要在 email 内容之前提供收件人地址、SMTP 地址、用户名和密码。我们已经尽可能多的提供了 gmail、yahoo 和 matlabgeeks 的设置，但是你的设置有可能不一样。需要注意的是，你不需要为了让 function 工作而用明文保存你的密码，而是最好以一个变量的形式传递它。</p>
+
+<p>再次提供一次<a href="http://matlabgeeks.com/wp-content/uploads/2013/02/sendmail_code.zip">附件</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">pikipity</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2013-02-28T23:01:00+08:00'><span class='date'>2013年02月28日</span> <span class='time'>11:01 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/matlab/'>matlab</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/do-a-barrel-roll.html" title="Previous Post: 谷姐别这样，转的头疼">&laquo; 谷姐别这样，转的头疼</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/fft-in-matlab.html" title="Next Post: 在 Matlab 中如何做傅里叶变换">在 Matlab 中如何做傅里叶变换 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+    
+        <section imagesd="comment">
+	<br>
+	<br>
+        <h1>Comments</h1>
+	<br>
+	<p></p>
+        <!-- Duoshuo Comment BEGIN -->
+	<div class="ds-thread"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"pikipity"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- Duoshuo Comment END -->
+       </section>
+       
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me -- pikipity</h1>
+  <ul id="post">
+  pikipity 的小博客，搜罗有意思的科技话题，展示自己的所知所学所感。<p>
+  
+  <img src="/images/myface.gif" width="100pt"><p>
+  
+  如果发现问题，请在文章后面留言指出或是直接点<a href="mailto:pikipityw@gmail.com">这里</a>发邮件给我指正，谢谢。<p>
+  
+  pikipity Blog: <a href="http://pikipity.github.io/">pikipity.github.io</a><p>
+  
+  pikipity Email: <a href="mailto:pikipityw@gmail.com">pikipityw.gmail.com</a><p>
+  
+  使用IE浏览器可能无法得到完美的浏览体验，建议更换为<a href="https://www.google.com/intl/en/chrome/browser/"> Chrome 浏览器</a><p>
+
+  </ul>
+</section>
+<section>
+  <h1>Category List</h1>
+    <span id="tag-cloud"><a href='/blog/categories/algorithm' style='font-size: 107.89473684210526%'>algorithm(5)</a> <a href='/blog/categories/arduino' style='font-size: 109.47368421052632%'>arduino(6)</a> <a href='/blog/categories/assembly' style='font-size: 111.05263157894737%'>assembly(7)</a> <a href='/blog/categories/c-plus-plus' style='font-size: 103.15789473684211%'>c++(2)</a> <a href='/blog/categories/cartoon' style='font-size: 111.05263157894737%'>cartoon(7)</a> <a href='/blog/categories/circuit' style='font-size: 104.73684210526315%'>circuit(3)</a> <a href='/blog/categories/game' style='font-size: 115.78947368421052%'>game(10)</a> <a href='/blog/categories/github' style='font-size: 104.73684210526315%'>github(3)</a> <a href='/blog/categories/google' style='font-size: 126.84210526315789%'>google(17)</a> <a href='/blog/categories/ios' style='font-size: 111.05263157894737%'>ios(7)</a> <a href='/blog/categories/life' style='font-size: 160.0%'>life(38)</a> <a href='/blog/categories/linux' style='font-size: 112.63157894736842%'>linux(8)</a> <a href='/blog/categories/mac' style='font-size: 125.26315789473685%'>mac(16)</a> <a href='/blog/categories/matlab' style='font-size: 125.26315789473685%'>matlab(16)</a> <a href='/blog/categories/movie' style='font-size: 106.3157894736842%'>movie(4)</a> <a href='/blog/categories/octopress' style='font-size: 104.73684210526315%'>octopress(3)</a> <a href='/blog/categories/others' style='font-size: 115.78947368421052%'>others(10)</a> <a href='/blog/categories/processing' style='font-size: 111.05263157894737%'>processing(7)</a> <a href='/blog/categories/python' style='font-size: 109.47368421052632%'>python(6)</a> <a href='/blog/categories/scm' style='font-size: 128.42105263157896%'>scm(18)</a> <a href='/blog/categories/technology' style='font-size: 126.84210526315789%'>technology(17)</a> </span>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week4.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week4)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week3.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week3)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week12summary.html">Algorithms: Design and Analysis Part 1 – Programming Questions (Week1 and Week 2 Summary)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week2.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week2)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week1.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week1)</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+<h1>Copyright Agreement</h1>
+<ul id="copyright">
+<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh"><img
+  alt="知识共享许可协议" style="border-width:0"
+  src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png"
+  /></a><br />本作品采用<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh">知识
+  共享署名-非商业性使用-相同方式共享 3.0 未本地化版本许可协议</a>进行
+  许可。<p>
+
+  如果您想转载本网站下的博文，请注明作者和出处。如果文章内没有特别说明，文章皆为原创，请将出处注明为那篇文章的网址；如果文章内特别指明为转载，请将出处注明为原始文章的网址。非常感谢。<p>
+</ul>
+</section><section>
+  <h1>Who are visiting</h1>
+  <ul id="for_fun">
+  <script type="text/javascript" src="http://jb.revolvermaps.com/2/1.js?i=1p1ij0eyux4&amp;s=190&amp;m=7&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+  </ul>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - pikipity -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,631 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Categories: Algorithm | 折腾来折腾去]]></title>
+  <link href="http://pikipity.github.io/blog/categories/algorithm/atom.xml" rel="self"/>
+  <link href="http://pikipity.github.io/"/>
+  <updated>2016-02-15T21:04:31+08:00</updated>
+  <id>http://pikipity.github.io/</id>
+  <author>
+    <name><![CDATA[pikipity]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Algorithms: Design and Analysis Part 1 -- Programming Questions (Week4)]]></title>
+    <link href="http://pikipity.github.io/blog/cousera-algorithm-week4.html"/>
+    <updated>2015-08-24T14:26:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/cousera-algorithm-week4</id>
+    <content type="html"><![CDATA[<p>这里主要记录下来在 “Algorithms: Design and Analysis Part 1” 的Programming Questions 中的算法、实现和作业中的困难。我是用的是 Python。<a href="http://pikipity.github.io/blog/cousera-algorithm-week3.html">Week 3 Programming Question 在这里</a>。 <a href="http://pan.baidu.com/s/1mgrKHw0">Week 4 Programming Question 的题目可以到这里查看</a>，<a href="http://pan.baidu.com/s/1hq93IOO">作业用到的数据可以到这里下载</a>。</p>
+
+<!--more-->
+
+
+<p>第四周，作业要求找出 &ldquo;Strongly Connected Components&rdquo; (SCC) 并计算其内部所含点的数量。如果一幅图上的任意一点都可以经由边与其他所有点相连，这个图就被称为 SCC，可以直观的理解为内部的点形成了回路的图。对于定向图，寻找 SCC 的方法基本可以分为以下几个步骤：</p>
+
+<ol>
+<li>生成定向图的反向图；</li>
+<li>对生成的反向图中的点进行深度优先搜索，纪录搜索结束的时间，最先搜索完成的点（也就是最底层的点）记为1，其次搜索完成的点（次底层点）记为2，依次类推；</li>
+<li>对原定向图进行深度优先搜索，点的搜索顺序按照刚刚得到的完成顺序由大到小进行，纪录每一个点的上层点 (leader)；</li>
+<li>根据每个点的上层点 (leader)，倒推得到 SCC。</li>
+</ol>
+
+
+<p>作业的难点在于深度优先算法在 python 中的实现。由于作业给的图非常大，如果在 python 中使用迭代的方式循环调用同一个函数来实现深度优先搜索，很有可能会导致达到迭代次数上限，所以只能用普通的循环语句来实现。推荐熟悉并使用 <a href="https://docs.python.org/2.7/library/itertools.html">“itertools”</a> 这个模组，循环执行某个固定功能的时候非常好用。</p>
+
+<p>Python 代码如下。由于给的图非常大，即使是图的读入过程都可能会很漫长，所以我将整个进度打印在屏幕上，方便监视。</p>
+
+<pre><code># -*- coding: utf-8 -*-
+import time
+from itertools import groupby
+from collections import defaultdict
+
+def dfs(input_graph,order,step):
+    # Depth-First Search
+    leader=dict()
+    time=0
+    finish_time=dict()
+    visited=set()
+    track=[]
+    N=0
+    for node in order:
+        N+=1
+        if step==1:
+            print "%.5f%% -- DFS for reverse graph"%(N/float(len(order))*100)
+        else:
+            print "%.5f%% -- DFS for graph"%(N/float(len(order))*100)
+        if node not in visited:
+            current_source=node
+            visited.add(node)
+            leader[node]=current_source
+            track.extend(list(set(input_graph[node])-visited))
+            while track:
+                p=track[-1]
+                visited.add(p)
+                leader[p]=current_source
+                if not set(input_graph[p])-visited:
+                    track.pop()
+                    time+=1
+                    finish_time[p]=time
+                else:
+                    track.extend(list(set(input_graph[p])-visited))
+            time+=1
+            finish_time[node]=time
+    return finish_time,leader
+
+
+
+def readgraph(lines):
+    # Generate graph
+    graph=defaultdict(list)
+    N=0
+    for line in lines:
+        N+=1
+        print "%.5f%% -- Read graph"%(N/float(len(lines))*100)
+        line=map(int,line.split())
+        if line[0]!=line[1]:
+            graph[line[0]].append(line[1])
+            graph[line[1]]
+    return graph
+
+def reversegraph(lines):
+    # Generate reverse graph
+    regraph=defaultdict(list)
+    N=0
+    for line in lines:
+        N+=1
+        print "%.5f%% -- Generate reverse graph"%(N/float(len(lines))*100)
+        line=map(int,line.split())
+        if line[0]!=line[1]:
+            regraph[line[1]].append(line[0])
+            regraph[line[0]]
+    return regraph
+
+def leader2SCC(leader_dict):
+    # Obtain length of SCC (reverse order) and SCC
+    SCC=defaultdict(list)
+    for i,k in groupby(leader_dict.keys(),leader_dict.get):
+        SCC[i].extend(list(k))
+    SCC_len=sorted([len(SCC[x]) for x in SCC.keys()],reverse=True)
+    while len(SCC_len)&lt;5:
+        SCC_len.append(0)
+    return SCC,SCC_len
+
+
+file=["SCC.txt"]
+for file_name in file:
+    print ""
+    # Record time
+    t1=time.clock()
+    # Read file
+    f=open(file_name)
+    lines=f.readlines()
+    f.close()
+    # Generate graph and reverse graph
+    graph=readgraph(lines)
+    regraph=reversegraph(lines)
+    # DFS for reverse graph and count finish time
+    finish_time_regraph,leader_regraph=dfs(regraph,sorted(regraph.keys(),reverse=True),1)
+    # reorder finish time
+    finishtime=[0]*len(finish_time_regraph)
+    finishtime=sorted(finish_time_regraph,key=finish_time_regraph.get,reverse=True)
+    # DFS for graph based on finish time to get SCC
+    finish_time_graph,leader_graph=dfs(graph,finishtime,2)
+    SCC,SCC_len=leader2SCC(leader_graph)
+    t2=time.clock()
+    # print and store result
+    print file_name+" result:"
+    if len(SCC_len)&gt;5:
+        SCC_len=SCC_len[0:5]
+    print SCC_len
+    print "time: %.3f CPU seconds"%(t2-t1)
+    f=open('result.txt','w')
+    f.write('''
+    "%s" results: %s
+    time: %.3f CPU seconds
+    '''%(file_name,SCC_len,t2-t1))
+    f.close()
+</code></pre>
+
+<p>答案：434821,968,459,313,211。总用时：730.875 CPU seconds。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Algorithms: Design and Analysis Part 1 -- Programming Questions (Week3)]]></title>
+    <link href="http://pikipity.github.io/blog/cousera-algorithm-week3.html"/>
+    <updated>2015-08-21T11:42:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/cousera-algorithm-week3</id>
+    <content type="html"><![CDATA[<p>这里主要记录下来在 “Algorithms: Design and Analysis Part 1” 的Programming Questions 中的算法、实现和作业中的困难。我是用的是 Python。<a href="http://pikipity.github.io/blog/cousera-algorithm-week2.html">Week 2 Programming Question 在这里</a>。 <a href="http://pan.baidu.com/s/1hqAPt56">Week 3 Programming Question 的题目可以到这里查看</a>，<a href="http://pan.baidu.com/s/1o69XkKi">作业用到的数据可以到这里下载</a>。</p>
+
+<!--more-->
+
+
+<p>第三周，作业要求使用 &ldquo;randomized contraction algorithm&rdquo; 来解决 &ldquo;min cut&rdquo; 问题。当我们将图上所有的点划分为两大类的时候，如果一个边的两个端点分别属于两个大类，这一个边被我们称为 &ldquo;cut"。"min cut&rdquo; 问题就是找到一种分类方法，使得 &ldquo;cut&rdquo; 的数量最少。<a href="http://pan.baidu.com/s/1o69XkKi">这里</a>这份文档，将如何使用 &ldquo;Karger’s Min Cut Algorithm&rdquo; （也就是题目要求使用的方法）解释的非常清楚，但是是英文的，我就挑其中的重点翻译一下。</p>
+
+<p>这个 &ldquo;Karger’s Min Cut Algorithm&rdquo; 非常简单，基本分为以下步骤：</p>
+
+<ol>
+<li>随机选择一个边；</li>
+<li>将选定的边的两个端点合并；</li>
+<li>重复步骤1、2，直到只剩两个点，此两点之间的边就是 cut；</li>
+<li>重复步骤1、2、3，直到找到 min cut。</li>
+</ol>
+
+
+<p>以下图为例，如果要找到其 min cut，需要进行以下步骤：</p>
+
+<p><img src="https://lh3.googleusercontent.com/oJW2ZvaypTpyEPuJVjF1DRfVm_zcXB_au3ASUl24ess=w237-h131-no" alt="Example of min cut" /></p>
+
+<ol>
+<li><p>随机选择一个边，例如 b-f，将 b 和 f 合并，得到下图。注意：当两个点合并之后，只有这两个点之间的边消失，其他边依然存在，比如 a-bf 和 e-bf 都是两个边。</p>
+
+<p><img src="https://lh3.googleusercontent.com/L149F_jt9nzZlU8IPJYFnEb-O1c_0hlp6KuSLj3YJJ8=w223-h114-no" alt="Step 1" /></p></li>
+<li><p>再随机选择一个边，例如 g-h ，将 g 和 h 合并，得到下图。</p>
+
+<p><img src="https://lh3.googleusercontent.com/YimUdKCc9onhcZl_RLXmJe29SMTyd-Fkb7ETc0PzT5Y=w227-h116-no" alt="Step 2" /></p></li>
+<li><p>再随机选择一个边，例如 d-g，合并 d 和 g，由于 g 已经与 h 合并，所以得到下图。</p>
+
+<p><img src="https://lh3.googleusercontent.com/9-0y23rvNo8aKv1nvhwakKzJcDim2keI4Qk3OUTQHSk=w186-h128-no" alt="Step 3" /></p></li>
+<li><p>再随机选择一个边，例如 a-e，合并 a 和 e，得到下图。</p>
+
+<p><img src="https://lh3.googleusercontent.com/x7rRguJeXo9SezNVKF149VMSBKLCMejeZ--HWuVwTCs=w196-h123-no" alt="Step 4" /></p></li>
+<li><p>随机选择一个边，例如 a-b，合并 a 和 b，得到下图。</p>
+
+<p><img src="https://lh3.googleusercontent.com/TXB-fHQEyp15Oi5DJ_qzJhw331WIAX17Dm26ZyG3ris=w152-h127-no" alt="Step 5" /></p></li>
+<li><p>随机选择一个边，例如 c-d，合并 c-d，得到下图。</p>
+
+<p><img src="https://lh3.googleusercontent.com/g19utDONvfiTUaZNpQ2dED-92_cW9nm3E-JGzwfjoNc=w174-h28-no" alt="Step 6" /></p></li>
+</ol>
+
+
+<p>以上是一个循环，cut 数量为2。由于每次都是随机选择边，所以无法保证一次就得到最少的 cut 数量，所以要将以上的步骤循环多次，随着次数的增多，就可以找到 min cut 了。</p>
+
+<p>这个算法很简单，难点是如何实现。我的程序中，每一次合并点都需要更新整幅图，比较耗费资源，如果有更好的实现方法，欢迎讨论。每一次循环的基本思路如下：</p>
+
+<pre><code>Repeat until there are only two points:
+    choose first point "a"
+    choose second point "b" from connections of "a"
+    change all "b" to "a" in current graph
+    move connections of "b" to "a"
+    remove self-connection
+    remove "b" point
+</code></pre>
+
+<p>Python 代码如下，我代码中，总共循环了50次，：</p>
+
+<pre><code># -*- coding: utf-8 -*-
+import random
+import copy
+
+def Choose_first_point(Points):
+    # Choose one point from Points
+    L=len(Points)
+    index=random.choice(range(0,L))
+    point=Points[index]
+    return index, point
+
+def Choose_second_point(first_index,first_point,Graph,Points):
+    # Choose second point from Graph based on first_point
+    second_index,second_point=Choose_first_point(Graph[first_index])
+    second_index=Points.index(second_point)
+    return second_index,second_point
+
+def Cal_Min_Cut(Points,Graph):
+    if len(Graph)==2:
+        return len(Graph[0])
+    # Choose silde
+    Index=[0,0]
+    Silde=[0,0]
+    Index[0],Silde[0]=Choose_first_point(Points)
+    Index[1],Silde[1]=Choose_second_point(Index[0],Silde[0],Graph,Points)
+    # Change all second index to first index
+    for i in Graph[Index[1]]:
+        index_i=Points.index(i)
+        while 1:
+            try: 
+                index=Graph[index_i].index(Silde[1])
+            except ValueError:
+                break
+            else:
+                Graph[index_i][index]=Silde[0]
+    # Combine second point to first point
+    Points.pop(Points.index(Silde[1]))
+    Graph[Index[0]]=Graph[Index[0]]+Graph[Index[1]]
+    # Remove self-silde
+    i=0
+    while 1:
+        try: 
+            k=Graph[Index[0]][i]
+        except IndexError:
+            break
+        else:
+            if k==Silde[0]:
+                Graph[Index[0]].pop(i)
+            else:
+                i+=1
+    Graph.pop(Index[1])
+    # Continue
+    return Cal_Min_Cut(Points,Graph)                                 
+
+
+
+
+# Read File
+file="KargerMinCut.txt"
+f=open(file)
+InGraph=[]
+InPoints=[]
+while 1:
+    line=f.readline()
+    if not line:
+        break
+    else:
+        line=map(int,line.split())
+        InPoints.append(line.pop(0))
+        InGraph.append(line)
+
+# Find min cut number
+N=50
+Num=''
+while N&gt;=0:
+    Points=copy.deepcopy(InPoints)
+    Graph=copy.deepcopy(InGraph)
+    print ""
+    temp=Cal_Min_Cut(Points,Graph)
+    if temp&lt;Num:
+        Num=temp
+    print "iteration "+str(N)
+    print "current cut: "+str(temp)
+    print "min cut: "+str(Num)
+    N-=1
+</code></pre>
+
+<p>答案是17</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Algorithms: Design and Analysis Part 1 – Programming Questions (Week1 and Week 2 Summary)]]></title>
+    <link href="http://pikipity.github.io/blog/cousera-algorithm-week12summary.html"/>
+    <updated>2015-08-17T15:24:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/cousera-algorithm-week12summary</id>
+    <content type="html"><![CDATA[<p>这里主要记录下来在 &ldquo;Algorithms: Design and Analysis Part 1&rdquo; 的Programming Questions 中的算法、实现和作业中的困难。我是用的是 Python。Week 1 Programming Question 在<a href="http://pikipity.github.io/blog/cousera-algorithm-week1.html">这里</a>。Week 2 Programming Question 在<a href="http://pikipity.github.io/blog/cousera-algorithm-week2.html">这里</a>。由于 Week 1 和 Week 2 都是讨论排序问题，所以在这里做下小结－比较一下之前实现过的方法的运行时间。</p>
+
+<!--more-->
+
+
+<p>具体代码可以到<a href="https://github.com/pikipity/Sorting-Algorithm-Comparison.git">这里</a>查看和下载。非常简单的比较了之前在 Week 1 和 Week 2 实现过的4排序方法和 Python 自带函数 <code>sorted</code> 对同一个数列运行1000次的时间。结果如下：</p>
+
+<ol>
+<li>Week 1 的 Merge Sort 方法：113.557s</li>
+<li>Week 2 的 QuickSort（第一个元素做 Pivot）：93.443s</li>
+<li>Week 2 的 QuickSort（最后一个元素做 Pivot）：95.201s</li>
+<li>Week 3 的 QuickSort（中间元素做Pivot）：94.088s</li>
+<li><code>sorted</code> 函数：19.413s</li>
+</ol>
+
+
+<p><code>sorted</code>函数使用 <a href="http://blog.csdn.net/yangzhongblog/article/details/8184707">“Timsort”</a> 方法，而且是使用 C 编写的，所以速度远远快于用 Python 编写的其他算法。所以想要速度快，还是用 C 比较好。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Algorithms: Design and Analysis Part 1 -- Programming Questions (Week2)]]></title>
+    <link href="http://pikipity.github.io/blog/cousera-algorithm-week2.html"/>
+    <updated>2015-08-16T12:03:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/cousera-algorithm-week2</id>
+    <content type="html"><![CDATA[<p>这里主要记录下来在 &ldquo;Algorithms: Design and Analysis Part 1&rdquo; 的Programming Questions 中的算法、实现和作业中的困难。我是用的是 Python。Week 1 Programming Question 在<a href="http://pikipity.github.io/blog/cousera-algorithm-week1.html">这里</a>。
+Week 2 Programming Question 的题目可以到<a href="http://pan.baidu.com/s/1sj41gap">这里</a>查看，作业用到的数据可以到<a href="http://pan.baidu.com/s/1hqpk1da">这里</a>下载。</p>
+
+<!--more-->
+
+
+<p>第二周，作业要求使用 &ldquo;QuickSort&rdquo; 方法对给定的数列排序，并记录“比较”的次数。这次作业的难点并不是对于 &ldquo;QuickSort&rdquo; 的实现，而是作业要求给出“比较”的次数。由于 &ldquo;QuickSort&rdquo; 虽然主思路一样但是实现方法千差万别，不同的实现方法会导致统计出来的“比较”的次数不同。所以必须严格按照老师上课讲的方法实现 &ldquo;QuickSort&rdquo; 才能得到正确答案。所以是否认真看老师的 lecture video 并能明白老师讲的细节成为这次作业的难点。由于 &ldquo;QuickSort&rdquo; 根据选定的 “Pivot” 不同可以分为三种，所以这一次的作业分为三个小问，每一个小问实现一种 &ldquo;QuickSort"，通过“比较”次数的不同就会发现选择哪种 "Pivot&rdquo; 比较好了。</p>
+
+<p>&ldquo;QuickSort&rdquo; 的基本思想和 week 1 中使用的 &ldquo;Merge Sort&rdquo; 基本一样，也是将大问题分解为小问题，但是不再是从数组的中间进行数组的拆分，而是通过确定 &ldquo;Pivot&rdquo; 元素在排序之后的数组中的位置，并以此位置为基础进行拆分。所以在进行拆分的同时进行了排序，所以也就不需要合并（Merge）的步骤了。基本步骤如下：</p>
+
+<ol>
+<li>选择一个元素作为 &ldquo;Pivot"。</li>
+<li>将数组中的其他元素与 &ldquo;Pivot&rdquo; 比较大小从而将原数组拆分为两个数组：比 &ldquo;Pivot&rdquo; 小的数组与比 &ldquo;Pivot&rdquo; 大的数组。确定 &ldquo;Pivot&rdquo; 元素的位置从而完成对 &ldquo;Pivot&rdquo; 元素的排序。</li>
+<li>分别对拆分出来的两个数组重复步骤1和步骤2，直到全部元素排序完成。</li>
+</ol>
+
+
+<p>上述步骤中需要注意两点：</p>
+
+<ol>
+<li>根据选定 &ldquo;Pivot&rdquo; 不同，排序步骤会发生不同，这也就是为什么这一次作业会出现三个小问。</li>
+<li>对于拆分的过程不同，拆分出来的两个数组也会不同，这会导致后续步骤中 &ldquo;Pivot&rdquo; 的不同，从而导致排序步骤的不同，这也就是为什么要严格按照老师 lecture video 中讲的方法来进行拆分，否则答案会不对。</li>
+</ol>
+
+
+<p>接下来，对于三个小问（也就是三种 &ldquo;Pivot&rdquo; 选择方式衍生出来三种 &ldquo;QuickSort"）分别如何实现来进行讲解。</p>
+
+<h2>第一个元素作为 &ldquo;Pivot&rdquo;</h2>
+
+<p>第一种 &ldquo;QuickSort&rdquo; 是将等待排序的数组的第一个元素作为 &ldquo;Pivot&rdquo; 来进行排序。在排序中，我们需要两个位置标记 <code>i</code> 和 <code>j</code>，整个等待排序的数列如下图所示，<code>i</code> 标记的是在比 &ldquo;Pivot&rdquo; 小的元素的数组中最后一个元素的位置，<code>j</code> 标记的是还没有和 &ldquo;Pivot&rdquo; 比较的元素的数组中第一个元素的位置。</p>
+
+<p><img src="https://lh3.googleusercontent.com/0rm5Elld6U_mwutu8VCk3ncL_70OfqbrX2p6BA3IpWo=w487-h361-no" alt="第一个元素作为 &quot;Pivot&quot; 的 &quot;QuickSort&quot;" /></p>
+
+<p>整个排序过程如下：</p>
+
+<ol>
+<li>选择等待排序的数组的第一个元素作为 &ldquo;Pivot"，初始化 <code>i</code> 和 <code>j</code>，<code>i</code>指向第一个元素的位置，<code>j</code> 指向第二个元素的位置。</li>
+<li>对 <code>j</code> 指向的元素和 &ldquo;Pivot&rdquo; 进行大小比较。如果 <code>j</code> 指向的元素小于  &ldquo;Pivot"，那么就将 <code>j</code> 指向的元素与 <code>i+1</code> 指向的元素进行交换，然后 <code>i</code> 变为 <code>i+1</code>，否则不做任何操作。最后，<code>j</code> 变为 <code>j+1</code>。</li>
+<li><p>重复步骤2，直到 <code>j</code> 指向的位置超出数组范围。得到的数组如下图所示。</p>
+
+<p><img src="https://lh3.googleusercontent.com/RHMt79CWJTzPifbTUKklvjLqw4F5DkF7CNkEsBTPUJw=w515-h361-no" alt="拆分完成" /></p></li>
+<li><p>将 <code>i</code> 指向的元素与 &ldquo;Pivot&rdquo; 交换，结束 &ldquo;Pivot&rdquo; 元素的排序。得到的数组如下图所示。</p>
+
+<p><img src="https://lh3.googleusercontent.com/Q_F0qpwtjBcQsq0D7DKsP0AOtnItuna_6nP9olsseX0=w519-h361-no" alt="&quot;Pivot&quot; 排序结束" /></p></li>
+<li>将比 “Pivot”小的元素组成的数组和比 &ldquo;Pivot&rdquo; 大的元素组成的数组分别作为等待排序的数组，重复步骤1～5，直到所有元素排序结束。</li>
+</ol>
+
+
+<p>需要注意两点：</p>
+
+<ol>
+<li>尽管存在多种 <code>i</code> 和 <code>j</code> 的选择和移动方式，虽然不影响排序结果，但是会影响后面循环中 &ldquo;Pivot&rdquo; 的选择，所以无法得到正确的“比较”次数。</li>
+<li>在第4步中，尽管不采用交换的方式而是直接将 &ldquo;Pivot&rdquo; 插入到正确位置并不影响最终的排序结果，但是同样会影响后面循环中 &ldquo;Pivot&rdquo; 的选择，所以也无法得到正确的“比较”次数。</li>
+</ol>
+
+
+<p>Python 代码如下：</p>
+
+<pre><code>def QuickSort(InputArray,Count):
+    if len(InputArray)==1 or len(InputArray)==0:
+        return InputArray,Count
+    i=0
+    j=1
+    while j&lt;len(InputArray):
+        Count+=1
+        if InputArray[j]&lt;InputArray[0]:
+            InputArray[j],InputArray[i+1]=InputArray[i+1],InputArray[j]
+            i+=1
+            j+=1
+        else:
+            j+=1
+    InputArray[0],InputArray[i]=InputArray[i],InputArray[0]
+    InputArray[:i],Count=QuickSort(InputArray[:i],Count)
+    InputArray[i+1:],Count=QuickSort(InputArray[i+1:],Count)
+    return InputArray,Count
+
+
+# Read file
+file="QuickSort.txt"
+f=open(file,'r')
+InputArray=map(int,f.readlines())
+f.close()
+Copy=InputArray
+
+# QuickSort
+Count=0
+InputArray,Count=QuickSort(InputArray,Count)
+
+
+if InputArray==sorted(Copy):
+    print "Correct"
+    print Count
+else:
+    print "Wrong"
+    print InputArray
+</code></pre>
+
+<p>代码的可以到<a href="http://pan.baidu.com/s/1o6qZXDw">这里</a>下载。答案是162085。</p>
+
+<h2>最后一个元素作为 &ldquo;Pivot&rdquo;</h2>
+
+<p>这种 &ldquo;QuickSort"，只需要在排序前，将最后一个元素和第一个元素交换，就完全可以当作第一种一样进行操作。同样要注意，必须是“交换”，否则无法得到正确的“比较”次数。Python 代码如下：</p>
+
+<pre><code>def QuickSort(InputArray,Count):
+    if len(InputArray)==1 or len(InputArray)==0:
+        return InputArray,Count
+    InputArray[0],InputArray[len(InputArray)-1]=InputArray[len(InputArray)-1],InputArray[0]
+    i=0
+    j=1
+    while j&lt;len(InputArray):
+        Count+=1
+        if InputArray[j]&lt;InputArray[0]:
+            InputArray[j],InputArray[i+1]=InputArray[i+1],InputArray[j]
+            i+=1
+            j+=1
+        else:
+            j+=1
+    InputArray[0],InputArray[i]=InputArray[i],InputArray[0]
+    InputArray[:i],Count=QuickSort(InputArray[:i],Count)
+    InputArray[i+1:],Count=QuickSort(InputArray[i+1:],Count)
+    return InputArray,Count
+
+
+# Read file
+file="QuickSort.txt"
+f=open(file,'r')
+InputArray=map(int,f.readlines())
+f.close()
+Copy=InputArray
+
+# QuickSort
+Count=0
+InputArray,Count=QuickSort(InputArray,Count)
+
+if InputArray==sorted(Copy):
+    print "Correct"
+    print Count
+else:
+    print "Wrong"
+    print InputArray
+</code></pre>
+
+<p>代码可以到<a href="http://pan.baidu.com/s/1o6y17nG">这里</a>下载。答案是164123。</p>
+
+<h2>中间元素作为 &ldquo;Pivot&rdquo;</h2>
+
+<p>这里的“中间”元素并不是指地是数列中间的元素，而是将数列第一个元素、数列最后一个元素和数列中间的元素进行大小比较，排在中间的元素作为 &ldquo;Pivot"。这一种同样可以等效为第一种，只是在排序前先要进行比较，然后把选定的元素和数列第一个元素进行交换就可以了。同样要注意，必须是“交换”。Python 代码如下：</p>
+
+<pre><code>def QuickSort(InputArray,Count):
+    if len(InputArray)==1 or len(InputArray)==0:
+        return InputArray,Count
+    Mid=(len(InputArray)-1)//2
+    a=InputArray[0]
+    b=InputArray[Mid]
+    c=InputArray[len(InputArray)-1]
+    if (b&gt;a and b&lt;c) or (b&lt;a and b&gt;c):
+        InputArray[0],InputArray[Mid]=InputArray[Mid],InputArray[0]
+    elif (c&gt;a and c&lt;b) or (c&lt;a and c&gt;b):
+        InputArray[0],InputArray[len(InputArray)-1]=InputArray[len(InputArray)-1],InputArray[0]
+    i=0
+    j=1
+    while j&lt;len(InputArray):
+        Count+=1
+        if InputArray[j]&lt;InputArray[0]:
+            InputArray[j],InputArray[i+1]=InputArray[i+1],InputArray[j]
+            i+=1
+            j+=1
+        else:
+            j+=1
+    InputArray[0],InputArray[i]=InputArray[i],InputArray[0]
+    InputArray[:i],Count=QuickSort(InputArray[:i],Count)
+    InputArray[i+1:],Count=QuickSort(InputArray[i+1:],Count)
+    return InputArray,Count
+
+
+# Read file
+file="QuickSort.txt"
+f=open(file,'r')
+InputArray=map(int,f.readlines())
+f.close()
+Copy=InputArray
+
+# QuickSort
+Count=0
+InputArray,Count=QuickSort(InputArray,Count)
+
+
+if InputArray==sorted(Copy):
+    print "Correct"
+    print Count
+else:
+    print "Wrong"
+    print InputArray
+</code></pre>
+
+<p>代码可以到<a href="http://pan.baidu.com/s/1bn15Qs3">这里</a>下载。答案是138382。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Algorithms: Design and Analysis Part 1 -- Programming Questions (Week1)]]></title>
+    <link href="http://pikipity.github.io/blog/cousera-algorithm-week1.html"/>
+    <updated>2015-08-15T09:05:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/cousera-algorithm-week1</id>
+    <content type="html"><![CDATA[<p>这里主要记录下来在 &ldquo;Algorithms: Design and Analysis Part 1&rdquo; 的Programming Questions 中的算法、实现和作业中的困难。我是用的是 Python。Week 1 Programming Question 的题目可以到<a href="http://pan.baidu.com/s/1bnnY6IF">这里</a>查看，作业用到的数据可以到<a href="http://pan.baidu.com/s/1bnnY6GB">这里</a>下载。</p>
+
+<!--more-->
+
+
+<p>第一周，作业是要求使用 &ldquo;Merge Sort&rdquo; 方法对给定的数列排序，并记录下颠倒元素组（inversions）的个数。对于颠倒元素组，如果在一个数组中<code>a[i]&gt;a[j]</code>但是<code>i&lt;j</code>，就可以将其定义为一个颠倒元素组。例如，在<code>2, 4, 1, 3, 5</code>中，有三组<code>(2,1)</code>，<code>(4,1)</code>和<code>(4,3)</code>。</p>
+
+<p>&ldquo;Merge Sort&rdquo; 方法比较简单（毕竟才第一周）。方法主要思想就是把一个大问题变为小问题，通过解决所有的小问题来实现大问题的解决。那么这个方法也就分为两步：</p>
+
+<ol>
+<li>大问题分解为小问题（Devide）：这一步中，要将这个数组从中间进行拆分，一直拆分到数组足够小为止，对于排序问题，最小的数组应该是仅包含两个元素的数组。</li>
+<li>解决所有的小问题实现大问题的解决（Merge）：这一步中，要将刚才拆分出来的所有小问题以回溯的方式逐层解决。</li>
+</ol>
+
+
+<p>拿一个例子来讲解一下，加入我们要排序的数组是<code>2, 4, 1, 3, 5</code>，按照上面的步骤：</p>
+
+<ol>
+<li><p>首先将大问题进行拆分，如图。</p>
+
+<p><img src="https://lh3.googleusercontent.com/U2vRnRKgdwpZyAq0JgDYyfDXuW8nKXRogksTGijd1AI=w499-h310-no" alt="Divide" /></p></li>
+<li>然后从下向上依次解决小问题：
+
+<ul>
+<li><p>最下层有两个数组<code>(2, 4)</code>和<code>(1)</code>，很显然不存在颠倒元素组</p>
+
+<p><img src="https://lh3.googleusercontent.com/3vNenhYhV08wqUabVfFLvS3cXa0ntz23uDN2JT3c0kg=w498-h311-no" alt="Merge 1" /></p></li>
+<li><p>然后将最下层的两个数组<code>(2, 4)</code>和<code>(1)</code>进行合并，合并的同时进行排序。注意：在每次合并的时候，两个数组一定是已经各自排好序的，所以如果第一个数组的第 i 个元素大于第二个数组的第 k 个元素，那么第一个数组的第 i+1, i+2, i+3 … 个元素都大于第二个数组的第 k 个元素，也就是说，如果第一个数组的长度为 L，那么就有 (L-i+1) 个颠倒元素组。如图：</p>
+
+<p><img src="https://lh3.googleusercontent.com/0sfNLXizKUa_ObsxffGuTgqpKnBS1BKHNNRDM4lBEoQ=w502-h309-no" alt="Merge 2" /></p></li>
+<li><p>类似的步骤对倒数第二层使用，就可以得到最终的结果了。</p>
+
+<p><img src="https://lh3.googleusercontent.com/iVssNpbM-JAXv6l4vZ1APNi7z7sjH2pHLavXS4UevSs=w498-h312-no" alt="Merge 3" /></p></li>
+</ul>
+</li>
+</ol>
+
+
+<p>在这个方法中需要特别注意的三点：</p>
+
+<ol>
+<li><p>在每次合并的时候，两个数组一定是已经各自排好序的，所以如果第一个数组的第 i 个元素大于第二个数组的第 k 个元素，那么第一个数组的第 i+1, i+2, i+3 … 个元素都大于第二个数组的第 k 个元素，也就是说，如果第一个数组的长度为 L，那么就有 (L-i+1) 个颠倒元素组，如图。需要注意的是，这里的 i 和 k 都是指的第 X 个元素，对于不同的编程语言，由于元素起始编号不同，那么对于第 X 个元素的引用方式也会不同，常规情况下（例如 C，C++，java 等），起始元素编号为0，所以第 i 个元素应该为 a[i-1] 而不是 a[i]，而对于 MATLAB，起始元素是1，所以第 i 个元素就是 a[i]。所以在计算颠倒元素个数的时候，要注意应该是 (L-i) 还是 (L-i+1)</p>
+
+<p><img src="https://lh3.googleusercontent.com/1T-ktT5mwmmAL-tZNfDj42q7x-6pN51fHCwsAJtkyqQ=w670-h183-no" alt="如何统计颠倒元素个数" /></p></li>
+<li><p>在合并的时候，可以每次都比较两个数组中的第一个元素，然后将小的那个从原数组中排出，放到存放结果的数组的最后，如图</p>
+
+<p><img src="https://lh3.googleusercontent.com/GeGbgUlVSU5Dju__OYYJIEKY6hzq2Eh7oCHW5reNI7E=w564-h300-no" alt="如何合并两个数组" /></p></li>
+<li>最后在统计颠倒元素组个数的时候，记得要将所有的颠倒元素组加起来，包括拆分和合并两个部分。</li>
+</ol>
+
+
+<p>最后是代码部分，我用的是 Python：</p>
+
+<pre><code>def SortCount(input_array):
+    if len(input_array) &gt; 1:
+        lower_part, count1 = SortCount(input_array[:len(input_array)//2])
+        upper_part, count2 = SortCount(input_array[len(input_array)//2:])
+        merge_part, count3 = MergeCount(lower_part,upper_part)
+        return merge_part, count1+count2+count3
+    else:
+        return input_array, 0
+
+
+def MergeCount(lower_part,upper_part):
+    count = 0
+    merge_result = []
+    while lower_part and upper_part:
+        if lower_part[0] &lt;= upper_part[0]:
+            merge_result.append(lower_part.pop(0))
+        else:
+            count += len(lower_part)
+            merge_result.append(upper_part.pop(0))
+    merge_result  += lower_part + upper_part
+    return merge_result, count
+
+file="IntegerArray.txt"
+f=open(file,'r')
+Array=map(int,f.readlines())
+f.close()
+SortArray,Count=SortCount(Array)
+print Count
+</code></pre>
+
+<p>代码可以到<a href="http://pan.baidu.com/s/1bnz3TXd">这里</a>下载。作业用到的数据可以到<a href="http://pan.baidu.com/s/1bnnY6GB">这里</a>下载。答案：2407905288</p>
+]]></content>
+  </entry>
+  
+</feed>

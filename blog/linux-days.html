@@ -1,0 +1,375 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>玩Linux的那些日子 - 折腾来折腾去</title>
+  <meta name="author" content="pikipity">
+
+  
+  <meta name="description" content="2011年到2012年，曾经玩过一年的Linux，和所有新人一样，刚开始纠结于发行版本问题，后来纠结于命令行的各种操作，自己查资料，自己解决问题，也或许是从那个时候开始逐渐走上了无限折腾的道路。一个人玩，很累，但是很开心。还曾经写过一个类似于教程的博客，用的是Google site，叫 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://pikipity.github.io/blog/linux-days.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="折腾来折腾去" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38118079-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">折腾来折腾去</a></h1>
+  
+    <h2>pikipity的blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="pikipity.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/projects">Projects</a></li>
+       <li><a href="/aboutme">AboutMe</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">玩Linux的那些日子</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-01-31T10:23:00+08:00'><span class='date'>2013年01月31日</span> <span class='time'>10:23 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>2011年到2012年，曾经玩过一年的Linux，和所有新人一样，刚开始纠结于发行版本问题，后来纠结于命令行的各种操作，自己查资料，自己解决问题，也或许是从那个时候开始逐渐走上了无限折腾的道路。一个人玩，很累，但是很开心。还曾经写过一个类似于教程的博客，用的是Google site，叫<a href="https://sites.google.com/site/ubuntubijinewer/">
+乌托邦的后花园</a>，已经不再更新和维护，现在全身心在这个博客上面。那么做一下总结吧 &ndash; 为了那些逝去的日子 O(∩_∩)O</p>
+
+<!--more-->
+
+
+<h3>Linux是什么？</h3>
+
+<p>不得不说，很多人，具体地说，很多不是学习软件专业的人，比如我，即使玩了很久的Linux也没法说清楚Linux到底是什么，只是觉得这个词很酷。Windows、Mac OX两大操作系统一统江湖的今天，玩Linux真的可以说是不走寻常路了。但是玩了半天连Linux是什么都不知道岂不是太糗了，就好想学了半天的8051单片机，却连个最小系统都搭建不出来，就太不像个<strong>专业玩家</strong>了。</p>
+
+<p>照例，先问Google娘，去<a href="https://www.google.com/search?q=%E4%BB%80%E4%B9%88%E6%98%AFLinux&amp;aq=f&amp;oq=%E4%BB%80%E4%B9%88%E6%98%AFLinux&amp;aqs=chrome.0.57j0l3j62l2.5095&amp;sourceid=chrome&amp;ie=UTF-8">Google</a>上搜索总过8,670,000个结果，呵呵，两个逗号 *^◎^* 。<a href="http://zh.wikipedia.org/wiki/Linux">维基百科</a>是这样说的</p>
+
+<blockquote><p>Linux是一种自由和开放源代码的类UNIX操作系统。</p></blockquote>
+
+<p>简洁明了？但是整个页面读起来就不<strong>简洁明了</strong>了。<a href="http://linux.vbird.org/linux_basic/0110whatislinux.php">鸟哥</a>是这样说的</p>
+
+<blockquote><p>Linux就是一套作業系統</p></blockquote>
+
+<p>万岁！鸟哥永远是Linux的大哥，这才是真正的<strong><em>简洁明了</em></strong>。</p>
+
+<p>好了不胡扯了。那么到底什么是Linux呢？每一个Linux使用者心中应该都有自己的定位吧，这种东西就和名著一样嘛</p>
+
+<blockquote><p>有XX个读者就有XX个哈姆雷特</p></blockquote>
+
+<p>简单说一下历史的话呢，就是这样的…………。很久很久以前，有两个为了能更舒适的使用“高性能”电脑的大胡子用汇编（汇编⊙﹏⊙b汗，牛人）编写了一个操作系统，这不是Linux，是Unix。你知道的汇编很难用的，于是他们两个大胡子（好基友o(≧v≦)o~~好棒）发明了C语言，并重新撰写了Unix</p>
+
+<p><img src="http://upload.wikimedia.org/wikipedia/commons/3/36/Ken_n_dennis.jpg" alt="创建Unix两个大胡子"></p>
+
+<p>由于新的Unix紧凑、易读、易移植，所以人们开始在他的基础上开始编写类Unix系统。后来，另外一个大胡子发起了一个<a href="http://zh.wikipedia.org/wiki/GNU%E8%A8%88%E5%8A%83">GNU计划</a>，希望建立一个完全自由的GNU操作系统</p>
+
+<p><img src="http://upload.wikimedia.org/wikipedia/commons/f/f4/Richard_Matthew_Stallman_cropped.jpeg" alt="创建GNU的大胡子"></p>
+
+<p>当然，他的想法是好的，但是能力有限啊（=_=，很显然，他不是Level 1，也不是神之右手），再后来，我们的猪脚出场了，o(≧v≦)o，一个赫尔辛基大学的hack本科生完成了惊天大逆转，基于MINIX(一个小型的商业类Unix系统)完成了自己Linux内核开发，并将其纳入到GNU中，至此<strong><em>GNU/Linux诞生了</em></strong></p>
+
+<p><img src="http://upload.newhua.com/2012/0327/1332832068972.jpg" alt="终于不是大胡子了T^T"></p>
+
+<h3>为什么用Linux呢？</h3>
+
+<p>这个问题去问<a href="https://www.google.com/search?q=%E4%B8%BA%E4%BB%80%E4%B9%88%E7%94%A8Linux%E5%91%A2%EF%BC%9F&amp;oq=%E4%B8%BA%E4%BB%80%E4%B9%88%E7%94%A8Linux%E5%91%A2%EF%BC%9F&amp;aqs=chrome.0.57j62l3.609&amp;sourceid=chrome&amp;ie=UTF-8">Google娘</a>，她会给你906,000个答案，一个人一种说法，但到底是为了什么呢？</p>
+
+<p>回想起来，玩过的发行版本还真不少，Ubuntu, Opensuse, Fedora。刚开始最先接触的是Ubuntu，后来Ubuntu不再使用Gnome桌面，改儿使用自己基于Gnome开发的Unity桌面，不升级显卡驱动难看死了，于是尝试了Opensuse。开始看到他的软件包管理方式，嗯，不错，很神奇，直接在<a href="http://software.opensuse.org/search">这里</a>搜索就可以了，很好嘛，结果发现连个Latex装起来都这么麻烦，坑爹么 o(>﹏&lt;)o ！！！于是走向了Fedora，啊，这个感觉，好极了，妈妈在也不用担心我的操作系统了，即使现在用着Mac我也不得不说一句，Fedora真的很好用。还有还有Gnome才是王道，什么KDE其实也是很好的嘛~ ~ ~ ^_^ ~ ~ ~</p>
+
+<p>胡扯了一大段，到底是为什么呢，还是没有搞清楚，但是扪心自问，其实原因很简单，只有两个</p>
+
+<ol>
+<li>好奇</li>
+<li>玩心太重</li>
+</ol>
+
+
+<p>好奇，是我开始探索Linux的动力。但真正让我坚持一年，虽然现在买了Mac，但依然不放弃Linux的原因还是<strong><em>玩</em></strong>。当然Linux不是玩具，只是工具，很多人用了一段时，发现自己根本就不喜欢这种很多时间都在命令行下度日的生活，还喜欢Windows的傻瓜式（没有贬义，只是强调易学）图形操作，无可厚非，在自己一个人玩Linux的日子里，我也无数次想过放弃，毕竟Linux真的很难学，专业软件也不如windows齐全，但是那种发现地雷，然后扫除地雷之后的快感，可能只有真正去玩的人才能体会吧</p>
+
+<blockquote><p>谁说不能为了玩去用Linux，我们就是好玩</p></blockquote>
+
+<h3>如何学习Linux</h3>
+
+<p>这里，我假设你是一个新手，新到读了我上面那些废话才明白，啊哦，原来是这样啊，老鸟请绕路右转，谢不远送。</p>
+
+<p>首先是发行版本的选择，建议先从Ubuntu入手吧，因为Ubuntu真的很傻瓜了，安装即可使用，完全不用担心什么开始的配置，并且拥有大量稳定版本软件包的软件库，作为一个开始省心省力，等到熟悉了Linux的基本操作，明白了一些基本概念，再去探索其他版本就不成问题了。</p>
+
+<p>发行版本选择结束了，不要急于安装，去看<a href="http://wiki.ubuntu.org.cn/%E9%A6%96%E9%A1%B5">wiki</a>，查<a href="http://forum.ubuntu.org.cn/">Forum</a>，把可能遇到的问题先大体有个印象，标记一下会用到网页，不要真遇到问题了连个找答案的地方都没。至少要知道以下几点吧</p>
+
+<ol>
+<li>Linux分区</li>
+<li>软件源是什么</li>
+<li>安装步骤</li>
+<li>如何配置中文</li>
+<li>显卡安装</li>
+<li>常用软件安装方法</li>
+</ol>
+
+
+<p>已经基本对Ubuntu大体有个了解了，就可以开始安装了，具体怎么安装，是双系统还是虚拟机，Google娘上一搜一大堆。<a href="https://sites.google.com/site/ubuntubijinewer/home">这里</a>是我从前写的Ubuntu教程，当时还是用的10.10吧，现在已经11.10了（-_-|||怎么才11.10，很久没更新了么？），很多连接已经失效了，以后再补充吧。</p>
+
+<p>最近发现了一个教Linux的视频网站，介绍了很多Linux的基础知识，对新手很实用，就是视频慢了点，还是非常不错的，叫做<a href="http://www.linuxcast.net/">LinuxCast.net</a></p>
+
+<p>继续还想深入了解与学习Linux的话，找书看吧，<a href="http://vbird.dic.ksu.edu.tw/">《鸟哥的私房菜》</a>绝对是经典中的经典，多少老鸟就是通过啄这个菜鸟进阶上去的。加油吧</p>
+
+<p>最后说一句，</p>
+
+<blockquote><p>折腾，永无止限</p></blockquote>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">pikipity</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2013-01-31T10:23:00+08:00'><span class='date'>2013年01月31日</span> <span class='time'>10:23 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/linux/'>linux</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/blogbu-shu-wan-bi.html" title="Previous Post: Blog部署完毕">&laquo; Blog部署完毕</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/new-assembler.html" title="Next Post: 汇编语言初学者遇到的困难和解决方法">汇编语言初学者遇到的困难和解决方法 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+    
+        <section imagesd="comment">
+	<br>
+	<br>
+        <h1>Comments</h1>
+	<br>
+	<p></p>
+        <!-- Duoshuo Comment BEGIN -->
+	<div class="ds-thread"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"pikipity"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- Duoshuo Comment END -->
+       </section>
+       
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me -- pikipity</h1>
+  <ul id="post">
+  pikipity 的小博客，搜罗有意思的科技话题，展示自己的所知所学所感。<p>
+  
+  <img src="/images/myface.gif" width="100pt"><p>
+  
+  如果发现问题，请在文章后面留言指出或是直接点<a href="mailto:pikipityw@gmail.com">这里</a>发邮件给我指正，谢谢。<p>
+  
+  pikipity Blog: <a href="http://pikipity.github.io/">pikipity.github.io</a><p>
+  
+  pikipity Email: <a href="mailto:pikipityw@gmail.com">pikipityw.gmail.com</a><p>
+  
+  使用IE浏览器可能无法得到完美的浏览体验，建议更换为<a href="https://www.google.com/intl/en/chrome/browser/"> Chrome 浏览器</a><p>
+
+  </ul>
+</section>
+<section>
+  <h1>Category List</h1>
+    <span id="tag-cloud"><a href='/blog/categories/algorithm' style='font-size: 107.89473684210526%'>algorithm(5)</a> <a href='/blog/categories/arduino' style='font-size: 109.47368421052632%'>arduino(6)</a> <a href='/blog/categories/assembly' style='font-size: 111.05263157894737%'>assembly(7)</a> <a href='/blog/categories/c-plus-plus' style='font-size: 103.15789473684211%'>c++(2)</a> <a href='/blog/categories/cartoon' style='font-size: 111.05263157894737%'>cartoon(7)</a> <a href='/blog/categories/circuit' style='font-size: 104.73684210526315%'>circuit(3)</a> <a href='/blog/categories/game' style='font-size: 115.78947368421052%'>game(10)</a> <a href='/blog/categories/github' style='font-size: 104.73684210526315%'>github(3)</a> <a href='/blog/categories/google' style='font-size: 126.84210526315789%'>google(17)</a> <a href='/blog/categories/ios' style='font-size: 111.05263157894737%'>ios(7)</a> <a href='/blog/categories/life' style='font-size: 160.0%'>life(38)</a> <a href='/blog/categories/linux' style='font-size: 112.63157894736842%'>linux(8)</a> <a href='/blog/categories/mac' style='font-size: 125.26315789473685%'>mac(16)</a> <a href='/blog/categories/matlab' style='font-size: 125.26315789473685%'>matlab(16)</a> <a href='/blog/categories/movie' style='font-size: 106.3157894736842%'>movie(4)</a> <a href='/blog/categories/octopress' style='font-size: 104.73684210526315%'>octopress(3)</a> <a href='/blog/categories/others' style='font-size: 115.78947368421052%'>others(10)</a> <a href='/blog/categories/processing' style='font-size: 111.05263157894737%'>processing(7)</a> <a href='/blog/categories/python' style='font-size: 109.47368421052632%'>python(6)</a> <a href='/blog/categories/scm' style='font-size: 128.42105263157896%'>scm(18)</a> <a href='/blog/categories/technology' style='font-size: 126.84210526315789%'>technology(17)</a> </span>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week4.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week4)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week3.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week3)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week12summary.html">Algorithms: Design and Analysis Part 1 – Programming Questions (Week1 and Week 2 Summary)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week2.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week2)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week1.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week1)</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+<h1>Copyright Agreement</h1>
+<ul id="copyright">
+<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh"><img
+  alt="知识共享许可协议" style="border-width:0"
+  src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png"
+  /></a><br />本作品采用<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh">知识
+  共享署名-非商业性使用-相同方式共享 3.0 未本地化版本许可协议</a>进行
+  许可。<p>
+
+  如果您想转载本网站下的博文，请注明作者和出处。如果文章内没有特别说明，文章皆为原创，请将出处注明为那篇文章的网址；如果文章内特别指明为转载，请将出处注明为原始文章的网址。非常感谢。<p>
+</ul>
+</section><section>
+  <h1>Who are visiting</h1>
+  <ul id="for_fun">
+  <script type="text/javascript" src="http://jb.revolvermaps.com/2/1.js?i=1p1ij0eyux4&amp;s=190&amp;m=7&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+  </ul>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - pikipity -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

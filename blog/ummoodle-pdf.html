@@ -1,0 +1,348 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>解决澳门大学 Ummoodle 上 PDF 文件在 IOS 无法正常打开或下载的问题 - 折腾来折腾去</title>
+  <meta name="author" content="pikipity">
+
+  
+  <meta name="description" content="澳门大学的 ummoodle 在更新之后就出现了 pdf 文件在 IOS 设备上无法正常打开的状况，打开包含 pdf 的网页之后就会出现如下画面： pdf 文件就好像一个没有完整显示的图片一样在那里，没法下载和拖动。但是此问题仅限于 IOS 设备里的浏览器，电脑上的浏览器可以正常显示， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://pikipity.github.io/blog/ummoodle-pdf.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="折腾来折腾去" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38118079-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">折腾来折腾去</a></h1>
+  
+    <h2>pikipity的blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="pikipity.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/projects">Projects</a></li>
+       <li><a href="/aboutme">AboutMe</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">解决澳门大学 Ummoodle 上 PDF 文件在 IOS 无法正常打开或下载的问题</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-10-04T21:11:00+08:00'><span class='date'>2013年10月04日</span> <span class='time'>9:11 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>澳门大学的 ummoodle 在更新之后就出现了 pdf 文件在 IOS 设备上无法正常打开的状况，打开包含 pdf 的网页之后就会出现如下画面：</p>
+
+<p><img src="https://lh3.googleusercontent.com/-QQxd0viyyg8/Uk7Cc9wZh5I/AAAAAAAABRE/reSNdTtOBrA/s512/%25E7%2585%25A7%25E7%2589%2587%252004-10-2013%252009%252020%252019%2520PM.png" alt="无法拖动和下载的 pdf 文件" /></p>
+
+<p>pdf 文件就好像一个没有完整显示的图片一样在那里，没法下载和拖动。但是此问题仅限于 IOS 设备里的浏览器，电脑上的浏览器可以正常显示，Android 设备上无法显示文件，但是会显示一条链接，点击连接之后就可以下载文件了，所以很显然是 IOS 设备的浏览器对于网页的解析出现了问题，于是我研究了一下一个含有 pdf 文件的网页，发下了下面的一段代码：</p>
+
+<pre><code>&lt;object id="resourceobject" data="https://ummoodle.umac.mo/pluginfile.php/74630/mod_resource/content/1/elec414-2013-2.pdf" type="application/pdf" width="800" height="600"&gt;
+
+&lt;param name="src" value="https://ummoodle.umac.mo/pluginfile.php/74630/mod_resource/content/1/elec414-2013-2.pdf" /&gt;
+
+Click &lt;a href="https://ummoodle.umac.mo/pluginfile.php/74630/mod_resource/content/1/elec414-2013-2.pdf" &gt;elec414-2013-2.pdf&lt;/a&gt; link to view the file.
+
+&lt;/object&gt;
+</code></pre>
+
+<p>很显然，网页本身是想调用 IOS 内置的 pdf 阅览器来浏览 pdf 文件，但是由于浏览器排版的原因（固定宽高的设定很明显不适合移动设备啊），导致此被预览的 pdf 文件被其他区块所覆盖，进而导致用户无法对 pdf 文件进行操作。由于 Android 系统没有内置 pdf 阅览器，所以只会显示文件链接，从而避免了排版问题。</p>
+
+<p>既然原因找到，那么就来想一想解决方法吧。很显然，学校对网页的改进还需要时间，那么就从自身做起吧，基本来说想到了两种解决方案：</p>
+
+<ol>
+<li>禁用 IOS 内置的 pdf 阅览器。这个方法比较复杂，由于 IOS 取消了 safari 设置中“禁用内置 pdf 阅览器”的选项，导致现在想要禁用 pdf 阅览器就必须直接删除<code>/Library/</code>下的 pdf 阅览器的插件才行，必须越狱之后安装 iFile 才可以。此方法不仅麻烦，由于需要触碰到系统文件，还比较危险，一旦删错文件，后果不堪设想。</li>
+<li>使用 moodle 的 APP，例如 <a href="https://itunes.apple.com/us/app/my-moodle/id461289000?mt=8">My Moodle</a> 和 <a href="https://itunes.apple.com/au/app/moodle-mobile/id633359593?mt=8">Moodle Mobile</a>，暂时我还没有使用过，但是据使用者说，可以正常打开 pdf 文件。</li>
+<li><p>直接浏览目标网页的 html 源代码，找到 pdf 文件原始地址来打开。我选择使用这种方法，一次设置之后，以后使用也很方便，熟练以后，因为 ummoodle 的各个网页的 html 代码结构都差不多，所以也是很快捷的。由于 IOS 上的 safari 浏览器无法直接查看源代码，所以需要借助一些可以查看 html 的网站来实现这个方法，我借助的是<a href="http://ole.michelsen.dk/blog/view-source-on-the-ipad-and-iphone/">这个</a>网站的方法。原理就是利用 “GeSHi” 这个小程序将网页发送给 “ole.michelsen.dk” 的服务器来解析网页的 html 代码，然后显示出来（还带有代码高亮呦！！）。具体的设置如下：</p>
+
+<ol>
+<li><p>在 IOS 上用 safari 随便打开一个网页，然后保存为书签，为了以后方便，书签起名叫“查看源代码”</p>
+
+<p><img src="https://lh6.googleusercontent.com/-GJzD1e5flq4/Uk7CacaecPI/AAAAAAAABQM/7yNUfqyc85s/s512/%25E7%2585%25A7%25E7%2589%2587%252004-10-2013%252009%252002%252034%2520PM.png" alt="我这里保存 Google 为书签" /></p>
+
+<p><img src="https://lh3.googleusercontent.com/-UwnXN2sL5Dc/Uk7CaT4DWHI/AAAAAAAABQY/TRDTziQF2pQ/s512/%25E7%2585%25A7%25E7%2589%2587%252004-10-2013%252009%252003%252059%2520PM.png" alt="书签起名叫“查看源代码”" /></p></li>
+<li><p>打开<a href="http://ole.michelsen.dk/viewsource/bookmarklet.min.js">这个</a>链接，将里面的内容全选并复制。</p>
+
+<p><img src="https://lh3.googleusercontent.com/-HMF-lKk1y-M/Uk7CclMamRI/AAAAAAAABRA/HzhlBHulUBA/s512/%25E7%2585%25A7%25E7%2589%2587%252004-10-2013%252009%252007%252032%2520PM.png" alt="复制所有内容" /></p></li>
+<li><p>在书签中找到刚才保存的书签，并将刚才复制的内容粘贴到此书签的 URL 处，点击“完成”保存书签就可以了。</p>
+
+<p><img src="https://lh4.googleusercontent.com/-HsLL8-EF6tk/Uk7CaRtwBII/AAAAAAAABQU/Tjad3nkRsko/s512/%25E7%2585%25A7%25E7%2589%2587%252004-10-2013%252009%252004%252027%2520PM.png" alt="编辑“查看源代码”书签" /></p>
+
+<p><img src="https://lh4.googleusercontent.com/-WzvU_jk6DA0/Uk7CbGpBFeI/AAAAAAAABQg/fm0VEzchE0U/s512/%25E7%2585%25A7%25E7%2589%2587%252004-10-2013%252009%252004%252040%2520PM.png" alt="将复制的内容粘贴到书签 URL 处" />
+如果想要下载某个网页的 pdf 文件，就先打开那个含 pdf 文件的网页，然后点击“查看源代码”的书签，就会打开网页的源代码，然后找到其中包含 pdf 文件源地址的部分（很好找的），点击源地址下载就可以了。</p></li>
+</ol>
+
+
+<p><img src="https://lh3.googleusercontent.com/-f0W97s6s1pQ/Uk7ON6MtNQI/AAAAAAAABRY/iqaaVByPcYk/s512/%25E7%2585%25A7%25E7%2589%2587%252004-10-2013%252009%252005%252051%2520PM.png" alt="含有 pdf 文件的网站，点击“查看源代码”的书签（可以把书签放在书签栏方便查找）" /></p>
+
+<p><img src="https://lh5.googleusercontent.com/-oCYL-kJ0eCM/Uk7CbpDIoEI/AAAAAAAABQs/73VVyzHxwg8/s512/%25E7%2585%25A7%25E7%2589%2587%252004-10-2013%252009%252006%252016%2520PM.png" alt="html 中包含 pdf 文件源地址的部分" /></p>
+
+<p><img src="https://lh4.googleusercontent.com/-I6jQKkkt67A/Uk7CcDHtE2I/AAAAAAAABQ4/_Q-EJqEbLYk/s512/%25E7%2585%25A7%25E7%2589%2587%252004-10-2013%252009%252006%252028%2520PM.png" alt="点击 pdf 文件源地址就可以正常打开 pdf 文件了" /></p></li>
+</ol>
+
+
+<p>PS: ICTO 回复了相关问题，回复邮件内容如下：</p>
+
+<pre><code>For this case, please advice your teacher to change the "Appearance" option of the PDF file to "New window" in UMMoodle and this will solve your problem.
+</code></pre>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">pikipity</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2013-10-04T21:11:00+08:00'><span class='date'>2013年10月04日</span> <span class='time'>9:11 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/ios/'>ios</a>, <a class='category' href='/blog/categories/life/'>life</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/attack-on-titan.html" title="Previous Post: 巨人的猎手">&laquo; 巨人的猎手</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/process-on.html" title="Next Post: 多人实时合作免费在线绘图软件 -- Process On">多人实时合作免费在线绘图软件 -- Process On &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+    
+        <section imagesd="comment">
+	<br>
+	<br>
+        <h1>Comments</h1>
+	<br>
+	<p></p>
+        <!-- Duoshuo Comment BEGIN -->
+	<div class="ds-thread"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"pikipity"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- Duoshuo Comment END -->
+       </section>
+       
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me -- pikipity</h1>
+  <ul id="post">
+  pikipity 的小博客，搜罗有意思的科技话题，展示自己的所知所学所感。<p>
+  
+  <img src="/images/myface.gif" width="100pt"><p>
+  
+  如果发现问题，请在文章后面留言指出或是直接点<a href="mailto:pikipityw@gmail.com">这里</a>发邮件给我指正，谢谢。<p>
+  
+  pikipity Blog: <a href="http://pikipity.github.io/">pikipity.github.io</a><p>
+  
+  pikipity Email: <a href="mailto:pikipityw@gmail.com">pikipityw.gmail.com</a><p>
+  
+  使用IE浏览器可能无法得到完美的浏览体验，建议更换为<a href="https://www.google.com/intl/en/chrome/browser/"> Chrome 浏览器</a><p>
+
+  </ul>
+</section>
+<section>
+  <h1>Category List</h1>
+    <span id="tag-cloud"><a href='/blog/categories/algorithm' style='font-size: 107.89473684210526%'>algorithm(5)</a> <a href='/blog/categories/arduino' style='font-size: 109.47368421052632%'>arduino(6)</a> <a href='/blog/categories/assembly' style='font-size: 111.05263157894737%'>assembly(7)</a> <a href='/blog/categories/c-plus-plus' style='font-size: 103.15789473684211%'>c++(2)</a> <a href='/blog/categories/cartoon' style='font-size: 111.05263157894737%'>cartoon(7)</a> <a href='/blog/categories/circuit' style='font-size: 104.73684210526315%'>circuit(3)</a> <a href='/blog/categories/game' style='font-size: 115.78947368421052%'>game(10)</a> <a href='/blog/categories/github' style='font-size: 104.73684210526315%'>github(3)</a> <a href='/blog/categories/google' style='font-size: 126.84210526315789%'>google(17)</a> <a href='/blog/categories/ios' style='font-size: 111.05263157894737%'>ios(7)</a> <a href='/blog/categories/life' style='font-size: 160.0%'>life(38)</a> <a href='/blog/categories/linux' style='font-size: 112.63157894736842%'>linux(8)</a> <a href='/blog/categories/mac' style='font-size: 125.26315789473685%'>mac(16)</a> <a href='/blog/categories/matlab' style='font-size: 125.26315789473685%'>matlab(16)</a> <a href='/blog/categories/movie' style='font-size: 106.3157894736842%'>movie(4)</a> <a href='/blog/categories/octopress' style='font-size: 104.73684210526315%'>octopress(3)</a> <a href='/blog/categories/others' style='font-size: 115.78947368421052%'>others(10)</a> <a href='/blog/categories/processing' style='font-size: 111.05263157894737%'>processing(7)</a> <a href='/blog/categories/python' style='font-size: 109.47368421052632%'>python(6)</a> <a href='/blog/categories/scm' style='font-size: 128.42105263157896%'>scm(18)</a> <a href='/blog/categories/technology' style='font-size: 126.84210526315789%'>technology(17)</a> </span>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week4.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week4)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week3.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week3)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week12summary.html">Algorithms: Design and Analysis Part 1 – Programming Questions (Week1 and Week 2 Summary)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week2.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week2)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week1.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week1)</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+<h1>Copyright Agreement</h1>
+<ul id="copyright">
+<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh"><img
+  alt="知识共享许可协议" style="border-width:0"
+  src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png"
+  /></a><br />本作品采用<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh">知识
+  共享署名-非商业性使用-相同方式共享 3.0 未本地化版本许可协议</a>进行
+  许可。<p>
+
+  如果您想转载本网站下的博文，请注明作者和出处。如果文章内没有特别说明，文章皆为原创，请将出处注明为那篇文章的网址；如果文章内特别指明为转载，请将出处注明为原始文章的网址。非常感谢。<p>
+</ul>
+</section><section>
+  <h1>Who are visiting</h1>
+  <ul id="for_fun">
+  <script type="text/javascript" src="http://jb.revolvermaps.com/2/1.js?i=1p1ij0eyux4&amp;s=190&amp;m=7&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+  </ul>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - pikipity -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

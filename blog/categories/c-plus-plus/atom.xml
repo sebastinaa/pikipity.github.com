@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Categories: C++ | 折腾来折腾去]]></title>
+  <link href="http://pikipity.github.io/blog/categories/c-plus-plus/atom.xml" rel="self"/>
+  <link href="http://pikipity.github.io/"/>
+  <updated>2016-02-15T21:04:31+08:00</updated>
+  <id>http://pikipity.github.io/</id>
+  <author>
+    <name><![CDATA[pikipity]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[兰顿蚂蚁（Ncurses）]]></title>
+    <link href="http://pikipity.github.io/blog/langton-ant.html"/>
+    <updated>2014-01-17T09:38:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/langton-ant</id>
+    <content type="html"><![CDATA[<p><img src="https://lh4.googleusercontent.com/-y22D4cBCYE4/UtiMAcZme4I/AAAAAAAABb0/3pzCr03dDQc/s353/LangtonsAntAnimated.gif" alt="兰顿蚂蚁规则演示" /></p>
+
+<p>“生命游戏”已经快被玩坏了，但是“兰顿蚂蚁”貌似很少有人做，可能是因为变化没有那么多，看起来不是那么有意思吧。</p>
+
+<p>“兰顿蚂蚁”也是细胞自动机的一种案例，在一个只有黑白两种方格的世界里，兰顿规定了一种蚂蚁的行动方式：</p>
+
+<ul>
+<li>如果蚂蚁当前在黑格，那么右转90度，将此格变为白色，前进一步；</li>
+<li>如果蚂蚁当前在白格，那么左转90度，将此格变为黑色，前进一步。</li>
+</ul>
+
+
+<p>我用 Ncurses 写了一个一只蚂蚁的程序，黑格用“#”表示，白格什么也没有（或者说是空格），蚂蚁根据朝向不同，字母也不同，朝上是“U”，朝下是“D”，朝左是“L”，朝右是“R”。程序可以到<a href="https://github.com/pikipity/Langton_ant.git">我的 Github 下载</a></p>
+
+<p>下面是此程序的一段演示视频：</p>
+
+<iframe height="498" width="510" src="http://player.youku.com/embed/XNjYyNjI0NjEy" frameborder="0" allowfullscreen></iframe>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[字符雨效果 -- Ncurses]]></title>
+    <link href="http://pikipity.github.io/blog/character-rain-ncurse.html"/>
+    <updated>2013-12-27T16:42:00+08:00</updated>
+    <id>http://pikipity.github.io/blog/character-rain-ncurse</id>
+    <content type="html"><![CDATA[<p>今天突然想到可以用 ncurses 实现一下《黑客帝国》中字符雨的效果，应该会很好看，顺便复习一下早已丢掉的 C++。代码很简单，可以到<a href="https://github.com/pikipity/Character_rain_the_matrix.git">这里</a>下载。</p>
+
+<p><img src="https://lh5.googleusercontent.com/-caNd3rPWReM/Ur077_y4FwI/AAAAAAAABas/vC5-57tCXZc/s720/12%25E6%259C%2588%252027%252C%25202013%252016%253A31.gif" alt="程序效果" /></p>
+]]></content>
+  </entry>
+  
+</feed>

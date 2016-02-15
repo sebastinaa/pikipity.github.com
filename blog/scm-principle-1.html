@@ -1,0 +1,397 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>单片机原理及程序设计 第一章 单片机简介 - 折腾来折腾去</title>
+  <meta name="author" content="pikipity">
+
+  
+  <meta name="description" content="这个《单片机原理及程序设计》系列主要是简单介绍8051系列单片机的基本原理及功能，并附带一些小程序作为应用的范例，为了便于程序理解，大多程序以C的形式出现，但是也会包括一部分的汇编，因为汇编是用来学习单片机结构与原理的最好语言了。这个系列主要抄录自《單晶片原理與程式設計》，《單晶片原理與程式設計》 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://pikipity.github.io/blog/scm-principle-1.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="折腾来折腾去" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38118079-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">折腾来折腾去</a></h1>
+  
+    <h2>pikipity的blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="pikipity.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/projects">Projects</a></li>
+       <li><a href="/aboutme">AboutMe</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">单片机原理及程序设计 第一章 单片机简介</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-02-08T23:47:00+08:00'><span class='date'>2013年02月08日</span> <span class='time'>11:47 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>这个《单片机原理及程序设计》系列主要是简单介绍8051系列单片机的基本原理及功能，并附带一些小程序作为应用的范例，为了便于程序理解，大多程序以C的形式出现，但是也会包括一部分的汇编，因为汇编是用来学习单片机结构与原理的最好语言了。这个系列主要抄录自<a href="http://elearning.stut.edu.tw/mechelec/chip.htm">《單晶片原理與程式設計》</a>，<a href="http://elearning.stut.edu.tw/mechelec/chip.htm">《單晶片原理與程式設計》</a>虽然介绍得已经很全面了，但是由于过于简略，以至于一个新手如果只看这一份材料很难明白它在说什么，所以这里作进一步的归纳、总结和补充。</p>
+
+<h3>什么是单片机</h3>
+
+<p><img src="/images/post/scm-principle-1_1.png" alt="单片机 AT89C51" width="300pt"></p>
+
+<!--more-->
+
+
+<p>上面这幅图就是8051系列的一种单片机AT89C51了，是的，单片机就是一块芯片而已，但是这块芯片里面可以说是包含了大半个你用的PC机或是ipad吧。需要注意的是，下面这幅图是单片机学习板，不要再指着整块学习板说是单片机了，学习板包是一整套完整的电路，包含了你要学习的原件，只要将单片机插入到上面，正确编程就可以使用了，使初学者专注于编程学习，可以忽略掉复杂的电路设计部分。但是单片机的编程是硬件编程（在后面的编程部分你就能深刻的体会到硬件编程和平常的编程有什么不同了），硬件部分的学习是绝对不可以忽略的。所以我建议，学习单片机不要只是编程，有条件，就买实体元件，自己搭建电路，可以学习的更加透彻，没有条件，可以下载仿真程序，例如<a href="http://baike.baidu.com/view/40936.htm">Proteus</a>(<a href="http://pan.baidu.com/share/link?shareid=345198&amp;uk=4080321956">点我下载Proteus</a>)。<a href="http://baike.baidu.com/view/40936.htm">Proteus</a>是一个简单易用的可以仿真单片机系统的软件，里面包含了大部分的8051系列芯片，和大量的常用原件，有了这个“妈妈再也不用花钱给我买学习版了”  o(≧v≦)o~~</p>
+
+<p><img src="/images/post/scm-principle-1_2.png" alt="开发板" width="300pt"></p>
+
+<p>对单片机有了实感接触以后，就可以开始单片机的学习了</p>
+
+<h3>单片机结构</h3>
+
+<p>这部分其实是废话，因为如果不准备做单片机开发，太过深入了解单片机结构根本就没有什么用，但是话又说回来，如果一点都不了解的话，对于初学者心里又不踏实，总而言之还是需要了解的，仅仅是了解而已。</p>
+
+<p>单片机的结构及结构间的关系如下图所示。</p>
+
+<p><img src="/images/post/scm-principle-1_3.png" alt="单片机的结构及结构间的关系" width="450pt"></p>
+
+<ol>
+<li><p>运算单元：可以从输入单元或是记忆单元提取数据，还可以将数据输送到输出或是记忆单元</p>
+
+<p>$$\mbox{运算单元}\left{\begin{array}{l}
+\mbox{算术运算：加减乘除等}\
+\mbox{逻辑运算：与或非等}
+\end{array}\right.$$</p></li>
+<li><p>控制单元：协调各部分之间的工作，使单片机按照编写的程序逐步执行。在执行一条命令的时候，单片机先解码，了解意思后再执行，一条条命令逐一执行，知道命令结束。</p></li>
+<li>输入与输出单元：单片机上只提供了I/O口，具体输入输出设备是什么，如何驱动使其工作，就需要自己电路设计和软件编程了，这应该是与普通编程最大的区别了</li>
+<li><p>记忆单元：</p>
+
+<p>$$\mbox{记忆单元}\left{\begin{array}{l}
+\mbox{主记忆体}：\left{\begin{array}{l}
+\mbox{ROM}\
+\mbox{RAM}
+\end{array}\right.\
+\mbox{辅助记忆体}
+\end{array}\right.$$</p>
+
+<ul>
+<li>ROM：只读内存，可以理解为存储程序的地方，在单片机运行期间只可以读取，不可以写入。存储的内容断电不会丢失</li>
+<li>RAM：随机存取存储器，在单片机运行期间可读可写，但是保存的内容断电就消失</li>
+<li>辅助记忆体：单片机的外设记忆体，例如硬盘之类的，在地址（“地址”在<a href="/blog/scm-principle-2.html">下一章</a>中具体介绍）允许范围内可以无限扩充</li>
+</ul>
+</li>
+</ol>
+
+
+<h3>8051单片机结构</h3>
+
+<p>上面介绍的是笼统的单片机结构，无论是我们将介绍的8051还是ipad的A5芯片都是这个样子的。现在要具体介绍8051单片机的更具体的结构</p>
+
+<p><img src="/images/post/scm-principle-1_5.png" alt="8051单片机结构" width="550pt"></p>
+
+<p>这其中的具体词汇可能还不了解，但是不要紧，后面章节会提到，到时候再来看就明白了</p>
+
+<h3>8051单片机引脚图</h3>
+
+<p><img src="/images/post/scm-principle-1_6.png" alt="8051单片机结构" width="350pt"></p>
+
+<p>上图是标准Intel的8051芯片引脚图，对于不同厂家的不同型号，不同之处就是引脚的排列顺序和I/O口的数量（I/O口就是"Px.x"的引脚）</p>
+
+<p>各个引脚的功能如下：</p>
+
+<ol>
+<li><p>P0 ~ P3：I/O口。注意：P0口本身不具有提升电路，需要外接提升电路来提供足够的电压给被控制元件。提升电路如图：</p>
+
+<p><img src="/images/post/scm-principle-1_9.jpg" alt="提升电路" width="350pt"></p>
+
+<p>电阻大小需要具体情况具体分析。也可直接连接driver chip，再连接被控制元件。</p></li>
+<li>Vcc：电源。GND：接地。</li>
+<li>EA：控制是否读取外部程式记忆体。为低时，读取；为高时，不读取</li>
+<li>ALE：位置锁住置能。平常每个时钟周期都会出现。如果此处接外部电路，则可以认为是外部时脉</li>
+<li>PSEN：外部程式记忆体读取信号</li>
+<li>RXD：串列传输输入端</li>
+<li>TXD：串列传输输出端</li>
+<li>INT0与INT1：外部中断输入端</li>
+<li>T0与T1：计数器外部输入端</li>
+<li>RD：外部资料记忆体读取激发信号</li>
+<li>WR：外部资料记忆体写入激发信号</li>
+<li>XTAL1与XTAL2：反向振荡器输入与输出端。与内部时脉结合形成时钟电路。</li>
+</ol>
+
+
+<h3>单片机最小系统</h3>
+
+<p>单片机本身是无法直接工作的，需要最小系统的支持才能正常工作，最小系统包括三部分电路：</p>
+
+<ol>
+<li>电源：不同型号，需要的电压不同，一般8051是+5V。Vcc引脚接+5V，GND引脚接地。</li>
+<li><p>时钟电路：单片机需要一个可以震荡的电路，为其产生一个震荡频率稳定的时钟信号来计时，从而同步各部分的工作。一般的8051已经集成了振荡电路，需要我们提供晶振给这个振荡电路稳定的振荡频率，连接方法如图。有的型号的8051系列单片机可能连外部晶振都不需要，自己就可以产生稳定的时钟信号，例如<a href="https://www.silabs.com/Support%20Documents/TechnicalDocs/C8051F34x.pdf">C8051f340</a>。</p>
+
+<p><img src="/images/post/scm-principle-1_7.png" alt="时钟电路" width="300pt"></p>
+
+<p>如果需要12MHz，就将晶振换为12MHz，两个电容换为30pF</p></li>
+<li><p>复位电路：复位电路使单片机除了ROM的内容全部恢复到初始状态。电路（RST就是单片机的RST引脚）如下，这个电路断电自动复位，并且还有按钮可以在运行期间复位。</p>
+
+<p><img src="/images/post/scm-principle-1_8.png" alt="复位电路" width="300pt"></p></li>
+</ol>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">pikipity</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2013-02-08T23:47:00+08:00'><span class='date'>2013年02月08日</span> <span class='time'>11:47 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/scm/'>scm</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/assembly-application-3.html" title="Previous Post: 汇编实战之LED数码管">&laquo; 汇编实战之LED数码管</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/mac-siri.html" title="Next Post: OS 10.9会出现Siri for Mac ?">OS 10.9会出现Siri for Mac ? &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+    
+        <section imagesd="comment">
+	<br>
+	<br>
+        <h1>Comments</h1>
+	<br>
+	<p></p>
+        <!-- Duoshuo Comment BEGIN -->
+	<div class="ds-thread"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"pikipity"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- Duoshuo Comment END -->
+       </section>
+       
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me -- pikipity</h1>
+  <ul id="post">
+  pikipity 的小博客，搜罗有意思的科技话题，展示自己的所知所学所感。<p>
+  
+  <img src="/images/myface.gif" width="100pt"><p>
+  
+  如果发现问题，请在文章后面留言指出或是直接点<a href="mailto:pikipityw@gmail.com">这里</a>发邮件给我指正，谢谢。<p>
+  
+  pikipity Blog: <a href="http://pikipity.github.io/">pikipity.github.io</a><p>
+  
+  pikipity Email: <a href="mailto:pikipityw@gmail.com">pikipityw.gmail.com</a><p>
+  
+  使用IE浏览器可能无法得到完美的浏览体验，建议更换为<a href="https://www.google.com/intl/en/chrome/browser/"> Chrome 浏览器</a><p>
+
+  </ul>
+</section>
+<section>
+  <h1>Category List</h1>
+    <span id="tag-cloud"><a href='/blog/categories/algorithm' style='font-size: 107.89473684210526%'>algorithm(5)</a> <a href='/blog/categories/arduino' style='font-size: 109.47368421052632%'>arduino(6)</a> <a href='/blog/categories/assembly' style='font-size: 111.05263157894737%'>assembly(7)</a> <a href='/blog/categories/c-plus-plus' style='font-size: 103.15789473684211%'>c++(2)</a> <a href='/blog/categories/cartoon' style='font-size: 111.05263157894737%'>cartoon(7)</a> <a href='/blog/categories/circuit' style='font-size: 104.73684210526315%'>circuit(3)</a> <a href='/blog/categories/game' style='font-size: 115.78947368421052%'>game(10)</a> <a href='/blog/categories/github' style='font-size: 104.73684210526315%'>github(3)</a> <a href='/blog/categories/google' style='font-size: 126.84210526315789%'>google(17)</a> <a href='/blog/categories/ios' style='font-size: 111.05263157894737%'>ios(7)</a> <a href='/blog/categories/life' style='font-size: 160.0%'>life(38)</a> <a href='/blog/categories/linux' style='font-size: 112.63157894736842%'>linux(8)</a> <a href='/blog/categories/mac' style='font-size: 125.26315789473685%'>mac(16)</a> <a href='/blog/categories/matlab' style='font-size: 125.26315789473685%'>matlab(16)</a> <a href='/blog/categories/movie' style='font-size: 106.3157894736842%'>movie(4)</a> <a href='/blog/categories/octopress' style='font-size: 104.73684210526315%'>octopress(3)</a> <a href='/blog/categories/others' style='font-size: 115.78947368421052%'>others(10)</a> <a href='/blog/categories/processing' style='font-size: 111.05263157894737%'>processing(7)</a> <a href='/blog/categories/python' style='font-size: 109.47368421052632%'>python(6)</a> <a href='/blog/categories/scm' style='font-size: 128.42105263157896%'>scm(18)</a> <a href='/blog/categories/technology' style='font-size: 126.84210526315789%'>technology(17)</a> </span>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week4.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week4)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week3.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week3)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week12summary.html">Algorithms: Design and Analysis Part 1 – Programming Questions (Week1 and Week 2 Summary)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week2.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week2)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week1.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week1)</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+<h1>Copyright Agreement</h1>
+<ul id="copyright">
+<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh"><img
+  alt="知识共享许可协议" style="border-width:0"
+  src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png"
+  /></a><br />本作品采用<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh">知识
+  共享署名-非商业性使用-相同方式共享 3.0 未本地化版本许可协议</a>进行
+  许可。<p>
+
+  如果您想转载本网站下的博文，请注明作者和出处。如果文章内没有特别说明，文章皆为原创，请将出处注明为那篇文章的网址；如果文章内特别指明为转载，请将出处注明为原始文章的网址。非常感谢。<p>
+</ul>
+</section><section>
+  <h1>Who are visiting</h1>
+  <ul id="for_fun">
+  <script type="text/javascript" src="http://jb.revolvermaps.com/2/1.js?i=1p1ij0eyux4&amp;s=190&amp;m=7&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+  </ul>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - pikipity -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,682 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>折腾来折腾去</title>
+  <meta name="author" content="pikipity">
+
+  
+  <meta name="description" content="翻译自Matlab Geeks的 &ldquo;How to Do a Fourier Transform in Matlab&rdquo;。 傅里叶变换是一个在很多科学和工程领域都非常有用的数学工具。傅里叶变换在信号处理、物理、通信、地质学、天文学、光学等很多领域都有应用。 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://pikipity.github.io/posts/14/index.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="折腾来折腾去" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38118079-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">折腾来折腾去</a></h1>
+  
+    <h2>pikipity的blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="pikipity.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/projects">Projects</a></li>
+       <li><a href="/aboutme">AboutMe</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/fft-in-matlab.html">在 Matlab 中如何做傅里叶变换</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-03-03T11:09:00+08:00'><span class='date'>2013年03月03日</span> <span class='time'>11:09 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>翻译自<a href="http://matlabgeeks.com/">Matlab Geeks</a>的 <a href="http://matlabgeeks.com/tips-tutorials/how-to-do-a-fourier-transform-in-matlab/">&ldquo;How to Do a Fourier Transform in Matlab&rdquo;</a>。</p>
+
+<p>傅里叶变换是一个在很多科学和工程领域都非常有用的数学工具。傅里叶变换在信号处理、物理、通信、地质学、天文学、光学等很多领域都有应用。这个技术将一个函数或是一组数据从时域或是取样域变换到频域。这意味着，傅里叶变换可以展示一组时间序列数据的频率分量。离散傅里叶变换是将取样域的离散数据转化到频域。快速傅里叶变换是一种高效进行离散傅里叶变换的方法，并且存在很多种方法来完成快速傅里叶变换。Matlab 使用快速傅里叶变换来得到离散数据的频域分量</p>
+
+<p>下面是一个在 Matlab 中如何用快速傅里叶变换来分析音频文件的例子。这个例子中的文件是记录在 note A4 （怎么翻译？不会啊）上的音叉录音。这个展示了傅里叶变换如何进行和如何在 Matlab 中使用这项技术。</p>
+
+<pre><code>%Fourier Transform of Sound File
+
+%Load File
+file = 'C:\MATLAB7\work\tuning_fork_A4';
+[y,Fs,bits] = wavread(file);
+
+Nsamps = length(y);
+t = (1/Fs)*(1:Nsamps)          %Prepare time data for plot
+
+%Do Fourier Transform
+y_fft = abs(fft(y));            %Retain Magnitude
+y_fft = y_fft(1:Nsamps/2);      %Discard Half of Points
+f = Fs*(0:Nsamps/2-1)/Nsamps;   %Prepare freq data for plot
+
+%Plot Sound File in Time Domain
+figure
+plot(t, y)
+xlabel('Time (s)')
+ylabel('Amplitude')
+title('Tuning Fork A4 in Time Domain')
+
+%Plot Sound File in Frequency Domain
+figure
+plot(f, y_fft)
+xlim([0 1000])
+xlabel('Frequency (Hz)')
+ylabel('Amplitude')
+title('Frequency Response of Tuning Fork A4')
+</code></pre>
+
+<p>音频文件 <a href="http://matlabgeeks.com/wp-content/uploads/2010/12/tuning_fork_A4.wav">&ldquo;tuning_fork_A4&rdquo;</a> 用 wavread 函数打开，这个函数返回文件的采样数据 &ldquo;y"、采样频率 "Fs&rdquo; 和 A/D 转换器使用的比特数 &ldquo;bits"。注意，文件的扩展名 &rdquo;.wav" 不需要在使用函数的时候特别指定。就像下面将会展示的，采样频率在重建数据的时候非常重要。</p>
+
+<p>快速傅里叶变换用 &ldquo;fft&rdquo; 函数执行。Matlab 没有 &ldquo;dft&rdquo; 函数因为快速傅里叶变换实际上就是计算的离散傅里叶变换。尽管快速傅里叶变换的角度在很多应用中非常中央，但是只有快速傅里叶变换的大小被保存了。“fft” 函数允许指定一个快速傅里叶变换的输出点数，但是在这个例子中，我们使用与输入点数一样数目的输出点数。在下一行，快速傅里叶变换的一半数据被舍弃了。为了这个例子的目的所以这样做了，但是在很多应用中，整个波谱都会用到（译者注：我认为这里舍弃一半的点是因为FFT是关于采样频率的一半对称的，所以只要看一半就可以了）。接下来的一行，将会用于横坐标的数据通过使用采样频率和时遇采样数量准备好了。这一步对于确定包含在音频文件的实际频率是很重要的。</p>
+
+<p>接下来，原始数据在时域上被画了下来，快速傅里叶变换的数据也被画了出来。为了展示在峰值的频率上的更多详情，在这个画中，x轴被限定在了 [0,1000] 的范围中。注意，在大约440Hz处，频率响应有一个峰值，这个就是 &ldquo;note A4&rdquo; 的频率。在其他频率也有一些很小东西，这些估计是音叉了。对于其他乐器比如吉他，在频率响应的峰值的整数倍上都可以看见谐波。</p>
+
+<p><img src="http://matlabgeeks.com/wp-content/uploads/2010/12/tunforktime.jpg" width="550pt"></p>
+
+<p><img src="http://matlabgeeks.com/wp-content/uploads/2010/12/tunforkfreq.jpg" width="550pt"></p>
+
+<p>傅里叶变换在很多不同的领域都是很有用的工具。二维的傅里叶变换也常常用在图像上。尝试一下上面的代码，看看你能不能得到一样的结果。</p>
+
+<p>PS：有人问 FFT 结果的幅值问题。本质来说，FFT结果的幅值单位是什么并不重要，只要你在分析过程中，需要分析的两个幅值的单位是统一的就可以了。Matlab 的 FFT 最终结果的绝对值的确看上去并不好看（太大了），根据 Matlab 帮助文件，FFT 的最终结果还需要进行一下小调整再来使用比较好（上面的图未作调整），<a href="https://gist.github.com/pikipity/7669493">这里</a>有我根据 Matlab 帮助文档编写的一个计算 FFT 并绘制 FFT 结果幅值图的函数，具体如何使用，请看函数内的注释说明。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/sending-message-with-sendmail.html">Matlab 小技巧：通过 Sendmail 来发送信息</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-02-28T23:01:00+08:00'><span class='date'>2013年02月28日</span> <span class='time'>11:01 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>翻译自 <a href="http://matlabgeeks.com/">&ldquo;Matlab Geeks&rdquo;</a> 的 <a href="http://matlabgeeks.com/tips-tutorials/sending-messages-with-sendmail/">&ldquo;Sending messages with sendmail&rdquo;</a>。</p>
+
+<p>当你运行一段很长的代码的时候，坐在电脑前面看着程序运行是一件非常痛苦的事情。我发现，有时候，如果我不知道这段很长的代码要运行多长时间，或是有错误返回的时候我就会这样做（我还是坐在电脑前面因为我喜欢看猫的 gif 动画和学校破旧的屏幕吧，谁知道呢……）。但是你不需要这样做。当你的电脑正在“突突”运行的时候，离开去做其他事情吧。通过一个很有用的命令 “sendmail”，你就可以通过一些简单的命令发送信息到你的邮箱或是手机上了。通过这篇博文，我会分享几个简单的我通常用来提醒自己程序运行结束或是有错误的 .m 文件。</p>
+
+<p>首先，“sendmail” 需要4个参数：收件人联系信息、email的主题、email的信息和附件。例如，如果你想发送一个email到我们的邮箱 &ldquo;<a href="&#109;&#x61;&#105;&#108;&#x74;&#x6f;&#58;&#x73;&#117;&#x70;&#x70;&#x6f;&#x72;&#116;&#64;&#109;&#97;&#x74;&#x6c;&#x61;&#98;&#x67;&#101;&#x65;&#x6b;&#x73;&#46;&#99;&#111;&#109;">&#115;&#x75;&#x70;&#112;&#x6f;&#x72;&#116;&#x40;&#109;&#97;&#116;&#108;&#x61;&#x62;&#103;&#x65;&#x65;&#107;&#115;&#46;&#x63;&#111;&#x6d;</a>"，这里展示了你应如何做：</p>
+
+<pre><code>&gt;&gt; sendmail('support@matlabgeeks.com','Hello',...
+'Thanks for the awesome email information!');
+</code></pre>
+
+<p>不幸的是，“sendmail” 不是这么简单，这样仅仅会返回一个错误，除非你已经设置了你用来发送的 email 地址和你是用的 SMTP 服务器。</p>
+
+<pre><code>&gt;&gt; setpref('Internet','SMTP_Server','mail.__.com');
+&gt;&gt; setpref('Internet','E_mail','myID@__.com');
+% and/or 
+&gt;&gt; setpref('Internet','SMTP_Username','myID@__.com');
+</code></pre>
+
+<p>并且，如果你的服务器需要，你还必须加入你的账户密码。把你的密码放入明文中会使安全性很脆弱，要小心。</p>
+
+<pre><code>&gt;&gt;setpref('Internet','SMTP_Password',password);
+</code></pre>
+
+<p>现在，你可以发送邮件了！或者，如果你想发送一条短信的话，可以通过修改 “sendmail” 中收件人的部分来实现这个。例如，如果你想发送一条信息到你的 verizon 手机上，你可以用下面的命令：</p>
+
+<pre><code>&gt;&gt; sendmail('55555555555@vtext.com','Hello',...
+'What's going on tonight?');
+</code></pre>
+
+<p>信息可以发送到的手机号码的列表可以在 <a href="http://sms411.net/how-to-send-email-to-a-phone/">&ldquo;Mr. Tweney&rsquo;s page&rdquo;</a> 中找到。</p>
+
+<p>“sendmail” 一个非常好的用处就是当你的程序运行完之后发送信息给你。我已经<a href="http://matlabgeeks.com/wp-content/uploads/2013/02/sendmail_code.zip">附加</a>了一些描述如何做的文件到这篇博文上。正如你将会看到的，我已经封装了一个 try catch 循环在程序中，所以任何错误都会发送 email 给我。比如，尝试用 <code>a=5;</code>、<code>b=[2 3]</code> 或者 <code>b=2</code> 来运行 function</p>
+
+<pre><code>function sample_script(a, b)
+% sample error and completion file
+% what time is it?
+date_time = datestr(now);
+% try to do some type of command
+try C = [a; b];   
+   % if it works, return the time it finished
+   disp(C);
+    e_mail('support@matlabgeeks.com','matlabgeeks','vlugade',PASSWD,...
+    'Completed',['At : ',date_time]);
+catch err
+   % find the error type
+   errStr = err.identifier;
+e_mail('support@matlabgeeks.com','gmail','vlugade',PASSWD,...
+    'Completed',{['At : ',date_time], ['With error : ', errStr]});
+end
+</code></pre>
+
+<p>你也肯定注意到了，我使用 “e-mail” 这个 function 来发送我的信息。这个 “e-mail.m” 文件已经附加在了这里。总的来说，它和你可以在 “Mathworks” 上找到的非常像，但是可以更方便的修改成你要用的。参数和 &ldquo;sendmail&rdquo; 稍微有点不一样，它需要在 email 内容之前提供收件人地址、SMTP 地址、用户名和密码。我们已经尽可能多的提供了 gmail、yahoo 和 matlabgeeks 的设置，但是你的设置有可能不一样。需要注意的是，你不需要为了让 function 工作而用明文保存你的密码，而是最好以一个变量的形式传递它。</p>
+
+<p>再次提供一次<a href="http://matlabgeeks.com/wp-content/uploads/2013/02/sendmail_code.zip">附件</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/do-a-barrel-roll.html">谷姐别这样，转的头疼</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-02-28T22:17:00+08:00'><span class='date'>2013年02月28日</span> <span class='time'>10:17 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Google 一个很老的彩蛋，当搜索 <a href="http://googlesystem.blogspot.com/2011/11/googles-barrel-roll-easter-egg.html">&ldquo;do a barrel roll&rdquo;</a> 的时候，整个搜索页面会旋转起来。</p>
+
+<p>这个彩蛋是很好玩，但是由于<a href="https://support.google.com/websearch/bin/answer.py?hl=zh-Hant&amp;p=settings_instant&amp;answer=186610">即时显示搜索结果</a>这个功能，导致你只要输入 &ldquo;do a&rdquo; 页面就会旋转起来，幸好只旋转一周，要是不停地旋转，这个菜单不就成了 Bug 一样的存在。但是也同时说明了广大人民群众最喜闻乐见的活动就是挑逗谷姐了。</p>
+
+<p>解决方法很简单，就是在搜索设定里取消“即时显示搜索结果”，但是必须有 Google 账户并登陆之后才可以设定。</p>
+
+<p><img src="/images/post/do-a-barrel-roll.jpg" width="550pt"></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/scm-principle-2.html">单片机原理及程序设计 第二章 记忆体和寄存器</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-02-27T22:37:00+08:00'><span class='date'>2013年02月27日</span> <span class='time'>10:37 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://pikipity.github.com/blog/scm-principle-1.html">上一章</a>主要是简单介绍了一下 8051 的样子和结构，这一章主要介绍内存，为将来介绍各个特殊功能和 assembly 做准备。</p>
+
+<h3>记忆体种类</h3>
+
+<p>记忆体主要分为两种：</p>
+
+<ol>
+<li>只读记忆体（ROM）：资料一旦存储就不能删除或是修改（既不能重新写入），且内容不会因为断电而消失。一般来说，我们可以认为你所编写的程式就存储在 8051 的 ROM 中，当然现在的新科技已经允许通过一定的手段来从新修改 ROM 上的内容了，所以你可以向你的 8051 芯片中重新写入程式，但是重新写入的次数是有限，但是这个次数非常大，所以不用担心。8051 内部 ROM 容量为 4K Byte，最大可扩充到 64K Byte。8052 内部 ROM 容量为 8K Byte，最大可扩充到 64K Byte</li>
+<li>随即存储存储器（RAM）：可以随时将数据存入记忆体的任意位置，但是断电后数据会消失。一般来说，我们可以认为程式临时数据就是存储在 8051 的 RAM 中的。8051 内部 RAM 容量为 128 Byte，最大可扩充到 64K Byte。8052 内部 RAM 容量为 256 Byte，最大可扩充到 64K Byte。</li>
+</ol>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/scm-principle-2.html">继续阅读</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/cloud-atlas.html">《云图》影评</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-02-26T23:29:00+08:00'><span class='date'>2013年02月26日</span> <span class='time'>11:29 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>2012年上映的德国科幻电影，当情节主旋律定格为“轮回转生”以后我以为会挺扯的，结果还是意外的好看，在<a href="http://blog.sina.com.cn/u/2289398997">“免费写手”的新浪微博</a>上看到一篇写的很好的影评，抄录在下面，原文在<a href="http://blog.sina.com.cn/s/blog_887574d50101bmyx.html">这里</a>。内容剧透在<a href="http://zh.wikipedia.org/wiki/%E9%9B%B2%E5%9C%96_(%E9%9B%BB%E5%BD%B1">这里</a>)，官方网站在<a href="http://cloudatlas.warnerbros.com/">这里</a>（网页做的很带感，有木有）。</p>
+
+<p><img src="/images/post/Cloud_Atlas.jpg" width="550pt"></p>
+
+<p>正文开始。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/cloud-atlas.html">继续阅读</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/searching-for-sugar-man.html">2013年奥斯卡最佳纪录长片奖 -- 《寻找小糖人》</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-02-26T23:19:00+08:00'><span class='date'>2013年02月26日</span> <span class='time'>11:19 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>这是一部讲述音乐人 <a href="http://zh.wikipedia.org/wiki/%E8%A5%BF%E6%96%AF%E6%89%98%C2%B7%E7%BD%97%E5%BE%B7%E9%87%8C%E6%A0%BC%E6%96%AF">Rodriguez</a> 的纪录片，不是有才华就可以成功的，一个人真的可以和命运抗争么？结局很治愈。据说，这是第一部用手机（iphone5）拍摄的奥斯卡最佳纪录长片。不管怎么说，看看吧。</p>
+
+<p><embed src="http://player.youku.com/player.php/sid/XNTAyNTUwNzAw/v.swf" quality="high" width="480" height="400" align="middle" allowScriptAccess="sameDomain" allowFullscreen="true" type="application/x-shockwave-flash"></p>
+
+<p>影片如果无法播放，请点<a href="http://v.youku.com/v_show/id_XNTAyNTUwNzAw.html">这里</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/fullmetal-alchemist-bgm.html">骨头社出品，必属精品 -- 燃到爆的《钢炼》BGM</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-02-25T22:46:00+08:00'><span class='date'>2013年02月25日</span> <span class='time'>10:46 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://baike.baidu.com/view/2995261.htm">骨头社</a>出品，绝对热血，绝对燃到爆的<a href="http://baike.baidu.com/view/3656.htm">《钢炼》</a>BGM &ndash; Diamond Eyes。up主还很良心的连BGM原档也发布了出来，快狂点<a href="http://pan.baidu.com/share/link?shareid=67962&amp;uk=1477362479">这里</a>下载吧。<a href="http://www.bilibili.tv/video/av323319/">B站直通车这里上车</a></p>
+
+<p><embed src="http://player.youku.com/player.php/sid/XNDM0NjM3MjM2/v.swf" quality="high" width="480" height="400" align="middle" allowScriptAccess="sameDomain" allowFullscreen="true" type="application/x-shockwave-flash"></p>
+
+<p>影片如果无法播放，请点<a href="http://v.youku.com/v_show/id_XNDM0NjM3MjM2.html">这里</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/kramdown-syntax-chinese-1.html">Kramdown 语法文档翻译（一）</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-02-23T17:14:00+08:00'><span class='date'>2013年02月23日</span> <span class='time'>5:14 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>这是 《kramdown Syntax》的中文翻译系列，英文、中文都不好，翻译过来为大家方便查询与学习，原文在<a href="http://kramdown.rubyforge.org/syntax.html#attribute-list-definitions">这里</a>。</p>
+
+<p><img src="/images/post/overview_kramdown.png" width="550pt"></p>
+
+<p>kramdown 语法是基于 Markdown 语法建立并加入了一些其他 Markdown 扩展版本（例如，<a href="http://maruku.rubyforge.org/">Maruku</a>、<a href="http://michelf.com/projects/php-markdown/extra/">PHP Markdown Extra</a> 和 <a href="http://johnmacfarlane.net/pandoc/">Pandoc</a>）所具有的特性。不仅如此，它努力去提供一个包括明确规则的严格的语法，所以它不可能完全符合 Markdown 语法。尽管如此，大多数用 Markdown 编写的文档依然可以用 kramdown 很好地解析。下面所有和 Markdown 语法存在不一样的地方的 kranmdown 语法都用高亮指出了。</p>
+
+<p>下面是所有 kramdown 所支持元素的语法定义，同时还有告诉你 kramdown 通过一个可用的编译器转换之后你将得到什么样的文档。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/kramdown-syntax-chinese-1.html">继续阅读</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/octopress-and-github.html">用Octopress 和 Github 建立自己的 Blog</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-02-22T08:44:00+08:00'><span class='date'>2013年02月22日</span> <span class='time'>8:44 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>这个 Blog 就是在使用 Octopress 和 Github 建立起来的。基本思路如下，首先用 Markdown 语言迅速成文，然后由 Octopress 生成站点文件并上传到 Github，利用 Github 的 Pages 功能，就可以直接通过访问 Github 提供的二级域名访问到你的站点了。</p>
+
+<p><img src="/images/post/octopress.jpg" width="550pt"></p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/octopress-and-github.html">继续阅读</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/game-pole-pit-father-s-philosophy.html">腐女的哲学</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-02-21T23:24:00+08:00'><span class='date'>2013年02月21日</span> <span class='time'>11:24 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>今天被一个学妹这么说自己的 Blog：</p>
+
+<blockquote><p>他写的没有一个我不知道…或者说我怎么觉得那些个话我都在别的地儿看过。。。</p></blockquote>
+
+<p>呵呵，原来大家都这么好学，想看别的地方没看过的，呵呵，这个网易专题应该没有了，希望零星看我 Blog 的读者喜欢 (*^◎^*)</p>
+
+<p>《极坑爹的哲学小游戏》，呵呵，下载在<a href="http://pan.baidu.com/share/link?shareid=377738&amp;uk=4080321956">这里</a>，攻略在下面，呵呵。为什么这么多"呵呵"，看攻略吧。</p>
+
+<ol>
+<li><a href="http://player.youku.com/player.php/sid/XNTEzNTIxOTI4/v.swf">END1</a></li>
+<li><a href="http://player.youku.com/player.php/sid/XNTEzNTI3NzY0/v.swf">END2</a></li>
+<li><a href="http://player.youku.com/player.php/sid/XNTEzNTMzOTI4/v.swf">END3</a></li>
+<li><a href="http://player.youku.com/player.php/sid/XNTEzNTM0NjIw/v.swf">END4</a></li>
+<li><a href="http://player.youku.com/player.php/sid/XNTEzNTM2NzYw/v.swf">END5</a></li>
+<li><a href="http://player.youku.com/player.php/sid/XNTEzNTM4MzQ4/v.swf">END6</a></li>
+<li><a href="http://player.youku.com/player.php/sid/XNTEzNTQxMjI4/v.swf">END7</a></li>
+<li><a href="http://player.youku.com/player.php/sid/XNTEzNTQxOTA0/v.swf">END8</a></li>
+</ol>
+
+
+<p><img src="/images/post/Boy_Game.jpg" width="550pt"></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/posts/15">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/posts/13">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me -- pikipity</h1>
+  <ul id="post">
+  pikipity 的小博客，搜罗有意思的科技话题，展示自己的所知所学所感。<p>
+  
+  <img src="/images/myface.gif" width="100pt"><p>
+  
+  如果发现问题，请在文章后面留言指出或是直接点<a href="mailto:pikipityw@gmail.com">这里</a>发邮件给我指正，谢谢。<p>
+  
+  pikipity Blog: <a href="http://pikipity.github.io/">pikipity.github.io</a><p>
+  
+  pikipity Email: <a href="mailto:pikipityw@gmail.com">pikipityw.gmail.com</a><p>
+  
+  使用IE浏览器可能无法得到完美的浏览体验，建议更换为<a href="https://www.google.com/intl/en/chrome/browser/"> Chrome 浏览器</a><p>
+
+  </ul>
+</section>
+<section>
+  <h1>Category List</h1>
+    <span id="tag-cloud"><a href='/blog/categories/algorithm' style='font-size: 107.89473684210526%'>algorithm(5)</a> <a href='/blog/categories/arduino' style='font-size: 109.47368421052632%'>arduino(6)</a> <a href='/blog/categories/assembly' style='font-size: 111.05263157894737%'>assembly(7)</a> <a href='/blog/categories/c-plus-plus' style='font-size: 103.15789473684211%'>c++(2)</a> <a href='/blog/categories/cartoon' style='font-size: 111.05263157894737%'>cartoon(7)</a> <a href='/blog/categories/circuit' style='font-size: 104.73684210526315%'>circuit(3)</a> <a href='/blog/categories/game' style='font-size: 115.78947368421052%'>game(10)</a> <a href='/blog/categories/github' style='font-size: 104.73684210526315%'>github(3)</a> <a href='/blog/categories/google' style='font-size: 126.84210526315789%'>google(17)</a> <a href='/blog/categories/ios' style='font-size: 111.05263157894737%'>ios(7)</a> <a href='/blog/categories/life' style='font-size: 160.0%'>life(38)</a> <a href='/blog/categories/linux' style='font-size: 112.63157894736842%'>linux(8)</a> <a href='/blog/categories/mac' style='font-size: 125.26315789473685%'>mac(16)</a> <a href='/blog/categories/matlab' style='font-size: 125.26315789473685%'>matlab(16)</a> <a href='/blog/categories/movie' style='font-size: 106.3157894736842%'>movie(4)</a> <a href='/blog/categories/octopress' style='font-size: 104.73684210526315%'>octopress(3)</a> <a href='/blog/categories/others' style='font-size: 115.78947368421052%'>others(10)</a> <a href='/blog/categories/processing' style='font-size: 111.05263157894737%'>processing(7)</a> <a href='/blog/categories/python' style='font-size: 109.47368421052632%'>python(6)</a> <a href='/blog/categories/scm' style='font-size: 128.42105263157896%'>scm(18)</a> <a href='/blog/categories/technology' style='font-size: 126.84210526315789%'>technology(17)</a> </span>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week4.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week4)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week3.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week3)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week12summary.html">Algorithms: Design and Analysis Part 1 – Programming Questions (Week1 and Week 2 Summary)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week2.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week2)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week1.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week1)</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+<h1>Copyright Agreement</h1>
+<ul id="copyright">
+<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh"><img
+  alt="知识共享许可协议" style="border-width:0"
+  src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png"
+  /></a><br />本作品采用<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh">知识
+  共享署名-非商业性使用-相同方式共享 3.0 未本地化版本许可协议</a>进行
+  许可。<p>
+
+  如果您想转载本网站下的博文，请注明作者和出处。如果文章内没有特别说明，文章皆为原创，请将出处注明为那篇文章的网址；如果文章内特别指明为转载，请将出处注明为原始文章的网址。非常感谢。<p>
+</ul>
+</section><section>
+  <h1>Who are visiting</h1>
+  <ul id="for_fun">
+  <script type="text/javascript" src="http://jb.revolvermaps.com/2/1.js?i=1p1ij0eyux4&amp;s=190&amp;m=7&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+  </ul>
+</section>
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - pikipity -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

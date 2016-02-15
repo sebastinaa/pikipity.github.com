@@ -1,0 +1,609 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Algorithms: Design and Analysis Part 1 -- Programming Questions (Week2) - 折腾来折腾去</title>
+  <meta name="author" content="pikipity">
+
+  
+  <meta name="description" content="这里主要记录下来在 &ldquo;Algorithms: Design and Analysis Part 1&rdquo; 的Programming Questions 中的算法、实现和作业中的困难。我是用的是 Python。Week 1 Programming Question 在这里。 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://pikipity.github.io/blog/cousera-algorithm-week2.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="折腾来折腾去" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38118079-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">折腾来折腾去</a></h1>
+  
+    <h2>pikipity的blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="pikipity.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/projects">Projects</a></li>
+       <li><a href="/aboutme">AboutMe</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week2)</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-08-16T12:03:00+08:00'><span class='date'>2015年08月16日</span> <span class='time'>12:03 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>这里主要记录下来在 &ldquo;Algorithms: Design and Analysis Part 1&rdquo; 的Programming Questions 中的算法、实现和作业中的困难。我是用的是 Python。Week 1 Programming Question 在<a href="http://pikipity.github.io/blog/cousera-algorithm-week1.html">这里</a>。
+Week 2 Programming Question 的题目可以到<a href="http://pan.baidu.com/s/1sj41gap">这里</a>查看，作业用到的数据可以到<a href="http://pan.baidu.com/s/1hqpk1da">这里</a>下载。</p>
+
+<!--more-->
+
+
+<p>第二周，作业要求使用 &ldquo;QuickSort&rdquo; 方法对给定的数列排序，并记录“比较”的次数。这次作业的难点并不是对于 &ldquo;QuickSort&rdquo; 的实现，而是作业要求给出“比较”的次数。由于 &ldquo;QuickSort&rdquo; 虽然主思路一样但是实现方法千差万别，不同的实现方法会导致统计出来的“比较”的次数不同。所以必须严格按照老师上课讲的方法实现 &ldquo;QuickSort&rdquo; 才能得到正确答案。所以是否认真看老师的 lecture video 并能明白老师讲的细节成为这次作业的难点。由于 &ldquo;QuickSort&rdquo; 根据选定的 “Pivot” 不同可以分为三种，所以这一次的作业分为三个小问，每一个小问实现一种 &ldquo;QuickSort"，通过“比较”次数的不同就会发现选择哪种 "Pivot&rdquo; 比较好了。</p>
+
+<p>&ldquo;QuickSort&rdquo; 的基本思想和 week 1 中使用的 &ldquo;Merge Sort&rdquo; 基本一样，也是将大问题分解为小问题，但是不再是从数组的中间进行数组的拆分，而是通过确定 &ldquo;Pivot&rdquo; 元素在排序之后的数组中的位置，并以此位置为基础进行拆分。所以在进行拆分的同时进行了排序，所以也就不需要合并（Merge）的步骤了。基本步骤如下：</p>
+
+<ol>
+<li>选择一个元素作为 &ldquo;Pivot"。</li>
+<li>将数组中的其他元素与 &ldquo;Pivot&rdquo; 比较大小从而将原数组拆分为两个数组：比 &ldquo;Pivot&rdquo; 小的数组与比 &ldquo;Pivot&rdquo; 大的数组。确定 &ldquo;Pivot&rdquo; 元素的位置从而完成对 &ldquo;Pivot&rdquo; 元素的排序。</li>
+<li>分别对拆分出来的两个数组重复步骤1和步骤2，直到全部元素排序完成。</li>
+</ol>
+
+
+<p>上述步骤中需要注意两点：</p>
+
+<ol>
+<li>根据选定 &ldquo;Pivot&rdquo; 不同，排序步骤会发生不同，这也就是为什么这一次作业会出现三个小问。</li>
+<li>对于拆分的过程不同，拆分出来的两个数组也会不同，这会导致后续步骤中 &ldquo;Pivot&rdquo; 的不同，从而导致排序步骤的不同，这也就是为什么要严格按照老师 lecture video 中讲的方法来进行拆分，否则答案会不对。</li>
+</ol>
+
+
+<p>接下来，对于三个小问（也就是三种 &ldquo;Pivot&rdquo; 选择方式衍生出来三种 &ldquo;QuickSort"）分别如何实现来进行讲解。</p>
+
+<h2>第一个元素作为 &ldquo;Pivot&rdquo;</h2>
+
+<p>第一种 &ldquo;QuickSort&rdquo; 是将等待排序的数组的第一个元素作为 &ldquo;Pivot&rdquo; 来进行排序。在排序中，我们需要两个位置标记 <code>i</code> 和 <code>j</code>，整个等待排序的数列如下图所示，<code>i</code> 标记的是在比 &ldquo;Pivot&rdquo; 小的元素的数组中最后一个元素的位置，<code>j</code> 标记的是还没有和 &ldquo;Pivot&rdquo; 比较的元素的数组中第一个元素的位置。</p>
+
+<p><img src="https://lh3.googleusercontent.com/0rm5Elld6U_mwutu8VCk3ncL_70OfqbrX2p6BA3IpWo=w487-h361-no" alt="第一个元素作为 &quot;Pivot&quot; 的 &quot;QuickSort&quot;" /></p>
+
+<p>整个排序过程如下：</p>
+
+<ol>
+<li>选择等待排序的数组的第一个元素作为 &ldquo;Pivot"，初始化 <code>i</code> 和 <code>j</code>，<code>i</code>指向第一个元素的位置，<code>j</code> 指向第二个元素的位置。</li>
+<li>对 <code>j</code> 指向的元素和 &ldquo;Pivot&rdquo; 进行大小比较。如果 <code>j</code> 指向的元素小于  &ldquo;Pivot"，那么就将 <code>j</code> 指向的元素与 <code>i+1</code> 指向的元素进行交换，然后 <code>i</code> 变为 <code>i+1</code>，否则不做任何操作。最后，<code>j</code> 变为 <code>j+1</code>。</li>
+<li><p>重复步骤2，直到 <code>j</code> 指向的位置超出数组范围。得到的数组如下图所示。</p>
+
+<p><img src="https://lh3.googleusercontent.com/RHMt79CWJTzPifbTUKklvjLqw4F5DkF7CNkEsBTPUJw=w515-h361-no" alt="拆分完成" /></p></li>
+<li><p>将 <code>i</code> 指向的元素与 &ldquo;Pivot&rdquo; 交换，结束 &ldquo;Pivot&rdquo; 元素的排序。得到的数组如下图所示。</p>
+
+<p><img src="https://lh3.googleusercontent.com/Q_F0qpwtjBcQsq0D7DKsP0AOtnItuna_6nP9olsseX0=w519-h361-no" alt="&quot;Pivot&quot; 排序结束" /></p></li>
+<li>将比 “Pivot”小的元素组成的数组和比 &ldquo;Pivot&rdquo; 大的元素组成的数组分别作为等待排序的数组，重复步骤1～5，直到所有元素排序结束。</li>
+</ol>
+
+
+<p>需要注意两点：</p>
+
+<ol>
+<li>尽管存在多种 <code>i</code> 和 <code>j</code> 的选择和移动方式，虽然不影响排序结果，但是会影响后面循环中 &ldquo;Pivot&rdquo; 的选择，所以无法得到正确的“比较”次数。</li>
+<li>在第4步中，尽管不采用交换的方式而是直接将 &ldquo;Pivot&rdquo; 插入到正确位置并不影响最终的排序结果，但是同样会影响后面循环中 &ldquo;Pivot&rdquo; 的选择，所以也无法得到正确的“比较”次数。</li>
+</ol>
+
+
+<p>Python 代码如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>def QuickSort(InputArray,Count):
+</span><span class='line'>    if len(InputArray)==1 or len(InputArray)==0:
+</span><span class='line'>        return InputArray,Count
+</span><span class='line'>    i=0
+</span><span class='line'>    j=1
+</span><span class='line'>    while j&lt;len(InputArray):
+</span><span class='line'>        Count+=1
+</span><span class='line'>        if InputArray[j]&lt;InputArray[0]:
+</span><span class='line'>            InputArray[j],InputArray[i+1]=InputArray[i+1],InputArray[j]
+</span><span class='line'>            i+=1
+</span><span class='line'>            j+=1
+</span><span class='line'>        else:
+</span><span class='line'>            j+=1
+</span><span class='line'>    InputArray[0],InputArray[i]=InputArray[i],InputArray[0]
+</span><span class='line'>    InputArray[:i],Count=QuickSort(InputArray[:i],Count)
+</span><span class='line'>    InputArray[i+1:],Count=QuickSort(InputArray[i+1:],Count)
+</span><span class='line'>    return InputArray,Count
+</span><span class='line'>    
+</span><span class='line'>
+</span><span class='line'># Read file
+</span><span class='line'>file="QuickSort.txt"
+</span><span class='line'>f=open(file,'r')
+</span><span class='line'>InputArray=map(int,f.readlines())
+</span><span class='line'>f.close()
+</span><span class='line'>Copy=InputArray
+</span><span class='line'>
+</span><span class='line'># QuickSort
+</span><span class='line'>Count=0
+</span><span class='line'>InputArray,Count=QuickSort(InputArray,Count)
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>if InputArray==sorted(Copy):
+</span><span class='line'>    print "Correct"
+</span><span class='line'>    print Count
+</span><span class='line'>else:
+</span><span class='line'>    print "Wrong"
+</span><span class='line'>    print InputArray</span></code></pre></td></tr></table></div></figure>
+
+
+<p>代码的可以到<a href="http://pan.baidu.com/s/1o6qZXDw">这里</a>下载。答案是162085。</p>
+
+<h2>最后一个元素作为 &ldquo;Pivot&rdquo;</h2>
+
+<p>这种 &ldquo;QuickSort"，只需要在排序前，将最后一个元素和第一个元素交换，就完全可以当作第一种一样进行操作。同样要注意，必须是“交换”，否则无法得到正确的“比较”次数。Python 代码如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>def QuickSort(InputArray,Count):
+</span><span class='line'>    if len(InputArray)==1 or len(InputArray)==0:
+</span><span class='line'>        return InputArray,Count
+</span><span class='line'>    InputArray[0],InputArray[len(InputArray)-1]=InputArray[len(InputArray)-1],InputArray[0]
+</span><span class='line'>    i=0
+</span><span class='line'>    j=1
+</span><span class='line'>    while j&lt;len(InputArray):
+</span><span class='line'>        Count+=1
+</span><span class='line'>        if InputArray[j]&lt;InputArray[0]:
+</span><span class='line'>            InputArray[j],InputArray[i+1]=InputArray[i+1],InputArray[j]
+</span><span class='line'>            i+=1
+</span><span class='line'>            j+=1
+</span><span class='line'>        else:
+</span><span class='line'>            j+=1
+</span><span class='line'>    InputArray[0],InputArray[i]=InputArray[i],InputArray[0]
+</span><span class='line'>    InputArray[:i],Count=QuickSort(InputArray[:i],Count)
+</span><span class='line'>    InputArray[i+1:],Count=QuickSort(InputArray[i+1:],Count)
+</span><span class='line'>    return InputArray,Count
+</span><span class='line'>    
+</span><span class='line'>
+</span><span class='line'># Read file
+</span><span class='line'>file="QuickSort.txt"
+</span><span class='line'>f=open(file,'r')
+</span><span class='line'>InputArray=map(int,f.readlines())
+</span><span class='line'>f.close()
+</span><span class='line'>Copy=InputArray
+</span><span class='line'>
+</span><span class='line'># QuickSort
+</span><span class='line'>Count=0
+</span><span class='line'>InputArray,Count=QuickSort(InputArray,Count)
+</span><span class='line'>
+</span><span class='line'>if InputArray==sorted(Copy):
+</span><span class='line'>    print "Correct"
+</span><span class='line'>    print Count
+</span><span class='line'>else:
+</span><span class='line'>    print "Wrong"
+</span><span class='line'>    print InputArray</span></code></pre></td></tr></table></div></figure>
+
+
+<p>代码可以到<a href="http://pan.baidu.com/s/1o6y17nG">这里</a>下载。答案是164123。</p>
+
+<h2>中间元素作为 &ldquo;Pivot&rdquo;</h2>
+
+<p>这里的“中间”元素并不是指地是数列中间的元素，而是将数列第一个元素、数列最后一个元素和数列中间的元素进行大小比较，排在中间的元素作为 &ldquo;Pivot"。这一种同样可以等效为第一种，只是在排序前先要进行比较，然后把选定的元素和数列第一个元素进行交换就可以了。同样要注意，必须是“交换”。Python 代码如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>def QuickSort(InputArray,Count):
+</span><span class='line'>    if len(InputArray)==1 or len(InputArray)==0:
+</span><span class='line'>        return InputArray,Count
+</span><span class='line'>    Mid=(len(InputArray)-1)//2
+</span><span class='line'>    a=InputArray[0]
+</span><span class='line'>    b=InputArray[Mid]
+</span><span class='line'>    c=InputArray[len(InputArray)-1]
+</span><span class='line'>    if (b&gt;a and b&lt;c) or (b&lt;a and b&gt;c):
+</span><span class='line'>        InputArray[0],InputArray[Mid]=InputArray[Mid],InputArray[0]
+</span><span class='line'>    elif (c&gt;a and c&lt;b) or (c&lt;a and c&gt;b):
+</span><span class='line'>        InputArray[0],InputArray[len(InputArray)-1]=InputArray[len(InputArray)-1],InputArray[0]
+</span><span class='line'>    i=0
+</span><span class='line'>    j=1
+</span><span class='line'>    while j&lt;len(InputArray):
+</span><span class='line'>        Count+=1
+</span><span class='line'>        if InputArray[j]&lt;InputArray[0]:
+</span><span class='line'>            InputArray[j],InputArray[i+1]=InputArray[i+1],InputArray[j]
+</span><span class='line'>            i+=1
+</span><span class='line'>            j+=1
+</span><span class='line'>        else:
+</span><span class='line'>            j+=1
+</span><span class='line'>    InputArray[0],InputArray[i]=InputArray[i],InputArray[0]
+</span><span class='line'>    InputArray[:i],Count=QuickSort(InputArray[:i],Count)
+</span><span class='line'>    InputArray[i+1:],Count=QuickSort(InputArray[i+1:],Count)
+</span><span class='line'>    return InputArray,Count
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'># Read file
+</span><span class='line'>file="QuickSort.txt"
+</span><span class='line'>f=open(file,'r')
+</span><span class='line'>InputArray=map(int,f.readlines())
+</span><span class='line'>f.close()
+</span><span class='line'>Copy=InputArray
+</span><span class='line'>
+</span><span class='line'># QuickSort
+</span><span class='line'>Count=0
+</span><span class='line'>InputArray,Count=QuickSort(InputArray,Count)
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>if InputArray==sorted(Copy):
+</span><span class='line'>    print "Correct"
+</span><span class='line'>    print Count
+</span><span class='line'>else:
+</span><span class='line'>    print "Wrong"
+</span><span class='line'>    print InputArray</span></code></pre></td></tr></table></div></figure>
+
+
+<p>代码可以到<a href="http://pan.baidu.com/s/1bn15Qs3">这里</a>下载。答案是138382。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">pikipity</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-08-16T12:03:00+08:00'><span class='date'>2015年08月16日</span> <span class='time'>12:03 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/algorithm/'>algorithm</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/cousera-algorithm-week1.html" title="Previous Post: Algorithms: Design and Analysis Part 1 -- Programming Questions (Week1)">&laquo; Algorithms: Design and Analysis Part 1 -- Programming Questions (Week1)</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/cousera-algorithm-week12summary.html" title="Next Post: Algorithms: Design and Analysis Part 1 – Programming Questions (Week1 and Week 2 Summary)">Algorithms: Design and Analysis Part 1 – Programming Questions (Week1 and Week 2 Summary) &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+    
+        <section imagesd="comment">
+	<br>
+	<br>
+        <h1>Comments</h1>
+	<br>
+	<p></p>
+        <!-- Duoshuo Comment BEGIN -->
+	<div class="ds-thread"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"pikipity"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- Duoshuo Comment END -->
+       </section>
+       
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me -- pikipity</h1>
+  <ul id="post">
+  pikipity 的小博客，搜罗有意思的科技话题，展示自己的所知所学所感。<p>
+  
+  <img src="/images/myface.gif" width="100pt"><p>
+  
+  如果发现问题，请在文章后面留言指出或是直接点<a href="mailto:pikipityw@gmail.com">这里</a>发邮件给我指正，谢谢。<p>
+  
+  pikipity Blog: <a href="http://pikipity.github.io/">pikipity.github.io</a><p>
+  
+  pikipity Email: <a href="mailto:pikipityw@gmail.com">pikipityw.gmail.com</a><p>
+  
+  使用IE浏览器可能无法得到完美的浏览体验，建议更换为<a href="https://www.google.com/intl/en/chrome/browser/"> Chrome 浏览器</a><p>
+
+  </ul>
+</section>
+<section>
+  <h1>Category List</h1>
+    <span id="tag-cloud"><a href='/blog/categories/algorithm' style='font-size: 107.89473684210526%'>algorithm(5)</a> <a href='/blog/categories/arduino' style='font-size: 109.47368421052632%'>arduino(6)</a> <a href='/blog/categories/assembly' style='font-size: 111.05263157894737%'>assembly(7)</a> <a href='/blog/categories/c-plus-plus' style='font-size: 103.15789473684211%'>c++(2)</a> <a href='/blog/categories/cartoon' style='font-size: 111.05263157894737%'>cartoon(7)</a> <a href='/blog/categories/circuit' style='font-size: 104.73684210526315%'>circuit(3)</a> <a href='/blog/categories/game' style='font-size: 115.78947368421052%'>game(10)</a> <a href='/blog/categories/github' style='font-size: 104.73684210526315%'>github(3)</a> <a href='/blog/categories/google' style='font-size: 126.84210526315789%'>google(17)</a> <a href='/blog/categories/ios' style='font-size: 111.05263157894737%'>ios(7)</a> <a href='/blog/categories/life' style='font-size: 160.0%'>life(38)</a> <a href='/blog/categories/linux' style='font-size: 112.63157894736842%'>linux(8)</a> <a href='/blog/categories/mac' style='font-size: 125.26315789473685%'>mac(16)</a> <a href='/blog/categories/matlab' style='font-size: 125.26315789473685%'>matlab(16)</a> <a href='/blog/categories/movie' style='font-size: 106.3157894736842%'>movie(4)</a> <a href='/blog/categories/octopress' style='font-size: 104.73684210526315%'>octopress(3)</a> <a href='/blog/categories/others' style='font-size: 115.78947368421052%'>others(10)</a> <a href='/blog/categories/processing' style='font-size: 111.05263157894737%'>processing(7)</a> <a href='/blog/categories/python' style='font-size: 109.47368421052632%'>python(6)</a> <a href='/blog/categories/scm' style='font-size: 128.42105263157896%'>scm(18)</a> <a href='/blog/categories/technology' style='font-size: 126.84210526315789%'>technology(17)</a> </span>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week4.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week4)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week3.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week3)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week12summary.html">Algorithms: Design and Analysis Part 1 – Programming Questions (Week1 and Week 2 Summary)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week2.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week2)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week1.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week1)</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+<h1>Copyright Agreement</h1>
+<ul id="copyright">
+<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh"><img
+  alt="知识共享许可协议" style="border-width:0"
+  src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png"
+  /></a><br />本作品采用<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh">知识
+  共享署名-非商业性使用-相同方式共享 3.0 未本地化版本许可协议</a>进行
+  许可。<p>
+
+  如果您想转载本网站下的博文，请注明作者和出处。如果文章内没有特别说明，文章皆为原创，请将出处注明为那篇文章的网址；如果文章内特别指明为转载，请将出处注明为原始文章的网址。非常感谢。<p>
+</ul>
+</section><section>
+  <h1>Who are visiting</h1>
+  <ul id="for_fun">
+  <script type="text/javascript" src="http://jb.revolvermaps.com/2/1.js?i=1p1ij0eyux4&amp;s=190&amp;m=7&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+  </ul>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - pikipity -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

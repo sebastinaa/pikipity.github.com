@@ -1,0 +1,400 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>单片机原理及程序设计 第三章 数据类型与表示方法 - 折腾来折腾去</title>
+  <meta name="author" content="pikipity">
+
+  
+  <meta name="description" content="对 8051 的编程本质上就是对一个个二进制数在内存中运算和转移，所以明确各种进制（尤其是二进制、十进制和十六进制）在汇编中的表示方法和它们之间的转换方法就非常重要了。 二进制 无符号二进制的表示方法很简单，只要在你所要表示的二进制数后面加一个 “B” 就可以了。例如 1011011B。 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://pikipity.github.io/blog/scm-principle-3.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="折腾来折腾去" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38118079-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">折腾来折腾去</a></h1>
+  
+    <h2>pikipity的blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="pikipity.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/projects">Projects</a></li>
+       <li><a href="/aboutme">AboutMe</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">单片机原理及程序设计 第三章 数据类型与表示方法</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-03-07T10:36:00+08:00'><span class='date'>2013年03月07日</span> <span class='time'>10:36 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>对 8051 的编程本质上就是对一个个二进制数在内存中运算和转移，所以明确各种进制（尤其是二进制、十进制和十六进制）在汇编中的表示方法和它们之间的转换方法就非常重要了。</p>
+
+<h2>二进制</h2>
+
+<p>无符号二进制的表示方法很简单，只要在你所要表示的二进制数后面加一个 <strong>“B”</strong> 就可以了。例如 <code>1011011B</code>。8位无符号整数范围为 0 ~ 255。16位无符号整数范围为 0 ~ 65535。</p>
+
+<p>表示有符号二进制的时候，一个 Byte 8位中的最高位表示符号，1为负，0为正，后面7位是你要表示的数的绝对值。8位有符号整数范围为 -128 ~ 127。16位有符号整数范围为 -32768 ~ 32767。</p>
+
+<p>当计算有符号二进制数加法的时候（减法只要转换一下加数的符号就变成加法了，所以是一样的），要先将负数变为2补数，然后再相加。所谓<strong>2补数</strong>，就是这个负数的<strong>绝对值</strong>的二进制数的<strong>反数加一</strong>。例如要求-96的2补数，96转换为二进制为01100000，先求反数为10011111，再加一就是-96的2补数10100000</p>
+
+<h2>十进制</h2>
+
+<p>十进制在汇编中的表示很简单，一个单纯的数（例如<code>129</code>）或是一个数字后面加一个 <strong>&ldquo;D&rdquo;</strong> （例如<code>129D</code>）就可以了。</p>
+
+<p>从二进制到十进制有一种特殊的转换方法，就是BCD转换方法，先将二进制4位为一部分的分开然后在进行转化，下面的例子展示了如何进行转化。</p>
+
+<p><img src="/images/post/scm-principle-3_1.jpg" alt="BCD转化举例" width="200pt"></p>
+
+<p>注意：BCD转化出来的一定是十进制，不要与16进制搞混，虽然看上去一样，但是表示的大小则完全不一样。</p>
+
+<h2>十六进制</h2>
+
+<p>十六进制从0到15分别为 <code>0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F</code></p>
+
+<p>十六进制在汇编中只要在数的后面加一个 <strong>&ldquo;H&rdquo;</strong> 就可以了，例如 <code>2FH</code>。</p>
+
+<p>需要注意的是，在汇编中，如果这个16进制数的第一个数就是一个字母的话需要在字母前加一个 <strong>&ldquo;0&rdquo;</strong>，例如 <code>0FEH</code>。</p>
+
+<h2>小数</h2>
+
+<p>上面介绍的都是整数，小数的表示则比较复杂。小数分为定点小数和浮点小数。</p>
+
+<h3>定点小数</h3>
+
+<p>定点小数的小数位数是固定的，定点小数表示简单，我们可以随意设定自己这个程序里面小数定点小数的表示方法，比如，我们可以规定我们的小数为8位，小数点前的数为7位，最前面还有一个符号位，那么我们的小数就表示如下图所示：</p>
+
+<p><img src="/images/post/scm-principle-3_2.jpg" alt="定点小数表示" width="250pt"></p>
+
+<p>定点小数的好处是表示简单、计算方便。缺点也很明显，无法表示拥有很多的小数位数的数，所以我们需要浮点小数。</p>
+
+<h3>浮点小数</h3>
+
+<p>浮点小数的小数为不固定，而是用科学计数法的方式记录小数，一个浮点小数分为三部分：符号位 S、阶码位 P 和尾数为 M，所标表示意思如下：</p>
+
+<p>$$(-1)<sup>S</sup>\times M\times 2<sup>P</sup>$$</p>
+
+<p>浮点小数又分为单精度浮点和双精度浮点：</p>
+
+<ol>
+<li>单精度浮点的阶码为8位，位数为23位，共32位（即四个字节）。</li>
+<li>双精度浮点的阶码为11位，位数为52位，共64位（即八个字节）。</li>
+</ol>
+
+
+<p>由于双精度和单精度除了长度以外都相同，所以这里只介绍单精度，双精度请自行脑补。</p>
+
+<p>单精度浮点数表示格式如下：</p>
+
+<p>|S（第31位）|P（30位到23位）|M（22为到0位）|</p>
+
+<p>根据 IEEE 754 的标准，浮点小数有四种特殊情况：</p>
+
+<ol>
+<li>P 和 M 都为全0的时候，表述0</li>
+<li>P 为全0，M 不为全0，是非规范形式</li>
+<li>P 为全1，M 为全0的时候，表示无穷大，符号位确定正负</li>
+<li>P 为全1，M 不为全0的时候，表示“这不是一个数”</li>
+</ol>
+
+
+<p>也就是说，单浮点最大为 <code>0 11111110 11111111111111111111111</code>，也就是 3.40282346638529E+38，最小为 <code>1 11111110 11111111111111111111111</code>，也就是 -3.40282346638529E+38，最接近0的数是 <code>0 00000000 00000000000000000000001</code>，也就是 1.40129846432482E-45。</p>
+
+<h3>二进制单精度浮点小数转化为十进制方法</h3>
+
+<p>将单精度浮点小数转化为十进制比较简单，只要按照对应的部分转化就可以得到对应的十进制数了，转化规律如：</p>
+
+<ol>
+<li>符号位：0为正，1为负。</li>
+<li>阶码位：对应的十进制减127（双浮点减1023）。例如阶码位为 <code>10001010</code> ，那么对应的2的指数就是 $138-127=11$。</li>
+<li>尾数位：在尾数位的最左边补一个1，将小数点放在这个1的后面，进行转化，所得到的就是尾数了。例如，尾数位为 <code>01110101100011100010001</code>，那么对应的尾数就是 $1.4592$</li>
+<li><p>按照公式组合就可以了，这里公式再次给出一边：</p>
+
+<p>$$(-1)<sup>S</sup>\times M\times 2<sup>P</sup>$$</p></li>
+</ol>
+
+
+<h3>十进制小数转化为二进制单精度浮点的方法</h3>
+
+<p>将十进制转化为单浮点二进制就比较麻烦了，可以按照下面的方法：</p>
+
+<ol>
+<li>符号位就不说了，主要是计算阶码位和尾数位。首先判断要转化的十进制是不是纯小数（纯小数的意思是无整数部分），如果是就到第三步，如果不是继续到第二步</li>
+<li><p>不是纯小数，就可以把数字分为两部分，整数部分和小数部分，整数部分就按照普通的方法转换就可以了，小数部分可以通过下面的方法转换：</p>
+
+<p><img src="/images/post/scm-principle-3_3.jpg" alt="十进制小数部分转化方法" width="350pt"></p>
+
+<p>然后将转化出来的二进制数的小数部分和整数部分组合在一起，左移小数点直到整数部分只剩一个1为止，小数部分取左起23位就是尾数位，将小数点移动的位数加127，转化为二进制就是阶码位。</p></li>
+<li><p>如果是纯小数就要先将纯小数转化为 $$1.\cdots\times 2<sup>n</sup>$$ 的形式，可以通过下面的公式转化（公式中 $X$ 代表待转换的十进制纯小数）：</p>
+
+<p>$$n=\mbox{int}(log_2 X-1)$$</p>
+
+<p>然后将转化之后的小数部分按照步骤2中方法进行转化，结果取左起23位就是尾数为，$n+127$ 转化为二进制就是阶码位。</p></li>
+</ol>
+
+
+<p>为了方便大家进行二进制、十进制和十六进制之间的转换，我用 Python 编写了一个小程序，下载在<a href="http://pikipity.github.com/Binary-Converter/">这里</a>，如果发现有什么 Bug，欢迎指正，谢谢。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">pikipity</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2013-03-07T10:36:00+08:00'><span class='date'>2013年03月07日</span> <span class='time'>10:36 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/assembly/'>assembly</a>, <a class='category' href='/blog/categories/scm/'>scm</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/ohlife.html" title="Previous Post: 喂，写日记啦！">&laquo; 喂，写日记啦！</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/assembly-language.html" title="Next Post: 单片机原理及程序设计 第四章 汇编语言">单片机原理及程序设计 第四章 汇编语言 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+    
+        <section imagesd="comment">
+	<br>
+	<br>
+        <h1>Comments</h1>
+	<br>
+	<p></p>
+        <!-- Duoshuo Comment BEGIN -->
+	<div class="ds-thread"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"pikipity"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- Duoshuo Comment END -->
+       </section>
+       
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me -- pikipity</h1>
+  <ul id="post">
+  pikipity 的小博客，搜罗有意思的科技话题，展示自己的所知所学所感。<p>
+  
+  <img src="/images/myface.gif" width="100pt"><p>
+  
+  如果发现问题，请在文章后面留言指出或是直接点<a href="mailto:pikipityw@gmail.com">这里</a>发邮件给我指正，谢谢。<p>
+  
+  pikipity Blog: <a href="http://pikipity.github.io/">pikipity.github.io</a><p>
+  
+  pikipity Email: <a href="mailto:pikipityw@gmail.com">pikipityw.gmail.com</a><p>
+  
+  使用IE浏览器可能无法得到完美的浏览体验，建议更换为<a href="https://www.google.com/intl/en/chrome/browser/"> Chrome 浏览器</a><p>
+
+  </ul>
+</section>
+<section>
+  <h1>Category List</h1>
+    <span id="tag-cloud"><a href='/blog/categories/algorithm' style='font-size: 107.89473684210526%'>algorithm(5)</a> <a href='/blog/categories/arduino' style='font-size: 109.47368421052632%'>arduino(6)</a> <a href='/blog/categories/assembly' style='font-size: 111.05263157894737%'>assembly(7)</a> <a href='/blog/categories/c-plus-plus' style='font-size: 103.15789473684211%'>c++(2)</a> <a href='/blog/categories/cartoon' style='font-size: 111.05263157894737%'>cartoon(7)</a> <a href='/blog/categories/circuit' style='font-size: 104.73684210526315%'>circuit(3)</a> <a href='/blog/categories/game' style='font-size: 115.78947368421052%'>game(10)</a> <a href='/blog/categories/github' style='font-size: 104.73684210526315%'>github(3)</a> <a href='/blog/categories/google' style='font-size: 126.84210526315789%'>google(17)</a> <a href='/blog/categories/ios' style='font-size: 111.05263157894737%'>ios(7)</a> <a href='/blog/categories/life' style='font-size: 160.0%'>life(38)</a> <a href='/blog/categories/linux' style='font-size: 112.63157894736842%'>linux(8)</a> <a href='/blog/categories/mac' style='font-size: 125.26315789473685%'>mac(16)</a> <a href='/blog/categories/matlab' style='font-size: 125.26315789473685%'>matlab(16)</a> <a href='/blog/categories/movie' style='font-size: 106.3157894736842%'>movie(4)</a> <a href='/blog/categories/octopress' style='font-size: 104.73684210526315%'>octopress(3)</a> <a href='/blog/categories/others' style='font-size: 115.78947368421052%'>others(10)</a> <a href='/blog/categories/processing' style='font-size: 111.05263157894737%'>processing(7)</a> <a href='/blog/categories/python' style='font-size: 109.47368421052632%'>python(6)</a> <a href='/blog/categories/scm' style='font-size: 128.42105263157896%'>scm(18)</a> <a href='/blog/categories/technology' style='font-size: 126.84210526315789%'>technology(17)</a> </span>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week4.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week4)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week3.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week3)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week12summary.html">Algorithms: Design and Analysis Part 1 – Programming Questions (Week1 and Week 2 Summary)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week2.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week2)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week1.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week1)</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+<h1>Copyright Agreement</h1>
+<ul id="copyright">
+<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh"><img
+  alt="知识共享许可协议" style="border-width:0"
+  src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png"
+  /></a><br />本作品采用<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh">知识
+  共享署名-非商业性使用-相同方式共享 3.0 未本地化版本许可协议</a>进行
+  许可。<p>
+
+  如果您想转载本网站下的博文，请注明作者和出处。如果文章内没有特别说明，文章皆为原创，请将出处注明为那篇文章的网址；如果文章内特别指明为转载，请将出处注明为原始文章的网址。非常感谢。<p>
+</ul>
+</section><section>
+  <h1>Who are visiting</h1>
+  <ul id="for_fun">
+  <script type="text/javascript" src="http://jb.revolvermaps.com/2/1.js?i=1p1ij0eyux4&amp;s=190&amp;m=7&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+  </ul>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - pikipity -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

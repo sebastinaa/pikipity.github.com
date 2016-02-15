@@ -1,0 +1,385 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Proteus和Keil的简单教程 - 折腾来折腾去</title>
+  <meta name="author" content="pikipity">
+
+  
+  <meta name="description" content="这篇主要简单介绍一下单片机仿真软件Proteus和单片机编程软件Keil，方便各位读者能够快速的在自己电脑上搭建一个8051单片机的软件仿真平台。 单片机仿真软件 &ndash; Proteus 如果你在平时的电路仿真中稍微留意一下的你会发现Spice在仿真中都无法仿真单片机系统， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://pikipity.github.io/blog/keil-and-proteus.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="折腾来折腾去" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38118079-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">折腾来折腾去</a></h1>
+  
+    <h2>pikipity的blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="pikipity.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/projects">Projects</a></li>
+       <li><a href="/aboutme">AboutMe</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Proteus和Keil的简单教程</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-02-16T21:38:00+08:00'><span class='date'>2013年02月16日</span> <span class='time'>9:38 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>这篇主要简单介绍一下单片机仿真软件Proteus和单片机编程软件Keil，方便各位读者能够快速的在自己电脑上搭建一个8051单片机的软件仿真平台。</p>
+
+<h3>单片机仿真软件 &ndash; Proteus</h3>
+
+<p>如果你在平时的电路仿真中稍微留意一下的你会发现<a href="http://baike.baidu.com/view/1867313.htm">Spice</a>在仿真中都无法仿真单片机系统，所以这里需要介绍一下这个单片机仿真软件<a href="http://baike.baidu.com/view/40936.htm">Proteus</a>。由英国<a href="http://www.labcenter.com/index.cfm">Labcenter electronics公司</a>出品的<a href="http://baike.baidu.com/view/5822.htm">EDA软件</a>，可以很好的仿真一部分单片机及其外围器材。并具有自动布线和智能生成原理图的功能。</p>
+
+<!--more-->
+
+
+<p>大家可以到<a href="http://pan.baidu.com/share/link?shareid=345198&amp;uk=4080321956">这里</a>下载Proteus Pro v7.8，压缩包内带有序列号生成器，并有安装及破解说明文件，虽然版本比较老，但是亲测可用。</p>
+
+<p>下载并安装完成后，点击<img src="/images/post/proteus.png" width="50pt">打开ISIS仿真软件，界面如下</p>
+
+<p><img src="/images/post/proteus_1.jpg" alt="Proteus仿真界面" width="650pt"></p>
+
+<p>接下来介绍几点比较重要的使用方法，如果想要更详细一点的教程的话，可以到<a href="http://pan.baidu.com/share/link?shareid=354817&amp;uk=4080321956">这里</a>下载</p>
+
+<ol>
+<li><p>添加元件方法：在图纸范围内单机鼠标右键，打开菜单，"Place"中就是可以放置的元件。单片机及外围元件在Component -> From Libraries中搜索就可以了。</p>
+
+<p><img src="/images/post/proteus_menu.jpg" alt="右键菜单" width="300pt"></p>
+
+<p><img src="/images/post/proteus_menu_place.jpg" alt="Place菜单" width="450pt"></p>
+
+<p><img src="/images/post/library.jpg" alt="Place -> Component -> From Libraries" width=&ldquo;550pt&rdquo;></p>
+
+<p>如果需要电源和地，则从Terminal中选择POWER或是GND就可以了，系统会根据你选则的单片机自动匹配POWER的电压大小（注意仿真的时候单片机本身不用接<a href="/blog/scm-principle-1.html">电源电路和时钟电路</a>），如果需要更改POWER电压值，只要右键单击POWER，选择"Edit Properties"，在"String"中输入你需要的电压值就可以了。</p>
+
+<p><img src="/images/post/terminal.jpg" alt="Terminal菜单" width="450pt"></p>
+
+<p><img src="/images/post/POWER.jpg" alt="右键单击POWER元件" width="400pt"></p>
+
+<p><img src="/images/post/POWER_edit.jpg" alt="Edit Properties" width="400pt"></p></li>
+<li><p>连线方法：连线有三种方法，</p>
+
+<ul>
+<li><p>直接连线：用鼠标点击两个节点便会自动连接。注意：当端口对齐的时候，只要连好最上面的第一条线，下面的线只要双击节点就可以自动连接，基本原理就是重复你的上一次动作。</p>
+
+<p><img src="/images/post/direct_connect.jpg" alt="直接连线的效果" width="550pt"></p></li>
+<li><p>间接连线：通过右键菜单中的Terminal中的INPUT和OUTPUT连结两个节点。注意：对应的IMPUT和OUTPUT需要有一样的名字，起名字的方法和编辑POWER电压值的方法一样。</p>
+
+<p><img src="/images/post/indirect_connect.jpg" alt="间接连线的效果" width="550pt"></p></li>
+<li><p>使用BUS连线：在左侧工具栏选择BUS <img src="/images/post/BUS.jpg" width="50pt">，就可以画出蓝色BUS线了，注意转折的地方需要点一下鼠标，结束双击鼠标。画完BUS线后，将节点连到BUS线上，然后对BUS设置Label,方法是右键单击BUS线，选择“Place Wrie Label”，Label的输入方式类似于下面效果图，意思是生成A1到A3的Label。再将对应节点的连线改为一样的名字，改名字的方法，和BUS线加Label的方法一样。注意：连线的名字不用一个个输入了，由于之前的BUS已经生成了Label，只要在下拉框内选择就可以了。</p>
+
+<p><img src="/images/post/BUS_connect.jpg" alt="BUS连线效果图" width="550pt"></p></li>
+</ul>
+</li>
+<li><p>向单片机内加载生成的Hex文件的方法：左键双击单片机，在"Program File"一栏里填入Hex文件的路径或点击后面文件夹选择Hex文件，"OK"即可。在这个窗口还可以改变时钟周期，在"Clock Frequency"中修改。</p>
+
+<p><img src="/images/post/doube_click_scm.jpg" alt="左键双击单片机" width="400pt"></p></li>
+</ol>
+
+
+<h3>51系列单片机编程软件 &ndash; Keil</h3>
+
+<p><a href="http://baike.baidu.com/view/942051.htm">Keil</a>是美国<a href="http://www.keil.com/">Keil software公司（已被ARM收购）</a>出品的专为51系列单片机进行编程的软件，可以编译C语言和汇编语言，其C语言的编译器Keil C51已经成为一种类似于行业标准一样的存在了。</p>
+
+<p>可以到<a href="http://pan.baidu.com/share/link?shareid=354882&amp;uk=4080321956">这里</a>下载Keil uVision3，或者到<a href="http://www.doyoung.net/data.html">杜洋工作室</a>下载。</p>
+
+<p>下载并安装后，就可以通过<img src="/images/post/keil.png" width="50pt">打开了。打开后界面如下图。每次打开都会自动回复上次关闭前最后一次保存的Project。</p>
+
+<p><img src="/images/post/keil_1.jpg" alt="Keil uVision3 界面" width="650pt"></p>
+
+<p>建立一个Project一般分为如下几步：</p>
+
+<ol>
+<li><p>在菜单栏上选择 Prject -> New Project，并起名字和保存。</p>
+
+<p><img src="/images/post/new_project.jpg" alt="New Project" width="650pt"></p>
+
+<p><img src="/images/post/projectname.jpg" alt="Project起名、保存" width="650pt"></p></li>
+<li><p>选择单片机类型。注意：确定后，会弹出对话框询问是否自动添加启动文件到Project中，一般选择“No”就可以了，因为由Keil提供的单片机启动文件在初学阶段一般不会用到</p>
+
+<p><img src="/images/post/scmstyle.jpg" alt="选择单片机类型" width="650pt"></p>
+
+<p><img src="/images/post/startup.jpg" alt="是否添加启动文件" width="450pt"></p></li>
+<li><p>然后新建一个文件开始编写C或者汇编。注意：保存的时候需要提供后缀名，如C的后缀为.c，汇编的后缀为.asm</p>
+
+<p><img src="/images/post/newfile.jpg" alt="新建文件" width="650pt"></p>
+
+<p><img src="/images/post/filename.jpg" alt="保存文件（注意文件名）" width="650pt"></p></li>
+<li><p>右键单击Project的文件夹，选择"Add Files to Group"，选择你的文件，“OK”，就可以将文件加入到project中</p>
+
+<p><img src="/images/post/addtogroup.jpg" alt="将文件加入到project中" width="650pt"></p></li>
+<li><p>编译的时候，只要按工具栏上的<img src="/images/post/buildall.jpg" width="50pt">就可以编译了。如果需要生成Hex文件用来烧录或是仿真，就需要在编译前按工具栏上的<img src="/images/post/projectproperty.jpg" width="50pt">，选中"Output"中的"Creat HEX"就可以了。</p>
+
+<p><img src="/images/post/creathexornot.jpg" alt="生成Hex选项" width="650pt"></p></li>
+</ol>
+
+
+<p>有了这两个软件，大家就可以进行单片机从硬件到软件的软件仿真了，但是仿真永远是仿真，不代表实物就是如此，所以真正实际是什么样子，还是硬件仿真比较靠谱。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">pikipity</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2013-02-16T21:38:00+08:00'><span class='date'>2013年02月16日</span> <span class='time'>9:38 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/scm/'>scm</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/updata-macbook.html" title="Previous Post: 苹果更新MacBook配置并降低产品价格">&laquo; 苹果更新MacBook配置并降低产品价格</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/mosfet.html" title="Next Post: MOSFET分析总结">MOSFET分析总结 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+    
+        <section imagesd="comment">
+	<br>
+	<br>
+        <h1>Comments</h1>
+	<br>
+	<p></p>
+        <!-- Duoshuo Comment BEGIN -->
+	<div class="ds-thread"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"pikipity"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- Duoshuo Comment END -->
+       </section>
+       
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me -- pikipity</h1>
+  <ul id="post">
+  pikipity 的小博客，搜罗有意思的科技话题，展示自己的所知所学所感。<p>
+  
+  <img src="/images/myface.gif" width="100pt"><p>
+  
+  如果发现问题，请在文章后面留言指出或是直接点<a href="mailto:pikipityw@gmail.com">这里</a>发邮件给我指正，谢谢。<p>
+  
+  pikipity Blog: <a href="http://pikipity.github.io/">pikipity.github.io</a><p>
+  
+  pikipity Email: <a href="mailto:pikipityw@gmail.com">pikipityw.gmail.com</a><p>
+  
+  使用IE浏览器可能无法得到完美的浏览体验，建议更换为<a href="https://www.google.com/intl/en/chrome/browser/"> Chrome 浏览器</a><p>
+
+  </ul>
+</section>
+<section>
+  <h1>Category List</h1>
+    <span id="tag-cloud"><a href='/blog/categories/algorithm' style='font-size: 107.89473684210526%'>algorithm(5)</a> <a href='/blog/categories/arduino' style='font-size: 109.47368421052632%'>arduino(6)</a> <a href='/blog/categories/assembly' style='font-size: 111.05263157894737%'>assembly(7)</a> <a href='/blog/categories/c-plus-plus' style='font-size: 103.15789473684211%'>c++(2)</a> <a href='/blog/categories/cartoon' style='font-size: 111.05263157894737%'>cartoon(7)</a> <a href='/blog/categories/circuit' style='font-size: 104.73684210526315%'>circuit(3)</a> <a href='/blog/categories/game' style='font-size: 115.78947368421052%'>game(10)</a> <a href='/blog/categories/github' style='font-size: 104.73684210526315%'>github(3)</a> <a href='/blog/categories/google' style='font-size: 126.84210526315789%'>google(17)</a> <a href='/blog/categories/ios' style='font-size: 111.05263157894737%'>ios(7)</a> <a href='/blog/categories/life' style='font-size: 160.0%'>life(38)</a> <a href='/blog/categories/linux' style='font-size: 112.63157894736842%'>linux(8)</a> <a href='/blog/categories/mac' style='font-size: 125.26315789473685%'>mac(16)</a> <a href='/blog/categories/matlab' style='font-size: 125.26315789473685%'>matlab(16)</a> <a href='/blog/categories/movie' style='font-size: 106.3157894736842%'>movie(4)</a> <a href='/blog/categories/octopress' style='font-size: 104.73684210526315%'>octopress(3)</a> <a href='/blog/categories/others' style='font-size: 115.78947368421052%'>others(10)</a> <a href='/blog/categories/processing' style='font-size: 111.05263157894737%'>processing(7)</a> <a href='/blog/categories/python' style='font-size: 109.47368421052632%'>python(6)</a> <a href='/blog/categories/scm' style='font-size: 128.42105263157896%'>scm(18)</a> <a href='/blog/categories/technology' style='font-size: 126.84210526315789%'>technology(17)</a> </span>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week4.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week4)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week3.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week3)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week12summary.html">Algorithms: Design and Analysis Part 1 – Programming Questions (Week1 and Week 2 Summary)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week2.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week2)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week1.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week1)</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+<h1>Copyright Agreement</h1>
+<ul id="copyright">
+<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh"><img
+  alt="知识共享许可协议" style="border-width:0"
+  src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png"
+  /></a><br />本作品采用<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh">知识
+  共享署名-非商业性使用-相同方式共享 3.0 未本地化版本许可协议</a>进行
+  许可。<p>
+
+  如果您想转载本网站下的博文，请注明作者和出处。如果文章内没有特别说明，文章皆为原创，请将出处注明为那篇文章的网址；如果文章内特别指明为转载，请将出处注明为原始文章的网址。非常感谢。<p>
+</ul>
+</section><section>
+  <h1>Who are visiting</h1>
+  <ul id="for_fun">
+  <script type="text/javascript" src="http://jb.revolvermaps.com/2/1.js?i=1p1ij0eyux4&amp;s=190&amp;m=7&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+  </ul>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - pikipity -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

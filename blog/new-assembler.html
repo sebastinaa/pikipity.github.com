@@ -1,0 +1,408 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>汇编语言初学者遇到的困难和解决方法 - 折腾来折腾去</title>
+  <meta name="author" content="pikipity">
+
+  
+  <meta name="description" content="这是一篇汇编初学者的总结，欢迎指正与讨论，以下讨论都以8051单片机的汇编语言为基础进行讨论。 使用汇编语言也有一段时间了，由于汇编语言是非常底层的语言，用惯了C或是C++之类的高级编程语言，突然开始使用这种与硬件紧密结合的语言会有很大的难度，无论是从分析、理解还是撰写。总结起来， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://pikipity.github.io/blog/new-assembler.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="折腾来折腾去" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38118079-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">折腾来折腾去</a></h1>
+  
+    <h2>pikipity的blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="pikipity.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/projects">Projects</a></li>
+       <li><a href="/aboutme">AboutMe</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">汇编语言初学者遇到的困难和解决方法</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-02-02T22:13:00+08:00'><span class='date'>2013年02月02日</span> <span class='time'>10:13 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>这是一篇汇编初学者的总结，欢迎指正与讨论，以下讨论都以8051单片机的汇编语言为基础进行讨论。</p>
+
+<p>使用汇编语言也有一段时间了，由于汇编语言是非常底层的语言，用惯了C或是C++之类的高级编程语言，突然开始使用这种与硬件紧密结合的语言会有很大的难度，无论是从分析、理解还是撰写。总结起来，对于一名汇编语言的初学者会遇到的最大的困难无非是3个：</p>
+
+<ol>
+<li><p>汇编语言本身命令有限且难以理解：</p>
+
+<p><!--more-->
+C与C++的大部分语句都是以函数的形式存在，把每个函数当做一个黑箱，只要搞清每个函数的输入输出即可了解程序本身，而且函数众多，几乎涵盖了可以想到的所有基础操作。</p>
+
+<p>但是汇编却不一样，每一个命令行不是单纯的“输入输出”的黑箱作业，会牵扯到很多隐藏的bit操作，并且命令有限，一个在C中简单的加减法的实现都要好多行，常常让初学者算法心中有数却不知如何用什么命令实现。</p></li>
+<li><p>C的编写逻辑不再适用：</p>
+
+<p>虽然C是强调过程的语言，不像Python等脚本语言是强调对象的语言，但是在编写的时候，我们更多思考的是对一个变量如何如何。但是汇编则完全不行，我们很难对一个地址中的内容做直接操作，需要跳转，在这种跳转极易出错</p></li>
+<li><p>汇编语言运算基础是二进制：</p>
+
+<p>困难最大的一点，C中只要数据类型是正确的，那么以十进制的思维考虑就可以了。但是汇编中只有二进制，二进制在生活中很少用到，思考难度很大，常常无法想的全面，并且一些二进制独有的特性往往被忽略掉</p></li>
+</ol>
+
+
+<p>那么对应这三个问题，我们应该如何解决呢？这里列出了我的解决方案：</p>
+
+<ol>
+<li><p>熟悉汇编命令：</p>
+
+<p>对于汇编语言，命令少，既是缺点也是优点。缺点上面已经列出，优点就是极其容易做到全局把握。全局把握就是说，不是要把每条命令是什么都背过但是至少要做到以下几点：</p>
+
+<ul>
+<li>至少把每条命令都看过一遍，做到看到这条命令就可以回想起这条命令涉及的内存地址有哪些。</li>
+<li>熟悉汇编命令，做到有哪些命令心中有数，比如，一说到跳转命令就马上联想到AT89C51 datasheet中architectural overview部分中的boolean and jump两个table中有相关的指令，这样就可以快速查询了</li>
+</ul>
+
+
+<p>做到这些之后就不会面对着自己辛辛苦苦画出的程序设计流程图茫然无措了</p></li>
+<li><p>汇编的编写逻辑基本是这样的：</p>
+
+<ol>
+<li>数据存放入内存</li>
+<li>将数据移入Acc或是B中</li>
+<li>在Acc或是B中操作</li>
+<li>将结果存回内存中</li>
+</ol>
+
+
+<p>只要按照这样的思路，就可以很容易的理解和写出汇编中数据操作的部分了，虽然过程复杂了一点，在C中一行就可以的搞定的，往往在汇编中要4、5行才行，但是这就是C语言那一行命令的本质。接下来，就是C语言中if, for, while在汇编中如何实现了，其实基本都对应了固定的程序块，只要记住就可以直接拿来是要了。这里列出常用的程序块写法</p>
+
+<ul>
+<li><p>XXX 循环n次</p>
+
+<pre><code>    MOV 存放循环次数的地址,#n
+L1: XXX
+    DJNZ 存放循环次数的地址,L1       
+</code></pre></li>
+<li><p>执行 XXX 从i=x到i=y，也就是for循环</p>
+
+<pre><code>    MOV 起始数值存放地址,#x
+    MOV 终止数值存放地址,#y
+    INC 终止数值存放地址
+L1: XXX
+    INC 起始地址
+    MOV A,起始地址
+    CJNE A,终止数值存放地址,L1
+</code></pre></li>
+<li><p>if x=y then XXX else YYY</p>
+
+<pre><code>    XCH A,x的存放地址
+    CJNE A,y的存放地址,L1
+    XCH A,x的存放地址
+L2: XXX
+    JMP L3
+L1: XCH A,x的存放地址
+    YYY
+L3:        
+</code></pre></li>
+<li><p>do XXX while x>=y</p>
+
+<pre><code>L1: XXX
+    XCH A,x的存放地址
+    CJNE A,y的存放地址,L2
+L2: XCH A,x的存放地址
+    JNC L1
+</code></pre></li>
+</ul>
+
+
+<p>还有一种，能够让逻辑清晰的方法，就是写出数学表达式。数学表达式的优点就是每一步的运算都逻辑清晰，并且对于二进制，十进制的基本运算的运算方法还是适用的，比如加法结合律还有乘法分配律，所以只要列出数据的二进制数学表达式，那么逻辑自然明了了。</p></li>
+<li><p>为什么汇编语言用2进制就让人难以计算和想象了呢？主要原因是人们会习惯性地按照十进制“位”的概念以bit为计算单位，在进行数据操作的时候，动辄就是8位，16位，就相当于十进制里的“千万”、“千万亿”，如此大的数量总会让人头昏眼花。但要注意的是单片机里已经提供了一些硬件运算，比如AT89C51就提供了8位二进制的硬件加减乘除，我们应该以这些基本运算为前提来搭建自己的程序，也就是说我们思考的单位不应该是bit，而是硬件的硬件计算单位，比如AT89C51就以8位为思考单位就会大大减少思考量。当然还是需要具体问题具体分析的，如果以3位为思考单位会更简单就用3位，5为简单就用5位，这也就是为什么二进制里为什么提出byte概念的原因吧。</p>
+
+<p> 总的来说，就是以“byte”来思考二进制，而不是bit</p></li>
+</ol>
+
+
+<p>最后介绍两种学习汇编的方法</p>
+
+<ol>
+<li><p>跟编译器学习，比如使用Keil的时候，先用C编写程序，然后编译，就可以查看编译器产生的汇编语言了，虽然非常难懂，但也不失为一种向高手学习的方法。在Keil上查看相关汇编的方法如下（下图为Keil uVision3）</p>
+
+<ol>
+<li><p>编写C程序，并编译成功，测试成功</p>
+
+<p><img src="/images/post/new_assembler_1.png" alt="编译成功"></p></li>
+<li><p>点击工具栏上的红色D “start/stop debug session” <img src="/images/post/new_assembler_2.png"></p></li>
+<li><p>然后再点击工具栏上的 &ldquo;Disassembly window&rdquo; <img src="/images/post/new_assembler_3.png"></p>
+
+<p>就得到了编译产生的汇编文件，并且C语句和相对应的汇编语句对应排列。</p>
+
+<p><img src="/images/post/new_assembler_4.png" alt="汇编文件"></p></li>
+</ol>
+</li>
+<li><p>如果可以上网，就比较方便了，去<a href="https://github.com/">Github</a>看别人写的程序，经常自己苦恼上好几天的程序，也许别人已经提供了范例在那里，不要抄，看思路，那不是最好的，最好的程序永远是自己写出来了</p></li>
+</ol>
+
+
+<p>接下来，就是如何将方法运用到解决实际问题中去了，<a href="/blog/assembly-application-1.html">这里</a>是<a href="">pikipity</a>自己编写的一些程序了。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">pikipity</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2013-02-02T22:13:00+08:00'><span class='date'>2013年02月02日</span> <span class='time'>10:13 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/assembly/'>assembly</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/linux-days.html" title="Previous Post: 玩Linux的那些日子">&laquo; 玩Linux的那些日子</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/assembly-application-1.html" title="Next Post: 汇编实战之加减法">汇编实战之加减法 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+    
+        <section imagesd="comment">
+	<br>
+	<br>
+        <h1>Comments</h1>
+	<br>
+	<p></p>
+        <!-- Duoshuo Comment BEGIN -->
+	<div class="ds-thread"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"pikipity"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- Duoshuo Comment END -->
+       </section>
+       
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me -- pikipity</h1>
+  <ul id="post">
+  pikipity 的小博客，搜罗有意思的科技话题，展示自己的所知所学所感。<p>
+  
+  <img src="/images/myface.gif" width="100pt"><p>
+  
+  如果发现问题，请在文章后面留言指出或是直接点<a href="mailto:pikipityw@gmail.com">这里</a>发邮件给我指正，谢谢。<p>
+  
+  pikipity Blog: <a href="http://pikipity.github.io/">pikipity.github.io</a><p>
+  
+  pikipity Email: <a href="mailto:pikipityw@gmail.com">pikipityw.gmail.com</a><p>
+  
+  使用IE浏览器可能无法得到完美的浏览体验，建议更换为<a href="https://www.google.com/intl/en/chrome/browser/"> Chrome 浏览器</a><p>
+
+  </ul>
+</section>
+<section>
+  <h1>Category List</h1>
+    <span id="tag-cloud"><a href='/blog/categories/algorithm' style='font-size: 107.89473684210526%'>algorithm(5)</a> <a href='/blog/categories/arduino' style='font-size: 109.47368421052632%'>arduino(6)</a> <a href='/blog/categories/assembly' style='font-size: 111.05263157894737%'>assembly(7)</a> <a href='/blog/categories/c-plus-plus' style='font-size: 103.15789473684211%'>c++(2)</a> <a href='/blog/categories/cartoon' style='font-size: 111.05263157894737%'>cartoon(7)</a> <a href='/blog/categories/circuit' style='font-size: 104.73684210526315%'>circuit(3)</a> <a href='/blog/categories/game' style='font-size: 115.78947368421052%'>game(10)</a> <a href='/blog/categories/github' style='font-size: 104.73684210526315%'>github(3)</a> <a href='/blog/categories/google' style='font-size: 126.84210526315789%'>google(17)</a> <a href='/blog/categories/ios' style='font-size: 111.05263157894737%'>ios(7)</a> <a href='/blog/categories/life' style='font-size: 160.0%'>life(38)</a> <a href='/blog/categories/linux' style='font-size: 112.63157894736842%'>linux(8)</a> <a href='/blog/categories/mac' style='font-size: 125.26315789473685%'>mac(16)</a> <a href='/blog/categories/matlab' style='font-size: 125.26315789473685%'>matlab(16)</a> <a href='/blog/categories/movie' style='font-size: 106.3157894736842%'>movie(4)</a> <a href='/blog/categories/octopress' style='font-size: 104.73684210526315%'>octopress(3)</a> <a href='/blog/categories/others' style='font-size: 115.78947368421052%'>others(10)</a> <a href='/blog/categories/processing' style='font-size: 111.05263157894737%'>processing(7)</a> <a href='/blog/categories/python' style='font-size: 109.47368421052632%'>python(6)</a> <a href='/blog/categories/scm' style='font-size: 128.42105263157896%'>scm(18)</a> <a href='/blog/categories/technology' style='font-size: 126.84210526315789%'>technology(17)</a> </span>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week4.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week4)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week3.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week3)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week12summary.html">Algorithms: Design and Analysis Part 1 – Programming Questions (Week1 and Week 2 Summary)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week2.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week2)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/cousera-algorithm-week1.html">Algorithms: Design and Analysis Part 1 -- Programming Questions (Week1)</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+<h1>Copyright Agreement</h1>
+<ul id="copyright">
+<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh"><img
+  alt="知识共享许可协议" style="border-width:0"
+  src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png"
+  /></a><br />本作品采用<a rel="license"
+  href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh">知识
+  共享署名-非商业性使用-相同方式共享 3.0 未本地化版本许可协议</a>进行
+  许可。<p>
+
+  如果您想转载本网站下的博文，请注明作者和出处。如果文章内没有特别说明，文章皆为原创，请将出处注明为那篇文章的网址；如果文章内特别指明为转载，请将出处注明为原始文章的网址。非常感谢。<p>
+</ul>
+</section><section>
+  <h1>Who are visiting</h1>
+  <ul id="for_fun">
+  <script type="text/javascript" src="http://jb.revolvermaps.com/2/1.js?i=1p1ij0eyux4&amp;s=190&amp;m=7&amp;v=false&amp;r=false&amp;b=000000&amp;n=false&amp;c=ff0000" async="async"></script>
+  </ul>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - pikipity -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
